@@ -5,11 +5,11 @@
 
     <groupId>biz.gabrys.lesscss</groupId>
     <artifactId>extended-compiler</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <packaging>jar</packaging>
     <name>Extended LessCSS Compiler</name>
     <description>Extended version of the LessCSS Compiler (Java library which compiles Less source files to the CSS code).</description>
-    <url>http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/</url>
+    <url>http://lesscss-extended-compiler.projects.gabrys.biz/1.0/</url>
 
     <inceptionYear>2015</inceptionYear>
     <organization>
