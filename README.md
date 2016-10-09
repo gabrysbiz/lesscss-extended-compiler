@@ -1,6 +1,6 @@
 # About
 [![License BSD 3-Clause](https://img.shields.io/badge/license-BSD%203--Clause-blue.svg)](http://lesscss-extended-compiler.projects.gabrys.biz/license.txt)
-[![Build Status](https://travis-ci.org/gabrysbiz/lesscss-extended-compiler.svg?branch=release%2F1.0)](https://travis-ci.org/gabrysbiz/lesscss-extended-compiler)
+[![Build Status](https://travis-ci.org/gabrysbiz/lesscss-extended-compiler.svg?branch=master)](https://travis-ci.org/gabrysbiz/lesscss-extended-compiler)
 
 Extended version of the [LessCSS Compiler](http://lesscss-compiler.projects.gabrys.biz/)
 (Java library which compiles [Less](http://lesscss.org/) source files to the [CSS](http://www.w3.org/Style/CSS/) code).
