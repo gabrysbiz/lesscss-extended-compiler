@@ -19,23 +19,23 @@ import java.net.URISyntaxException;
 import org.apache.commons.lang3.StringUtils;
 
 /**
- * Responsible for creating new instances of the {@link HttpSource}.
+ * Responsible for creating new instances of the {@link FtpSource}.
  * @since 1.0
  */
-public class HttpSourceFactory implements ConcreteSourceFactory<HttpSource> {
+public class FtpSourceFactory implements ConcreteSourceFactory<FtpSource> {
 
     /**
      * Constructs a new instance.
      * @since 1.0
      */
-    public HttpSourceFactory() {
+    public FtpSourceFactory() {
         // do nothing
     }
 
-    public HttpSource createAbsoluteSource(final LessSource source, final String importAbsolutePath) {
+    public FtpSource createAbsoluteSource(final LessSource source, final String importAbsolutePath) {
         try {
             final URI importUri = new URI(importAbsolutePath).normalize();
-            return new HttpSource(importUri.toURL());
+            return new FtpSource(importUri.toURL(), source.getEncoding());
         } catch (final URISyntaxException e) {
             throw new SourceFactoryException("Cannot normalize URL", e);
         } catch (final MalformedURLException e) {
@@ -43,12 +43,12 @@ public class HttpSourceFactory implements ConcreteSourceFactory<HttpSource> {
         }
     }
 
-    public HttpSource createRelativeSource(final LessSource source, final String importRelativePath) {
+    public FtpSource createRelativeSource(final LessSource source, final String importRelativePath) {
         try {
             final String sourcePath = source.getPath();
             final String parentPath = sourcePath.substring(0, sourcePath.lastIndexOf('/'));
             final URI importUri = new URI(parentPath + '/' + importRelativePath).normalize();
-            return new HttpSource(importUri.toURL());
+            return new FtpSource(importUri.toURL(), source.getEncoding());
         } catch (final URISyntaxException e) {
             throw new SourceFactoryException("Cannot normalize URL", e);
         } catch (final MalformedURLException e) {
@@ -60,6 +60,6 @@ public class HttpSourceFactory implements ConcreteSourceFactory<HttpSource> {
         if (StringUtils.isEmpty(path)) {
             return false;
         }
-        return path.startsWith("http://") || path.startsWith("https://");
+        return path.startsWith("ftp://");
     }
 }

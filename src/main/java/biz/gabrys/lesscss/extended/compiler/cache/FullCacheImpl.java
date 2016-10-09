@@ -141,13 +141,13 @@ public class FullCacheImpl implements FullCache, DeletableCache {
     private String createFileName(final EntryType type, final LessSource source) {
         final String path = source.getPath();
         final int index = path.replace('\\', '/').lastIndexOf('/');
-        final StringBuilder fileName = new StringBuilder();
+        final StringBuilder fileName = new StringBuilder(75);
         if (index > 0) {
             fileName.append(path.substring(index + 1));
             fileName.append('-');
         }
         final String hashCode = String.valueOf(path.hashCode());
-        if (hashCode.startsWith("-")) {
+        if (hashCode.charAt(0) == '-') {
             fileName.append(hashCode.replace('-', 'n'));
         } else {
             fileName.append('p');

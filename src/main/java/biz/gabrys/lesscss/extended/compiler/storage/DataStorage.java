@@ -13,6 +13,7 @@
 package biz.gabrys.lesscss.extended.compiler.storage;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -64,9 +65,9 @@ public interface DataStorage {
      * Puts lines to the storage.
      * @param fileName the file name.
      * @param lines the text lines with data.
-     * @since 1.0
+     * @since 2.0
      */
-    void put(String fileName, Iterable<String> lines);
+    void put(String fileName, Collection<String> lines);
 
     /**
      * Returns lines with data.

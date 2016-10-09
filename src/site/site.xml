@@ -35,6 +35,7 @@
             <item name="Caching data" href="caching-data.html" />
             <item name="Locations" href="locations.html" />
             <item name="Download" href="download.html" />
+            <item name="Changelog" href="changelog.html" />
         </menu>
 
         <menu ref="reports" />

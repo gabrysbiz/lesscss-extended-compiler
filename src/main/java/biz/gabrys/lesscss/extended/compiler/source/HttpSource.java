@@ -39,7 +39,7 @@ public class HttpSource implements LessSource {
     private Date lastModificationDate;
 
     /**
-     * Constructs a new instance of the {@link HttpSource} and sets URL of the source file.
+     * Constructs a new instance and sets URL of the source file.
      * @param url the source file URL.
      * @since 1.0
      */
@@ -52,8 +52,10 @@ public class HttpSource implements LessSource {
     }
 
     /**
-     * {@inheritDoc} Before the first {@link #getContent()} call returns current source encoding. After the first
-     * {@link #getContent()} call always returns the source encoding read while downloading the source contents.
+     * Returns an encoding of the source code. Before the first {@link #getContent()} call returns current source
+     * encoding. After the first {@link #getContent()} call always returns the source encoding read while downloading
+     * the source contents.
+     * @return the encoding.
      * @since 1.0
      */
     public String getEncoding() {
@@ -69,19 +71,21 @@ public class HttpSource implements LessSource {
         if (contentType == null || !contentType.contains("charset=")) {
             return Charset.defaultCharset().toString();
         }
-        return contentType.substring(contentType.lastIndexOf("=") + 1);
+        return contentType.substring(contentType.lastIndexOf('=') + 1);
     }
 
     public String getContent() {
         final HttpURLConnection connection = makeConnection(true);
+        encoding = getEncodingFromContentType(connection.getContentType());
         String content;
         try {
             content = IOUtils.toString(connection.getInputStream(), encoding);
         } catch (final IOException e) {
+            connection.disconnect();
             throw new SourceException(e);
         }
-        encoding = getEncodingFromContentType(connection.getContentType());
         lastModificationDate = getModificationDate(connection.getLastModified());
+        connection.disconnect();
         return content;
     }
 
@@ -97,7 +101,9 @@ public class HttpSource implements LessSource {
         }
 
         final HttpURLConnection connection = makeConnection(false);
-        return getModificationDate(connection.getLastModified());
+        final Date date = getModificationDate(connection.getLastModified());
+        connection.disconnect();
+        return date;
     }
 
     private static Date getModificationDate(final long modificationDate) {
@@ -111,6 +117,7 @@ public class HttpSource implements LessSource {
         HttpURLConnection connection;
         int responseCode;
         URL resourceUrl = url;
+        boolean redirected = false;
         while (true) {
             try {
                 connection = (HttpURLConnection) resourceUrl.openConnection();
@@ -123,16 +130,26 @@ public class HttpSource implements LessSource {
             if (!REDIRECT_CODES.contains(responseCode)) {
                 break;
             }
+            redirected = true;
             final String location = connection.getHeaderField("Location");
             try {
                 resourceUrl = new URL(location);
             } catch (final MalformedURLException e) {
-                throw new SourceException("Invalid Location header: " + location, e);
+                throw new SourceException(String.format("Invalid Location header: %s", location), e);
             }
         }
         if (responseCode != HttpURLConnection.HTTP_OK) {
-            throw new SourceException(String.format("Cannot fetch content form network (error code: %s)", responseCode));
+            throw new SourceException(createDownloadErrorMessage(resourceUrl, redirected, responseCode));
         }
         return connection;
+    }
+
+    private String createDownloadErrorMessage(final URL resourceUrl, final boolean redirected, final int responseCode) {
+        String redirectedText = "";
+        if (redirected) {
+            redirectedText = String.format("redirected from \"%s\", ", url);
+        }
+        throw new SourceException(
+                String.format("Cannot download source \"%s\" (%serror code: %s)", resourceUrl, redirectedText, responseCode));
     }
 }

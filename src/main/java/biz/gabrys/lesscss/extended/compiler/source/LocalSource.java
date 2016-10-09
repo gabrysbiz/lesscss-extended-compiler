@@ -19,8 +19,8 @@ import java.util.Date;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.SystemUtils;
 
 /**
  * Represents a <a href="http://lesscss.org/">Less</a> source stored in local file system.
@@ -90,7 +90,9 @@ public class LocalSource implements LessSource {
     }
 
     /**
-     * Checks whether the path represents an absolute path.
+     * Checks whether the path represents an absolute path. Always returns {@code false} if path contains NULL bytes
+     * (see <a href="http://cwe.mitre.org/data/definitions/158.html">CWE-158</a>,
+     * <a href="http://projects.webappsec.org/w/page/13246949/Null%20Byte%20Injection">WASC-28</a>).
      * @param path the checked path.
      * @return {@code true} whether the path represents an absolute path, otherwise {@code false}.
      * @since 1.0
@@ -100,12 +102,16 @@ public class LocalSource implements LessSource {
     }
 
     static boolean isAbsolutePath(final String path, final boolean windowsOperatingSystem) {
-        final char separator = '/';
+        if (path != null && path.indexOf('\0') > -1) {
+            return false;
+        }
+
         final String normalizedPath = FilenameUtils.normalize(path, true);
         if (StringUtils.isEmpty(normalizedPath)) {
             return false;
         }
 
+        final char separator = '/';
         final char firstChar = normalizedPath.charAt(0);
         if (!windowsOperatingSystem) {
             return firstChar == separator;

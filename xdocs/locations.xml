@@ -14,7 +14,7 @@
             <ul>
                 <li>source code caching availability</li>
                 <li>
-                    native compiler implementation (<a href="http://lesscss-compiler.projects.gabrys.biz/1.0/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html">biz.gabrys.lesscss.compiler.LessCompiler</a>)
+                    native compiler implementation (<a href="http://lesscss-compiler.projects.gabrys.biz/1.1/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html">biz.gabrys.lesscss.compiler.LessCompiler</a>)
                 </li>
                 <li>
                     source factory implementation

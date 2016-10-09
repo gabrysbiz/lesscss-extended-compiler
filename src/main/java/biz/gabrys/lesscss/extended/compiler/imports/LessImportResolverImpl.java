@@ -48,7 +48,8 @@ public class LessImportResolverImpl implements LessImportResolver {
                 path = matcher.group(PATH_IN_SINGLE_QUOTES_GROUP_INDEX);
             }
             if (path.contains("'") || path.contains("\"")) {
-                throw new ImportException("Path contains not allowed character: " + (path.contains("'") ? "' (apostrophe)" : "\" (quote)"));
+                final String characterInfo = path.contains("'") ? "' (apostrophe)" : "\" (quote)";
+                throw new ImportException(String.format("Path contains not allowed character: %s", characterInfo));
             }
 
             final String option = matcher.group(IMPORT_OPTION_GROUP_INDEX);
