@@ -21,26 +21,26 @@ import java.util.List;
  */
 public class SourceFactoryImpl implements SourceFactory {
 
-    private final List<ConcreteSourceFactory> factories = new ArrayList<ConcreteSourceFactory>();
+    private final List<ConcreteSourceFactory<? extends LessSource>> factories = new ArrayList<ConcreteSourceFactory<? extends LessSource>>();
 
     /**
      * Constructs a new instance and sets concrete factories.
      * @param factories concrete factories.
      * @since 1.0
      */
-    public SourceFactoryImpl(final Iterable<ConcreteSourceFactory> factories) {
-        for (final ConcreteSourceFactory factory : factories) {
+    public SourceFactoryImpl(final Iterable<ConcreteSourceFactory<? extends LessSource>> factories) {
+        for (final ConcreteSourceFactory<? extends LessSource> factory : factories) {
             this.factories.add(factory);
         }
     }
 
     public LessSource create(final LessSource source, final String importPath) {
-        for (final ConcreteSourceFactory factory : factories) {
+        for (final ConcreteSourceFactory<? extends LessSource> factory : factories) {
             if (factory.isAbsolutePath(importPath)) {
                 return factory.createAbsoluteSource(source, importPath);
             }
         }
-        for (final ConcreteSourceFactory factory : factories) {
+        for (final ConcreteSourceFactory<? extends LessSource> factory : factories) {
             if (factory.isAbsolutePath(source.getPath())) {
                 return factory.createRelativeSource(source, importPath);
             }

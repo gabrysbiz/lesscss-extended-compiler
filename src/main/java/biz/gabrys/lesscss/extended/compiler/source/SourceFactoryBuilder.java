@@ -21,7 +21,7 @@ import java.util.Map;
  */
 public class SourceFactoryBuilder {
 
-    private final Map<Class<?>, ConcreteSourceFactory> factories = new LinkedHashMap<Class<?>, ConcreteSourceFactory>();
+    private final Map<Class<?>, ConcreteSourceFactory<? extends LessSource>> factories = new LinkedHashMap<Class<?>, ConcreteSourceFactory<? extends LessSource>>();
 
     /**
      * Constructs a new instance with zero factories.
@@ -37,10 +37,11 @@ public class SourceFactoryBuilder {
      * @return {@code this} builder.
      * @since 1.0
      * @see HttpSourceFactory
+     * @see FtpSourceFactory
      * @see LocalSourceFactory
      */
     public SourceFactoryBuilder withStandard() {
-        return withHttp().withLocal();
+        return withHttp().withFtp().withLocal();
     }
 
     /**
@@ -70,6 +71,19 @@ public class SourceFactoryBuilder {
     }
 
     /**
+     * Creates a new builder with added {@link FtpSourceFactory} at the end or does nothing if you try to add the same
+     * factory again.
+     * @return {@code this} builder.
+     * @since 2.0
+     */
+    public SourceFactoryBuilder withFtp() {
+        if (!factories.containsKey(FtpSourceFactory.class)) {
+            factories.put(FtpSourceFactory.class, new FtpSourceFactory());
+        }
+        return this;
+    }
+
+    /**
      * Creates a new builder with added {@link ConcreteSourceFactory} at the end or does nothing if you try to add the
      * same factory again.
      * @param factory the concrete source factory.
@@ -77,7 +91,7 @@ public class SourceFactoryBuilder {
      * @throws IllegalArgumentException is factory is equal to {@code null}.
      * @since 1.0
      */
-    public SourceFactoryBuilder withCustom(final ConcreteSourceFactory factory) {
+    public SourceFactoryBuilder withCustom(final ConcreteSourceFactory<? extends LessSource> factory) {
         if (factory == null) {
             throw new IllegalArgumentException("Factory cannot be null");
         }

@@ -13,6 +13,7 @@
 package biz.gabrys.lesscss.extended.compiler.control.processor;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -58,8 +59,9 @@ public class SourceTreePreparationProcessor extends AbstractSourceTreePreparatio
     protected void prepareWhenExpired(final LessSource source, final Set<String> preparedSourcesPaths) {
         final String sourceCode = source.getContent();
         datesCache.saveSourceModificationDate(source, source.getLastModificationDate());
-        final List<String> imports = new ArrayList<String>();
-        for (final LessImportOperation operation : importResolver.resolve(sourceCode)) {
+        final Collection<LessImportOperation> operations = importResolver.resolve(sourceCode);
+        final List<String> imports = new ArrayList<String>(operations.size());
+        for (final LessImportOperation operation : operations) {
             final LessSource importSource = sourceFactory.create(source, operation.getComputedPath());
             imports.add(operation.getComputedPath());
             prepare(importSource, preparedSourcesPaths);

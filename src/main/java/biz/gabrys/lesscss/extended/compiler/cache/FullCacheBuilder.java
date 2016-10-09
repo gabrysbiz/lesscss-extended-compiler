@@ -66,7 +66,7 @@ public class FullCacheBuilder {
 
     /**
      * Crates a new instance of the {@link FullCacheImpl}. If {@link #withDirectory(File)} or
-     * {@link #withDataStorage(DataStorage)} has not been called before, it uses temporary directory
+     * {@link #withDataStorage(DataStorage)} has not been called before, it uses temporary directory.
      * @return the new instance of the {@link FullCacheImpl}.
      * @throws UnsupportedOperationException if cannot create temporary directory.
      * @since 1.0

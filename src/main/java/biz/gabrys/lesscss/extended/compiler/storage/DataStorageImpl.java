@@ -14,7 +14,6 @@ package biz.gabrys.lesscss.extended.compiler.storage;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -32,22 +31,12 @@ public class DataStorageImpl implements DataStorage {
     /**
      * Constructs a new instance.
      * @param workingDirectory the working directory.
-     * @throws IllegalArgumentException if path does not point to an directory or cannot create directory.
+     * @throws IllegalArgumentException if working directory is equal to {@code null}.
      * @since 1.0
      */
     public DataStorageImpl(final File workingDirectory) {
         if (workingDirectory == null) {
             throw new IllegalArgumentException("Working directory cannot be null");
-        }
-        if (workingDirectory.exists()) {
-            if (!workingDirectory.isDirectory()) {
-                throw new IllegalArgumentException(
-                        String.format("Path \"%s\" exists, but does not point to an directory", workingDirectory));
-            }
-        } else {
-            if (!workingDirectory.mkdirs()) {
-                throw new IllegalArgumentException(String.format("Cannot create directory \"%s\"", workingDirectory));
-            }
         }
         directory = workingDirectory;
     }
@@ -120,17 +109,13 @@ public class DataStorageImpl implements DataStorage {
     /**
      * {@inheritDoc}
      * @throws DataStorageException if an I/O error occurred.
-     * @since 1.0
+     * @since 2.0
      */
-    public void put(final String fileName, final Iterable<String> lines) {
+    public void put(final String fileName, final Collection<String> lines) {
         synchronized (mutex) {
             final File cache = getFilePreparedForPut(fileName);
-            final Collection<String> collection = new ArrayList<String>();
-            for (final String line : lines) {
-                collection.add(line);
-            }
             try {
-                FileUtils.writeLines(cache, collection);
+                FileUtils.writeLines(cache, lines);
             } catch (final IOException e) {
                 throw new DataStorageException(e);
             }

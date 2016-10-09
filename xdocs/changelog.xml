@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+    <properties>
+        <title>Changelog</title>
+    </properties>
+
+    <body>
+        <section id="release-2.0" name="Release 2.0">
+            <p>New Features:</p>
+            <ul>
+                <li><a href="https://tools.ietf.org/html/rfc959">FTP</a> protocol support</li>
+            </ul>
+            <p>API:</p>
+            <ul>
+                <li>
+                    <a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/storage/DataStorage.html">DataStorage#put(fileName, lines)</a>:
+                    changed the type of the parameter <code>lines</code> from <code>java.lang.Iterable</code> to <code>java.util.Collection</code>
+                </li>
+                <li>
+                    <a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/source/ConcreteSourceFactory.html">ConcreteSourceFactory</a> is now generic:
+                    <code>ConcreteSourceFactory&lt;T extends LessSource&gt;</code>
+                </li>
+            </ul>
+            <p>Dependencies:</p>
+            <ul>
+                <li>Use <code>commons-lang3</code> instead of <code>commons-lang</code></li>
+            </ul>
+            <p>Bugs:</p>
+            <ul>
+                <li>Security fixes:
+                    <ul>
+                        <li>
+                            changed the way of creating temporary directories
+                            (see <a href="https://www.owasp.org/index.php/Top_10_2013-A9-Using_Components_with_Known_Vulnerabilities">OWAPS Top Ten 2013 Category A9</a>)
+                        </li>
+                        <li>
+                            protection against NULL bytes
+                            (see <a href="http://cwe.mitre.org/data/definitions/158.html">CWE-158</a>,
+                             <a href="http://projects.webappsec.org/w/page/13246949/Null%20Byte%20Injection">WASC-28</a>)
+                        </li>
+                    </ul>
+                </li>
+                <li>Optimization of create new collections</li>
+            </ul>
+        </section>
+        <section id="release-1.0" name="Release 1.0">
+            <p>Initial release.</p>
+            <p><a href="http://lesscss-extended-compiler.projects.gabrys.biz/1.0/">See documentation</a></p>
+        </section>
+    </body>
+</document>

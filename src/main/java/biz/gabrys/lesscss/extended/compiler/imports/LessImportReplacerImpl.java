@@ -37,7 +37,7 @@ public class LessImportReplacerImpl implements LessImportReplacer {
         final String beginCode = sourceCode.substring(0, importIndex);
         final String endCode = sourceCode.substring(importIndex + importSourceCode.length());
 
-        final StringBuilder newImportSourceCode = new StringBuilder();
+        final StringBuilder newImportSourceCode = new StringBuilder(importPath.length() + 25);
         newImportSourceCode.append("@import (");
         newImportSourceCode.append(operation.getComputedOption());
         newImportSourceCode.append(") \"");

@@ -14,9 +14,10 @@ package biz.gabrys.lesscss.extended.compiler.source;
 
 /**
  * Responsible for creating new instances of the {@link LessSource} with the particular type.
+ * @param <T> created instances type.
  * @since 1.0
  */
-public interface ConcreteSourceFactory {
+public interface ConcreteSourceFactory<T extends LessSource> {
 
     /**
      * Creates a {@link LessSource} based on the absolute path to imported source.
@@ -25,7 +26,7 @@ public interface ConcreteSourceFactory {
      * @return the new instance of the {@link LessSource}.
      * @since 1.0
      */
-    LessSource createAbsoluteSource(LessSource source, String importAbsolutePath);
+    T createAbsoluteSource(LessSource source, String importAbsolutePath);
 
     /**
      * Creates a {@link LessSource} based on the {@link LessSource} and relative path to imported source.
@@ -34,7 +35,7 @@ public interface ConcreteSourceFactory {
      * @return the new instance of the {@link LessSource}.
      * @since 1.0
      */
-    LessSource createRelativeSource(LessSource source, String importRelativePath);
+    T createRelativeSource(LessSource source, String importRelativePath);
 
     /**
      * Checks whether the path represents an absolute path.

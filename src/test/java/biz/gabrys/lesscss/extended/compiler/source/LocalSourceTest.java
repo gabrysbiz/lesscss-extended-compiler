@@ -54,4 +54,12 @@ public final class LocalSourceTest {
         Assert.assertTrue(WINDOWS + "\"C:\\file\" should be treated as absolute path", LocalSource.isAbsolutePath("C:\\file", true));
         Assert.assertTrue(OTHER_SYSTEMS + "\"/file\" should be treated as absolute path", LocalSource.isAbsolutePath("/file", false));
     }
+
+    @Test
+    public void isAbsolutePath_pathContainsNullBytes_returnsFalse() {
+        Assert.assertFalse(WINDOWS + "\"C:\\file\\fi\0le\" should be treated as absolute path",
+                LocalSource.isAbsolutePath("C:\\file\\fi\0le", true));
+        Assert.assertFalse(OTHER_SYSTEMS + "\"/file/fi\0le\" should be treated as absolute path",
+                LocalSource.isAbsolutePath("/file/fi\0le", false));
+    }
 }
