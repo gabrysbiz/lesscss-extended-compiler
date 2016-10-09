@@ -21,6 +21,7 @@ import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link SourceTreePreparationProcessor}.
@@ -42,9 +43,7 @@ public class SourceTreePreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreePreparationProcessorBuilder(final FullCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("cache", cache);
         datesCache = cache;
         importsCache = cache;
     }
@@ -57,13 +56,10 @@ public class SourceTreePreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreePreparationProcessorBuilder(final SourceModificationDateCache datesCache, final SourceImportsCache importsCache) {
-        if (datesCache == null) {
-            throw new IllegalArgumentException("Dates cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("dates cache", datesCache);
+        ParameterUtils.verifyNotNull("imports cache", importsCache);
+
         this.datesCache = datesCache;
-        if (importsCache == null) {
-            throw new IllegalArgumentException("Imports cache cannot be null");
-        }
         this.importsCache = importsCache;
     }
 

@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Allows you to create an instance of {@link FullCache} which delegates execution of each method to concrete caches.
@@ -62,25 +63,17 @@ public class FullCacheAdapter implements FullCache {
      */
     public FullCacheAdapter(final SourceModificationDateCache modificationDatesCache, final SourceImportsCache importsCache,
             final SourceCodeCache sourceCache, final CompilationDateCache compilationDatesCache, final CompiledCodeCache compiledCache) {
-        if (modificationDatesCache == null) {
-            throw new IllegalArgumentException("Source modification dates cache cannot be null");
-        }
+
+        ParameterUtils.verifyNotNull("source modification dates cache", modificationDatesCache);
+        ParameterUtils.verifyNotNull("source imports paths cache", importsCache);
+        ParameterUtils.verifyNotNull("source code cache", sourceCache);
+        ParameterUtils.verifyNotNull("compilation dates cache", compilationDatesCache);
+        ParameterUtils.verifyNotNull("compiled code cache", compiledCache);
+
         this.modificationDatesCache = modificationDatesCache;
-        if (importsCache == null) {
-            throw new IllegalArgumentException("Source imports paths cache cannot be null");
-        }
         this.importsCache = importsCache;
-        if (sourceCache == null) {
-            throw new IllegalArgumentException("Source code cache cannot be null");
-        }
         this.sourceCache = sourceCache;
-        if (compilationDatesCache == null) {
-            throw new IllegalArgumentException("Compilation dates cache cannot be null");
-        }
         this.compilationDatesCache = compilationDatesCache;
-        if (compiledCache == null) {
-            throw new IllegalArgumentException("Compiled code cache cannot be null");
-        }
         this.compiledCache = compiledCache;
     }
 

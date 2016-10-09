@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import biz.gabrys.lesscss.extended.compiler.storage.DataStorage;
 import biz.gabrys.lesscss.extended.compiler.storage.DataStorageImpl;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link FullCacheImpl}.
@@ -42,9 +43,7 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheBuilder withDirectory(final File workingDirectory) {
-        if (workingDirectory == null) {
-            throw new IllegalArgumentException("Directory cannot be null");
-        }
+        ParameterUtils.verifyNotNull("directory", workingDirectory);
         dataStorage = new DataStorageImpl(workingDirectory);
         return this;
     }
@@ -57,9 +56,7 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheBuilder withDataStorage(final DataStorage dataStorage) {
-        if (dataStorage == null) {
-            throw new IllegalArgumentException("Data storage cannot be null");
-        }
+        ParameterUtils.verifyNotNull("data storage", dataStorage);
         this.dataStorage = dataStorage;
         return this;
     }

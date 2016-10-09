@@ -15,6 +15,8 @@ package biz.gabrys.lesscss.extended.compiler.source;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
+
 /**
  * Responsible for creating new instances of the {@link SourceFactoryImpl}.
  * @since 1.0
@@ -103,9 +105,7 @@ public class SourceFactoryBuilder {
      * @since 1.0
      */
     public SourceFactoryBuilder withCustom(final ConcreteSourceFactory<? extends LessSource> factory) {
-        if (factory == null) {
-            throw new IllegalArgumentException("Factory cannot be null");
-        }
+        ParameterUtils.verifyNotNull("factory", factory);
         if (!factories.containsKey(factory.getClass())) {
             factories.put(factory.getClass(), factory);
         }

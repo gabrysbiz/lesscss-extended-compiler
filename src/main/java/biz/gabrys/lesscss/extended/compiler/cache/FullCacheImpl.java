@@ -18,6 +18,7 @@ import java.util.List;
 
 import biz.gabrys.lesscss.extended.compiler.source.LessSource;
 import biz.gabrys.lesscss.extended.compiler.storage.DataStorage;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Full cache implementation based on the {@link DataStorage}. It stores files in the flat structure.
@@ -38,9 +39,7 @@ public class FullCacheImpl implements FullCache, DeletableCache {
      * @since 1.0
      */
     public FullCacheImpl(final DataStorage storage) {
-        if (storage == null) {
-            throw new IllegalArgumentException("Data storage cannot be null");
-        }
+        ParameterUtils.verifyNotNull("data storage", storage);
         this.storage = storage;
     }
 

@@ -30,6 +30,7 @@ import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link ExtendedCompiler} which cache source and compiled code.
@@ -53,9 +54,7 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingSourceAndCompiledCodeExtendedCompilerBuilder(final FullCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("cache", cache);
         this.cache = cache;
     }
 
