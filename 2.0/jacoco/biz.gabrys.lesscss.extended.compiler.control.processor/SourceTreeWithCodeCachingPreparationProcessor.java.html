@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SourceTreeWithCodeCachingPreparationProcessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.control.processor</a> &gt; <span class="el_source">SourceTreeWithCodeCachingPreparationProcessor.java</span></div><h1>SourceTreeWithCodeCachingPreparationProcessor.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.control.processor;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Set;
+
+import biz.gabrys.lesscss.extended.compiler.cache.SourceCodeCache;
+import biz.gabrys.lesscss.extended.compiler.cache.SourceImportsCache;
+import biz.gabrys.lesscss.extended.compiler.cache.SourceModificationDateCache;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.SourceExpirationChecker;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportOperation;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportReplacer;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
+import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
+
+/**
+ * Pre compilation processor responsible for preparing source file with imports (deep, imports of imports). It's saving
+ * for all sources:
+ * &lt;ul&gt;
+ * &lt;li&gt;modification date&lt;/li&gt;
+ * &lt;li&gt;imports list&lt;/li&gt;
+ * &lt;li&gt;source code&lt;/li&gt;
+ * &lt;/ul&gt;
+ * @since 1.0
+ */
+public class SourceTreeWithCodeCachingPreparationProcessor extends AbstractSourceTreePreparationProcessor {
+
+    private final SourceModificationDateCache datesCache;
+    private final SourceCodeCache codeCache;
+    private final LessImportResolver importResolver;
+    private final LessImportReplacer importReplacer;
+
+    /**
+     * Constructs a new instance.
+     * @param expirationChecker the checker responsible for determining if the source file expired.
+     * @param datesCache the cache responsible for storing source files modification dates.
+     * @param importsCache the cache responsible for storing source files imports list.
+     * @param codeCache the cache responsible for storing source files code.
+     * @param importResolver the resolver responsible for returning a list of import operations.
+     * @param importReplacer the replacer responsible for replacing import operations.
+     * @param sourceFactory the factory responsible for creating new instances of the {@link LessSource}.
+     * @since 1.0
+     */
+    public SourceTreeWithCodeCachingPreparationProcessor(final SourceExpirationChecker expirationChecker,
+            final SourceModificationDateCache datesCache, final SourceImportsCache importsCache, final SourceCodeCache codeCache,
+            final LessImportResolver importResolver, final LessImportReplacer importReplacer, final SourceFactory sourceFactory) {
+<span class="fc" id="L61">        super(expirationChecker, importsCache, sourceFactory);</span>
+<span class="fc" id="L62">        this.datesCache = datesCache;</span>
+<span class="fc" id="L63">        this.codeCache = codeCache;</span>
+<span class="fc" id="L64">        this.importResolver = importResolver;</span>
+<span class="fc" id="L65">        this.importReplacer = importReplacer;</span>
+<span class="fc" id="L66">    }</span>
+
+    @Override
+    protected void prepareWhenExpired(final LessSource source, final Set&lt;String&gt; preparedSourcesPaths) {
+<span class="fc" id="L70">        String sourceCode = source.getContent();</span>
+<span class="fc" id="L71">        datesCache.saveSourceModificationDate(source, source.getLastModificationDate());</span>
+<span class="fc" id="L72">        final Collection&lt;LessImportOperation&gt; operations = importResolver.resolve(sourceCode);</span>
+<span class="fc" id="L73">        final List&lt;String&gt; imports = new ArrayList&lt;String&gt;(operations.size());</span>
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        for (final LessImportOperation operation : operations) {</span>
+<span class="fc" id="L75">            final LessSource importSource = sourceFactory.create(source, operation.getComputedPath());</span>
+<span class="fc" id="L76">            imports.add(operation.getComputedPath());</span>
+<span class="fc" id="L77">            prepare(importSource, preparedSourcesPaths);</span>
+<span class="fc" id="L78">            final String importedPath = codeCache.getSourceRelativePath(importSource);</span>
+<span class="fc" id="L79">            sourceCode = importReplacer.replace(sourceCode, operation, importedPath);</span>
+<span class="fc" id="L80">        }</span>
+<span class="fc" id="L81">        importsCache.saveSourceImports(source, imports);</span>
+<span class="fc" id="L82">        codeCache.saveSourceCode(source, sourceCode);</span>
+<span class="fc" id="L83">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

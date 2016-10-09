@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SourceTreePreparationProcessorBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.control.processor</a> &gt; <span class="el_source">SourceTreePreparationProcessorBuilder.java</span></div><h1>SourceTreePreparationProcessorBuilder.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.control.processor;
+
+import biz.gabrys.lesscss.extended.compiler.cache.FullCache;
+import biz.gabrys.lesscss.extended.compiler.cache.SourceImportsCache;
+import biz.gabrys.lesscss.extended.compiler.cache.SourceModificationDateCache;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.SourceAlwaysExpiredChecker;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.SourceExpirationChecker;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+
+/**
+ * Responsible for creating new instances of the {@link SourceTreePreparationProcessor}.
+ * @since 1.0
+ */
+public class SourceTreePreparationProcessorBuilder {
+
+    private final SourceModificationDateCache datesCache;
+    private final SourceImportsCache importsCache;
+
+    private SourceExpirationChecker expirationChecker;
+    private LessImportResolver importResolver;
+    private SourceFactory sourceFactory;
+
+    /**
+     * Constructs a new instance and sets cache.
+     * @param cache the cache responsible for storing data.
+     * @throws IllegalArgumentException if cache is equal to {@code null}.
+     * @since 1.0
+     */
+<span class="nc" id="L44">    public SourceTreePreparationProcessorBuilder(final FullCache cache) {</span>
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (cache == null) {</span>
+<span class="nc" id="L46">            throw new IllegalArgumentException(&quot;Cache cannot be null&quot;);</span>
+        }
+<span class="nc" id="L48">        datesCache = cache;</span>
+<span class="nc" id="L49">        importsCache = cache;</span>
+<span class="nc" id="L50">    }</span>
+
+    /**
+     * Constructs a new instance and sets caches.
+     * @param datesCache the cache responsible for storing source files modification dates.
+     * @param importsCache the cache responsible for storing source files imports list.
+     * @throws IllegalArgumentException if at least one cache is equal to {@code null}.
+     * @since 1.0
+     */
+<span class="nc" id="L59">    public SourceTreePreparationProcessorBuilder(final SourceModificationDateCache datesCache, final SourceImportsCache importsCache) {</span>
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (datesCache == null) {</span>
+<span class="nc" id="L61">            throw new IllegalArgumentException(&quot;Dates cache cannot be null&quot;);</span>
+        }
+<span class="nc" id="L63">        this.datesCache = datesCache;</span>
+<span class="nc bnc" id="L64" title="All 2 branches missed.">        if (importsCache == null) {</span>
+<span class="nc" id="L65">            throw new IllegalArgumentException(&quot;Imports cache cannot be null&quot;);</span>
+        }
+<span class="nc" id="L67">        this.importsCache = importsCache;</span>
+<span class="nc" id="L68">    }</span>
+
+    /**
+     * Sets specified {@link LessImportResolver}.
+     * @param importResolver the import resolver.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public SourceTreePreparationProcessorBuilder withImportResolver(final LessImportResolver importResolver) {
+<span class="nc" id="L77">        this.importResolver = importResolver;</span>
+<span class="nc" id="L78">        return this;</span>
+    }
+
+    /**
+     * Sets specified {@link SourceFactory}.
+     * @param sourceFactory the source factory.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public SourceTreePreparationProcessorBuilder withSourceFactory(final SourceFactory sourceFactory) {
+<span class="nc" id="L88">        this.sourceFactory = sourceFactory;</span>
+<span class="nc" id="L89">        return this;</span>
+    }
+
+    /**
+     * Crates a new instance of the {@link SourceTreePreparationProcessor}. If you do not set some specific
+     * implementations explicitly, then the following default ones are used:
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link SourceAlwaysExpiredChecker}&lt;/li&gt;
+     * &lt;li&gt;{@link LessImportResolverImpl}&lt;/li&gt;
+     * &lt;li&gt;{@link SourceFactory} created by {@link SourceFactoryBuilder} with standard factories (
+     * {@link SourceFactoryBuilder#withStandard()})&lt;/li&gt;
+     * &lt;/ul&gt;
+     * @return the new instance of the {@link SourceTreePreparationProcessor}.
+     * @since 1.0
+     */
+    public SourceTreePreparationProcessor create() {
+<span class="nc bnc" id="L105" title="All 2 branches missed.">        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        final LessImportResolver resolver = importResolver != null ? importResolver : new LessImportResolverImpl();</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        final SourceFactory factory = sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create();</span>
+<span class="nc" id="L108">        return new SourceTreePreparationProcessor(checker, datesCache, importsCache, resolver, factory);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

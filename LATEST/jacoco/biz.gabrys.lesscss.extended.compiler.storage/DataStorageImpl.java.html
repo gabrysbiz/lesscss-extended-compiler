@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DataStorageImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.storage</a> &gt; <span class="el_source">DataStorageImpl.java</span></div><h1>DataStorageImpl.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.storage;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Collection;
+import java.util.List;
+
+import org.apache.commons.io.FileUtils;
+
+/**
+ * Default implementation of the {@link DataStorage}.
+ * @since 1.0
+ */
+public class DataStorageImpl implements DataStorage {
+
+<span class="nc" id="L28">    private final Object mutex = new Object();</span>
+    private final File directory;
+
+    /**
+     * Constructs a new instance.
+     * @param workingDirectory the working directory.
+     * @throws IllegalArgumentException if working directory is equal to {@code null}.
+     * @since 1.0
+     */
+<span class="nc" id="L37">    public DataStorageImpl(final File workingDirectory) {</span>
+<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (workingDirectory == null) {</span>
+<span class="nc" id="L39">            throw new IllegalArgumentException(&quot;Working directory cannot be null&quot;);</span>
+        }
+<span class="nc" id="L41">        directory = workingDirectory;</span>
+<span class="nc" id="L42">    }</span>
+
+    public boolean hasData(final String fileName) {
+<span class="nc bnc" id="L45" title="All 2 branches missed.">        return getFile(fileName) != null;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws DataStorageException if an I/O error occurred.
+     * @since 1.0
+     */
+    public void put(final String fileName, final File file) {
+<span class="nc" id="L54">        synchronized (mutex) {</span>
+<span class="nc" id="L55">            final File cache = getFilePreparedForPut(fileName);</span>
+            try {
+<span class="nc" id="L57">                FileUtils.copyFile(file, cache);</span>
+<span class="nc" id="L58">            } catch (final IOException e) {</span>
+<span class="nc" id="L59">                throw new DataStorageException(e);</span>
+<span class="nc" id="L60">            }</span>
+<span class="nc" id="L61">        }</span>
+<span class="nc" id="L62">    }</span>
+
+    public File getFile(final String fileName) {
+<span class="nc" id="L65">        synchronized (mutex) {</span>
+<span class="nc" id="L66">            final File file = new File(directory, fileName);</span>
+<span class="nc bnc" id="L67" title="All 2 branches missed.">            if (file.exists()) {</span>
+<span class="nc" id="L68">                return file;</span>
+            }
+<span class="nc" id="L70">            return null;</span>
+<span class="nc" id="L71">        }</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws DataStorageException if an I/O error occurred.
+     * @since 1.0
+     */
+    public void put(final String fileName, final String text) {
+<span class="nc" id="L80">        synchronized (mutex) {</span>
+<span class="nc" id="L81">            final File cache = getFilePreparedForPut(fileName);</span>
+            try {
+<span class="nc" id="L83">                FileUtils.write(cache, text);</span>
+<span class="nc" id="L84">            } catch (final IOException e) {</span>
+<span class="nc" id="L85">                throw new DataStorageException(e);</span>
+<span class="nc" id="L86">            }</span>
+<span class="nc" id="L87">        }</span>
+<span class="nc" id="L88">    }</span>
+
+    /**
+     * {@inheritDoc}
+     * @throws DataStorageException if an I/O error occurred.
+     * @since 1.0
+     */
+    public String getText(final String fileName) {
+<span class="nc" id="L96">        synchronized (mutex) {</span>
+<span class="nc" id="L97">            final File cache = getFile(fileName);</span>
+<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (cache == null) {</span>
+<span class="nc" id="L99">                return null;</span>
+            }
+            try {
+<span class="nc" id="L102">                return FileUtils.readFileToString(cache);</span>
+<span class="nc" id="L103">            } catch (final IOException e) {</span>
+<span class="nc" id="L104">                throw new DataStorageException(e);</span>
+            }
+<span class="nc" id="L106">        }</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws DataStorageException if an I/O error occurred.
+     * @since 2.0
+     */
+    public void put(final String fileName, final Collection&lt;String&gt; lines) {
+<span class="nc" id="L115">        synchronized (mutex) {</span>
+<span class="nc" id="L116">            final File cache = getFilePreparedForPut(fileName);</span>
+            try {
+<span class="nc" id="L118">                FileUtils.writeLines(cache, lines);</span>
+<span class="nc" id="L119">            } catch (final IOException e) {</span>
+<span class="nc" id="L120">                throw new DataStorageException(e);</span>
+<span class="nc" id="L121">            }</span>
+<span class="nc" id="L122">        }</span>
+<span class="nc" id="L123">    }</span>
+
+    /**
+     * {@inheritDoc}
+     * @throws DataStorageException if an I/O error occurred.
+     * @since 1.0
+     */
+    public List&lt;String&gt; getLines(final String fileName) {
+<span class="nc" id="L131">        synchronized (mutex) {</span>
+<span class="nc" id="L132">            final File cache = getFile(fileName);</span>
+<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (cache == null) {</span>
+<span class="nc" id="L134">                return null;</span>
+            }
+            try {
+<span class="nc" id="L137">                return FileUtils.readLines(cache);</span>
+<span class="nc" id="L138">            } catch (final IOException e) {</span>
+<span class="nc" id="L139">                throw new DataStorageException(e);</span>
+            }
+<span class="nc" id="L141">        }</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws DataStorageException if an I/O error occurred.
+     * @since 1.0
+     */
+    public void delete(final String fileName) {
+<span class="nc" id="L150">        synchronized (mutex) {</span>
+<span class="nc" id="L151">            getFilePreparedForPut(fileName);</span>
+<span class="nc" id="L152">        }</span>
+<span class="nc" id="L153">    }</span>
+
+    private File getFilePreparedForPut(final String fileName) {
+<span class="nc" id="L156">        final File file = new File(directory, fileName);</span>
+<span class="nc bnc" id="L157" title="All 4 branches missed.">        if (file.exists() &amp;&amp; !file.delete()) {</span>
+<span class="nc" id="L158">            throw new DataStorageException(String.format(&quot;Cannot remove old source file \&quot;%s\&quot;&quot;, file));</span>
+        }
+<span class="nc" id="L160">        return file;</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws DataStorageException if an I/O error occurred.
+     * @since 1.0
+     */
+    public void deleteAll() {
+<span class="nc" id="L169">        synchronized (mutex) {</span>
+            try {
+<span class="nc" id="L171">                FileUtils.cleanDirectory(directory);</span>
+<span class="nc" id="L172">            } catch (final IOException e) {</span>
+<span class="nc" id="L173">                throw new DataStorageException(e);</span>
+<span class="nc" id="L174">            }</span>
+<span class="nc" id="L175">        }</span>
+<span class="nc" id="L176">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

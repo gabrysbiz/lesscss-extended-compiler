@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CachingCompiledCodeExtendedCompilerBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler</a> &gt; <span class="el_source">CachingCompiledCodeExtendedCompilerBuilder.java</span></div><h1>CachingCompiledCodeExtendedCompilerBuilder.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler;
+
+import biz.gabrys.lesscss.compiler.LessCompiler;
+import biz.gabrys.lesscss.compiler.LessCompilerImpl;
+import biz.gabrys.lesscss.extended.compiler.cache.FullCache;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.CompiledSourceExpirationChecker;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.CompiledSourceExpirationCheckerImpl;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.SourceExpirationChecker;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.SourceModificationDateBasedExpirationChecker;
+import biz.gabrys.lesscss.extended.compiler.control.processor.DoNothingPostCompilationProcessor;
+import biz.gabrys.lesscss.extended.compiler.control.processor.PostCompilationProcessor;
+import biz.gabrys.lesscss.extended.compiler.control.processor.PreCompilationProcessor;
+import biz.gabrys.lesscss.extended.compiler.control.processor.SourceTreePreparationProcessorBuilder;
+import biz.gabrys.lesscss.extended.compiler.control.provider.CachedSourceFileProvider;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+
+/**
+ * Responsible for creating new instances of the {@link ExtendedCompiler} which cache compiled code.
+ * @since 1.0
+ */
+public class CachingCompiledCodeExtendedCompilerBuilder {
+
+    private final FullCache cache;
+
+    private LessCompiler compiler;
+    private SourceExpirationChecker expirationChecker;
+    private LessImportResolver importResolver;
+    private SourceFactory sourceFactory;
+    private PostCompilationProcessor postProcessor;
+
+    /**
+     * Constructs a new instance.
+     * @param cache the cache.
+     * @throws IllegalArgumentException if cache is equal to {@code null}.
+     * @since 1.0
+     */
+<span class="nc" id="L52">    public CachingCompiledCodeExtendedCompilerBuilder(final FullCache cache) {</span>
+<span class="nc bnc" id="L53" title="All 2 branches missed.">        if (cache == null) {</span>
+<span class="nc" id="L54">            throw new IllegalArgumentException(&quot;Cache cannot be null&quot;);</span>
+        }
+<span class="nc" id="L56">        this.cache = cache;</span>
+<span class="nc" id="L57">    }</span>
+
+    /**
+     * Sets native compiler. Default {@link LessCompilerImpl}.
+     * @param compiler the &lt;a href=&quot;http://lesscss.org/&quot;&gt;Less&lt;/a&gt; compiler.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public CachingCompiledCodeExtendedCompilerBuilder withCompiler(final LessCompiler compiler) {
+<span class="nc" id="L66">        this.compiler = compiler;</span>
+<span class="nc" id="L67">        return this;</span>
+    }
+
+    /**
+     * Sets expiration checker which is responsible for checking expiration of individual files. Default
+     * {@link SourceModificationDateBasedExpirationChecker}.
+     * @param expirationChecker the source expiration checker.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public CachingCompiledCodeExtendedCompilerBuilder withExpirationChecker(final SourceExpirationChecker expirationChecker) {
+<span class="nc" id="L78">        this.expirationChecker = expirationChecker;</span>
+<span class="nc" id="L79">        return this;</span>
+
+    }
+
+    /**
+     * Sets &lt;a href=&quot;http://lesscss.org/&quot;&gt;Less&lt;/a&gt; import resolver which is responsible for returning a list of import
+     * operations from the source code. Default {@link LessImportResolverImpl}.
+     * @param importResolver the import resolver.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public CachingCompiledCodeExtendedCompilerBuilder withImportResolver(final LessImportResolver importResolver) {
+<span class="nc" id="L91">        this.importResolver = importResolver;</span>
+<span class="nc" id="L92">        return this;</span>
+    }
+
+    /**
+     * Sets factory which is responsible for creating new instances of the
+     * {@link biz.gabrys.lesscss.extended.compiler.source.LessSource LessSource}. Default {@link SourceFactory} created
+     * by {@link SourceFactoryBuilder} with:
+     * &lt;ul&gt;
+     * &lt;li&gt;standard factories ({@link SourceFactoryBuilder#withStandard()}) when compiler is not an instance of
+     * {@link LessCompilerImpl}&lt;/li&gt;
+     * &lt;li&gt;local factory ({@link SourceFactoryBuilder#withLocal()}) when compiler is an instance of
+     * {@link LessCompilerImpl}&lt;/li&gt;
+     * &lt;/ul&gt;
+     * @param sourceFactory the source factory.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public CachingCompiledCodeExtendedCompilerBuilder withSourceFactory(final SourceFactory sourceFactory) {
+<span class="nc" id="L110">        this.sourceFactory = sourceFactory;</span>
+<span class="nc" id="L111">        return this;</span>
+    }
+
+    /**
+     * Sets compilation processor which is responsible for preparing compiled code before returning it. Default
+     * {@link DoNothingPostCompilationProcessor}.
+     * @param postProcessor the post compilation processor.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public CachingCompiledCodeExtendedCompilerBuilder withPostProcessor(final PostCompilationProcessor postProcessor) {
+<span class="nc" id="L122">        this.postProcessor = postProcessor;</span>
+<span class="nc" id="L123">        return this;</span>
+    }
+
+    /**
+     * Crates a new instance of the {@link ExtendedCompiler}. If you do not set some specific implementations
+     * explicitly, then the following default ones are used:
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link LessCompilerImpl}&lt;/li&gt;
+     * &lt;li&gt;{@link SourceModificationDateBasedExpirationChecker}&lt;/li&gt;
+     * &lt;li&gt;{@link LessImportResolverImpl}&lt;/li&gt;
+     * &lt;li&gt;{@link SourceFactory} created by {@link SourceFactoryBuilder} with:
+     * &lt;ul&gt;
+     * &lt;li&gt;standard factories ({@link SourceFactoryBuilder#withStandard()}) when compiler is not an instance of
+     * {@link LessCompilerImpl}&lt;/li&gt;
+     * &lt;li&gt;local factory ({@link SourceFactoryBuilder#withLocal()}) when compiler is an instance of
+     * {@link LessCompilerImpl}&lt;/li&gt;
+     * &lt;/ul&gt;
+     * &lt;/li&gt;
+     * &lt;li&gt;{@link DoNothingPostCompilationProcessor}&lt;/li&gt;
+     * &lt;/ul&gt;
+     * @return the new instance of the {@link ExtendedCompiler}.
+     * @since 1.0
+     */
+    public ExtendedCompiler create() {
+<span class="nc bnc" id="L147" title="All 2 branches missed.">        final LessCompiler lessCompiler = compiler != null ? compiler : new LessCompilerImpl();</span>
+
+<span class="nc" id="L149">        final SourceTreePreparationProcessorBuilder builder = new SourceTreePreparationProcessorBuilder(cache);</span>
+<span class="nc bnc" id="L150" title="All 2 branches missed.">        builder.withImportResolver(importResolver != null ? importResolver : new LessImportResolverImpl());</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">        if (sourceFactory != null) {</span>
+<span class="nc" id="L152">            builder.withSourceFactory(sourceFactory);</span>
+        } else {
+<span class="nc" id="L154">            final SourceFactoryBuilder sourceFactoryBuilder = new SourceFactoryBuilder();</span>
+<span class="nc bnc" id="L155" title="All 2 branches missed.">            if (lessCompiler instanceof LessCompilerImpl) {</span>
+<span class="nc" id="L156">                sourceFactoryBuilder.withLocal();</span>
+            } else {
+<span class="nc" id="L158">                sourceFactoryBuilder.withStandard();</span>
+            }
+<span class="nc" id="L160">            builder.withSourceFactory(sourceFactoryBuilder.create());</span>
+        }
+<span class="nc" id="L162">        final PreCompilationProcessor preProc = builder.create();</span>
+
+<span class="nc bnc" id="L164" title="All 2 branches missed.">        final PostCompilationProcessor postProc = postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();</span>
+
+<span class="nc" id="L166">        final ExtendedCompiler extendedCompiler = new SimpleExtendedCompiler(lessCompiler, preProc, new CachedSourceFileProvider(cache),</span>
+                postProc);
+
+<span class="nc bnc" id="L169" title="All 2 branches missed.">        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker</span>
+                : new SourceModificationDateBasedExpirationChecker(cache);
+<span class="nc" id="L171">        final CompiledSourceExpirationChecker compiledSourceChecker = new CompiledSourceExpirationCheckerImpl(checker, cache, cache,</span>
+                sourceFactory);
+<span class="nc" id="L173">        return new CachingCompiledCodeExtendedCompiler(extendedCompiler, compiledSourceChecker, cache, cache);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

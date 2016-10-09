@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>DoNothingPostCompilationProcessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.control.processor</a> &gt; <span class="el_source">DoNothingPostCompilationProcessor.java</span></div><h1>DoNothingPostCompilationProcessor.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.control.processor;
+
+import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+
+/**
+ * Post compilation processor which returns compiled code without any modifications.
+ * @since 1.0
+ */
+public class DoNothingPostCompilationProcessor implements PostCompilationProcessor {
+
+    /**
+     * Constructs a new instance.
+     * @since 1.0
+     */
+<span class="nc" id="L27">    public DoNothingPostCompilationProcessor() {</span>
+        // do nothing
+<span class="nc" id="L29">    }</span>
+
+    /**
+     * Returns compiled code without any modifications.
+     * @param source the source file (ignored).
+     * @param compiledCode the compiled code.
+     * @return the code from parameter without any modifications.
+     * @since 1.0
+     */
+    public String prepare(final LessSource source, final String compiledCode) {
+<span class="nc" id="L39">        return compiledCode;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

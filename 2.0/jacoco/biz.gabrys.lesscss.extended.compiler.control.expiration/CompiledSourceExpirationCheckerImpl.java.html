@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CompiledSourceExpirationCheckerImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.control.expiration</a> &gt; <span class="el_source">CompiledSourceExpirationCheckerImpl.java</span></div><h1>CompiledSourceExpirationCheckerImpl.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.control.expiration;
+
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
+
+import biz.gabrys.lesscss.extended.compiler.cache.SourceImportsCache;
+import biz.gabrys.lesscss.extended.compiler.cache.SourceModificationDateCache;
+import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
+
+/**
+ * Checker which marks compiled code of a source file as expired when the file or one of its imports expired (deep -
+ * imports of imports etc.). Expiration of individual files are determined by an other checker (set in the constructor).
+ * @since 1.0
+ */
+public class CompiledSourceExpirationCheckerImpl implements CompiledSourceExpirationChecker {
+
+    private final SourceExpirationChecker expirationChecker;
+    private final SourceModificationDateCache datesCache;
+    private final SourceImportsCache importsCache;
+    private final SourceFactory sourceFactory;
+
+    /**
+     * Constructs a new instance.
+     * @param expirationChecker the individual source files expiration checker.
+     * @param datesCache the cache responsible for storing source files dates.
+     * @param importsCache the cache responsible for storing source files imports lists.
+     * @param sourceFactory the factory responsible for creating new instances of the {@link LessSource}.
+     * @since 1.0
+     */
+    public CompiledSourceExpirationCheckerImpl(final SourceExpirationChecker expirationChecker,
+<span class="fc" id="L45">            final SourceModificationDateCache datesCache, final SourceImportsCache importsCache, final SourceFactory sourceFactory) {</span>
+<span class="fc" id="L46">        this.expirationChecker = expirationChecker;</span>
+<span class="fc" id="L47">        this.datesCache = datesCache;</span>
+<span class="fc" id="L48">        this.importsCache = importsCache;</span>
+<span class="fc" id="L49">        this.sourceFactory = sourceFactory;</span>
+<span class="fc" id="L50">    }</span>
+
+    /**
+     * {@inheritDoc} This method delegates work to the {@link #isExpired(LessSource, Date, Set)} (set is empty).
+     * @since 1.0
+     */
+    public boolean isExpired(final LessSource source, final Date lastCompilationDate) {
+<span class="nc" id="L57">        return isExpired(source, lastCompilationDate, new HashSet&lt;String&gt;());</span>
+    }
+
+    /**
+     * Tests whether a compiled code for a source file expired. This method is called recursively for the source and all
+     * of its imports (until find the first expired file). To avoid imports loop, it processes only sources which path
+     * is not contained by the set.
+     * @param source the source file.
+     * @param lastCompilationDate the date of last compilation.
+     * @param checkedSourcesPaths set with checked sources paths.
+     * @return {@code true} whether the compiled code expired, otherwise {@code false}.
+     * @since 1.0
+     */
+    protected boolean isExpired(final LessSource source, final Date lastCompilationDate, final Set&lt;String&gt; checkedSourcesPaths) {
+<span class="pc bpc" id="L71" title="1 of 4 branches missed.">        if (expirationChecker.isExpired(source) || isModifiedAfterLastCompilation(source, lastCompilationDate)) {</span>
+<span class="fc" id="L72">            return true;</span>
+        }
+<span class="fc" id="L74">        checkedSourcesPaths.add(source.getPath());</span>
+<span class="fc" id="L75">        return checkImports(source, lastCompilationDate, checkedSourcesPaths);</span>
+    }
+
+    /**
+     * Tests whether a source has been modified after last compilation.
+     * @param source the source file.
+     * @param lastCompilationDate the date of last compilation.
+     * @return {@code true} whether the source has been modified after last compilation, otherwise {@code false}.
+     * @since 1.0
+     */
+    protected boolean isModifiedAfterLastCompilation(final LessSource source, final Date lastCompilationDate) {
+<span class="fc" id="L86">        final Date modificationDate = datesCache.getSourceModificationDate(source);</span>
+<span class="fc" id="L87">        return modificationDate.after(lastCompilationDate);</span>
+    }
+
+    private boolean checkImports(final LessSource source, final Date lastCompilationDate, final Set&lt;String&gt; checkedSourcesPaths) {
+<span class="fc bfc" id="L91" title="All 2 branches covered.">        for (final String importPath : importsCache.getSourceImports(source)) {</span>
+<span class="fc" id="L92">            final LessSource importedSource = sourceFactory.create(source, importPath);</span>
+<span class="fc bfc" id="L93" title="All 2 branches covered.">            if (checkedSourcesPaths.contains(importedSource.getPath())) {</span>
+<span class="fc" id="L94">                continue;</span>
+            }
+<span class="fc bfc" id="L96" title="All 2 branches covered.">            if (isExpired(importedSource, lastCompilationDate, checkedSourcesPaths)) {</span>
+<span class="fc" id="L97">                return true;</span>
+            }
+<span class="fc" id="L99">        }</span>
+<span class="fc" id="L100">        return false;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
