@@ -24,6 +24,7 @@ import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link SourceTreeWithCodeCachingPreparationProcessor}.
@@ -46,14 +47,12 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @throws IllegalArgumentException if cache is equal to {@code null}.
      * @since 1.0
      */
-<span class="fc" id="L49">    public SourceTreeWithCodeCachingPreparationProcessorBuilder(final FullCache cache) {</span>
-<span class="pc bpc" id="L50" title="1 of 2 branches missed.">        if (cache == null) {</span>
-<span class="nc" id="L51">            throw new IllegalArgumentException(&quot;Cache cannot be null&quot;);</span>
-        }
-<span class="fc" id="L53">        datesCache = cache;</span>
-<span class="fc" id="L54">        importsCache = cache;</span>
-<span class="fc" id="L55">        codeCache = cache;</span>
-<span class="fc" id="L56">    }</span>
+<span class="fc" id="L50">    public SourceTreeWithCodeCachingPreparationProcessorBuilder(final FullCache cache) {</span>
+<span class="fc" id="L51">        ParameterUtils.verifyNotNull(&quot;cache&quot;, cache);</span>
+<span class="fc" id="L52">        datesCache = cache;</span>
+<span class="fc" id="L53">        importsCache = cache;</span>
+<span class="fc" id="L54">        codeCache = cache;</span>
+<span class="fc" id="L55">    }</span>
 
     /**
      * Constructs a new instance and sets caches.
@@ -64,20 +63,16 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessorBuilder(final SourceModificationDateCache datesCache,
-<span class="nc" id="L67">            final SourceImportsCache importsCache, final SourceCodeCache codeCache) {</span>
-<span class="nc bnc" id="L68" title="All 2 branches missed.">        if (datesCache == null) {</span>
-<span class="nc" id="L69">            throw new IllegalArgumentException(&quot;Dates cache cannot be null&quot;);</span>
-        }
-<span class="nc" id="L71">        this.datesCache = datesCache;</span>
-<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (importsCache == null) {</span>
-<span class="nc" id="L73">            throw new IllegalArgumentException(&quot;Imports cache cannot be null&quot;);</span>
-        }
-<span class="nc" id="L75">        this.importsCache = importsCache;</span>
-<span class="nc bnc" id="L76" title="All 2 branches missed.">        if (codeCache == null) {</span>
-<span class="nc" id="L77">            throw new IllegalArgumentException(&quot;Code cache cannot be null&quot;);</span>
-        }
-<span class="nc" id="L79">        this.codeCache = codeCache;</span>
-<span class="nc" id="L80">    }</span>
+<span class="nc" id="L66">            final SourceImportsCache importsCache, final SourceCodeCache codeCache) {</span>
+
+<span class="nc" id="L68">        ParameterUtils.verifyNotNull(&quot;dates cache&quot;, datesCache);</span>
+<span class="nc" id="L69">        ParameterUtils.verifyNotNull(&quot;imports cache&quot;, importsCache);</span>
+<span class="nc" id="L70">        ParameterUtils.verifyNotNull(&quot;code cache&quot;, codeCache);</span>
+
+<span class="nc" id="L72">        this.datesCache = datesCache;</span>
+<span class="nc" id="L73">        this.importsCache = importsCache;</span>
+<span class="nc" id="L74">        this.codeCache = codeCache;</span>
+<span class="nc" id="L75">    }</span>
 
     /**
      * Sets specified {@link SourceExpirationChecker}.
@@ -86,8 +81,8 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessorBuilder withExpirationChecker(final SourceExpirationChecker expirationChecker) {
-<span class="fc" id="L89">        this.expirationChecker = expirationChecker;</span>
-<span class="fc" id="L90">        return this;</span>
+<span class="fc" id="L84">        this.expirationChecker = expirationChecker;</span>
+<span class="fc" id="L85">        return this;</span>
     }
 
     /**
@@ -97,8 +92,8 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessorBuilder withImportResolver(final LessImportResolver importResolver) {
-<span class="fc" id="L100">        this.importResolver = importResolver;</span>
-<span class="fc" id="L101">        return this;</span>
+<span class="fc" id="L95">        this.importResolver = importResolver;</span>
+<span class="fc" id="L96">        return this;</span>
     }
 
     /**
@@ -108,8 +103,8 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessorBuilder withImportReplacer(final LessImportReplacer importReplacer) {
-<span class="fc" id="L111">        this.importReplacer = importReplacer;</span>
-<span class="fc" id="L112">        return this;</span>
+<span class="fc" id="L106">        this.importReplacer = importReplacer;</span>
+<span class="fc" id="L107">        return this;</span>
     }
 
     /**
@@ -119,8 +114,8 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessorBuilder withSourceFactory(final SourceFactory sourceFactory) {
-<span class="fc" id="L122">        this.sourceFactory = sourceFactory;</span>
-<span class="fc" id="L123">        return this;</span>
+<span class="fc" id="L117">        this.sourceFactory = sourceFactory;</span>
+<span class="fc" id="L118">        return this;</span>
     }
 
     /**
@@ -137,11 +132,11 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessor create() {
-<span class="pc bpc" id="L140" title="1 of 2 branches missed.">        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();</span>
-<span class="pc bpc" id="L141" title="1 of 2 branches missed.">        final LessImportResolver resolver = importResolver != null ? importResolver : new LessImportResolverImpl();</span>
-<span class="pc bpc" id="L142" title="1 of 2 branches missed.">        final LessImportReplacer replacer = importReplacer != null ? importReplacer : new LessImportReplacerImpl();</span>
-<span class="pc bpc" id="L143" title="1 of 2 branches missed.">        final SourceFactory factory = sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create();</span>
-<span class="fc" id="L144">        return new SourceTreeWithCodeCachingPreparationProcessor(checker, datesCache, importsCache, codeCache, resolver, replacer, factory);</span>
+<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();</span>
+<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        final LessImportResolver resolver = importResolver != null ? importResolver : new LessImportResolverImpl();</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        final LessImportReplacer replacer = importReplacer != null ? importReplacer : new LessImportReplacerImpl();</span>
+<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        final SourceFactory factory = sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create();</span>
+<span class="fc" id="L139">        return new SourceTreeWithCodeCachingPreparationProcessor(checker, datesCache, importsCache, codeCache, resolver, replacer, factory);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

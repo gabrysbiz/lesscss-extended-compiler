@@ -30,6 +30,7 @@ import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link ExtendedCompiler} which cache source and compiled code.
@@ -52,12 +53,10 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @throws IllegalArgumentException if cache is equal to {@code null}.
      * @since 1.0
      */
-<span class="fc" id="L55">    public CachingSourceAndCompiledCodeExtendedCompilerBuilder(final FullCache cache) {</span>
-<span class="pc bpc" id="L56" title="1 of 2 branches missed.">        if (cache == null) {</span>
-<span class="nc" id="L57">            throw new IllegalArgumentException(&quot;Cache cannot be null&quot;);</span>
-        }
-<span class="fc" id="L59">        this.cache = cache;</span>
-<span class="fc" id="L60">    }</span>
+<span class="fc" id="L56">    public CachingSourceAndCompiledCodeExtendedCompilerBuilder(final FullCache cache) {</span>
+<span class="fc" id="L57">        ParameterUtils.verifyNotNull(&quot;cache&quot;, cache);</span>
+<span class="fc" id="L58">        this.cache = cache;</span>
+<span class="fc" id="L59">    }</span>
 
     /**
      * Sets native compiler. Default {@link LessCompilerImpl}.
@@ -66,8 +65,8 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingSourceAndCompiledCodeExtendedCompilerBuilder withCompiler(final LessCompiler compiler) {
-<span class="fc" id="L69">        this.compiler = compiler;</span>
-<span class="fc" id="L70">        return this;</span>
+<span class="fc" id="L68">        this.compiler = compiler;</span>
+<span class="fc" id="L69">        return this;</span>
     }
 
     /**
@@ -78,8 +77,8 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingSourceAndCompiledCodeExtendedCompilerBuilder withExpirationChecker(final SourceExpirationChecker expirationChecker) {
-<span class="fc" id="L81">        this.expirationChecker = expirationChecker;</span>
-<span class="fc" id="L82">        return this;</span>
+<span class="fc" id="L80">        this.expirationChecker = expirationChecker;</span>
+<span class="fc" id="L81">        return this;</span>
 
     }
 
@@ -91,8 +90,8 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingSourceAndCompiledCodeExtendedCompilerBuilder withImportResolver(final LessImportResolver importResolver) {
-<span class="fc" id="L94">        this.importResolver = importResolver;</span>
-<span class="fc" id="L95">        return this;</span>
+<span class="fc" id="L93">        this.importResolver = importResolver;</span>
+<span class="fc" id="L94">        return this;</span>
     }
 
     /**
@@ -103,8 +102,8 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingSourceAndCompiledCodeExtendedCompilerBuilder withImportReplacer(final LessImportReplacer importReplacer) {
-<span class="fc" id="L106">        this.importReplacer = importReplacer;</span>
-<span class="fc" id="L107">        return this;</span>
+<span class="fc" id="L105">        this.importReplacer = importReplacer;</span>
+<span class="fc" id="L106">        return this;</span>
     }
 
     /**
@@ -116,8 +115,8 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingSourceAndCompiledCodeExtendedCompilerBuilder withSourceFactory(final SourceFactory sourceFactory) {
-<span class="fc" id="L119">        this.sourceFactory = sourceFactory;</span>
-<span class="fc" id="L120">        return this;</span>
+<span class="fc" id="L118">        this.sourceFactory = sourceFactory;</span>
+<span class="fc" id="L119">        return this;</span>
     }
 
     /**
@@ -128,8 +127,8 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingSourceAndCompiledCodeExtendedCompilerBuilder withPostProcessor(final PostCompilationProcessor postProcessor) {
-<span class="fc" id="L131">        this.postProcessor = postProcessor;</span>
-<span class="fc" id="L132">        return this;</span>
+<span class="fc" id="L130">        this.postProcessor = postProcessor;</span>
+<span class="fc" id="L131">        return this;</span>
     }
 
     /**
@@ -148,64 +147,64 @@ public class CachingSourceAndCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public ExtendedCompiler create() {
-<span class="fc" id="L151">        final LessCompiler localCompiler = createLessCompiler();</span>
-<span class="fc" id="L152">        final SourceTreeWithCodeCachingPreparationProcessorBuilder sourceTreeBuilder = new SourceTreeWithCodeCachingPreparationProcessorBuilder(</span>
+<span class="fc" id="L150">        final LessCompiler localCompiler = createLessCompiler();</span>
+<span class="fc" id="L151">        final SourceTreeWithCodeCachingPreparationProcessorBuilder sourceTreeBuilder = new SourceTreeWithCodeCachingPreparationProcessorBuilder(</span>
                 cache);
-<span class="fc" id="L154">        final SourceExpirationChecker localExpirationChecker = createExpirationChecker();</span>
-<span class="fc" id="L155">        final SourceFactory localSourceFactory = createSourceFactory();</span>
-<span class="fc" id="L156">        final PreCompilationProcessor localPreProcessor = createPreProcessor(sourceTreeBuilder, localExpirationChecker, localSourceFactory);</span>
-<span class="fc" id="L157">        final PostCompilationProcessor localPostProcessor = createPostProcessor();</span>
-<span class="fc" id="L158">        final ExtendedCompiler extendedCompiler = createSimpleExtendedCompiler(localCompiler, localPreProcessor, localPostProcessor);</span>
-<span class="fc" id="L159">        final CompiledSourceExpirationChecker compiledSourceChecker = createCompiledSourceExpirationChecker(localExpirationChecker,</span>
+<span class="fc" id="L153">        final SourceExpirationChecker localExpirationChecker = createExpirationChecker();</span>
+<span class="fc" id="L154">        final SourceFactory localSourceFactory = createSourceFactory();</span>
+<span class="fc" id="L155">        final PreCompilationProcessor localPreProcessor = createPreProcessor(sourceTreeBuilder, localExpirationChecker, localSourceFactory);</span>
+<span class="fc" id="L156">        final PostCompilationProcessor localPostProcessor = createPostProcessor();</span>
+<span class="fc" id="L157">        final ExtendedCompiler extendedCompiler = createSimpleExtendedCompiler(localCompiler, localPreProcessor, localPostProcessor);</span>
+<span class="fc" id="L158">        final CompiledSourceExpirationChecker compiledSourceChecker = createCompiledSourceExpirationChecker(localExpirationChecker,</span>
                 localSourceFactory);
-<span class="fc" id="L161">        return new CachingCompiledCodeExtendedCompiler(extendedCompiler, compiledSourceChecker, cache, cache);</span>
+<span class="fc" id="L160">        return new CachingCompiledCodeExtendedCompiler(extendedCompiler, compiledSourceChecker, cache, cache);</span>
     }
 
     LessCompiler createLessCompiler() {
-<span class="fc bfc" id="L165" title="All 2 branches covered.">        return compiler != null ? compiler : new LessCompilerImpl();</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        return compiler != null ? compiler : new LessCompilerImpl();</span>
     }
 
     SourceExpirationChecker createExpirationChecker() {
-<span class="fc bfc" id="L169" title="All 2 branches covered.">        return expirationChecker != null ? expirationChecker : new SourceModificationDateBasedExpirationChecker(cache);</span>
+<span class="fc bfc" id="L168" title="All 2 branches covered.">        return expirationChecker != null ? expirationChecker : new SourceModificationDateBasedExpirationChecker(cache);</span>
     }
 
     SourceFactory createSourceFactory() {
-<span class="fc bfc" id="L173" title="All 2 branches covered.">        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());</span>
+<span class="fc bfc" id="L172" title="All 2 branches covered.">        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());</span>
     }
 
     SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
-<span class="fc" id="L177">        return builder.withStandard().create();</span>
+<span class="fc" id="L176">        return builder.withStandard().create();</span>
     }
 
     PreCompilationProcessor createPreProcessor(final SourceTreeWithCodeCachingPreparationProcessorBuilder builder,
             final SourceExpirationChecker checker, final SourceFactory sourceFactory) {
-<span class="fc" id="L182">        builder.withExpirationChecker(checker);</span>
-<span class="fc" id="L183">        builder.withImportResolver(createImportResolver());</span>
-<span class="fc" id="L184">        builder.withImportReplacer(createImportReplacer());</span>
-<span class="fc" id="L185">        builder.withSourceFactory(sourceFactory);</span>
-<span class="fc" id="L186">        return builder.create();</span>
+<span class="fc" id="L181">        builder.withExpirationChecker(checker);</span>
+<span class="fc" id="L182">        builder.withImportResolver(createImportResolver());</span>
+<span class="fc" id="L183">        builder.withImportReplacer(createImportReplacer());</span>
+<span class="fc" id="L184">        builder.withSourceFactory(sourceFactory);</span>
+<span class="fc" id="L185">        return builder.create();</span>
     }
 
     LessImportResolver createImportResolver() {
-<span class="fc bfc" id="L190" title="All 2 branches covered.">        return importResolver != null ? importResolver : new LessImportResolverImpl();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">        return importResolver != null ? importResolver : new LessImportResolverImpl();</span>
     }
 
     LessImportReplacer createImportReplacer() {
-<span class="fc bfc" id="L194" title="All 2 branches covered.">        return importReplacer != null ? importReplacer : new LessImportReplacerImpl();</span>
+<span class="fc bfc" id="L193" title="All 2 branches covered.">        return importReplacer != null ? importReplacer : new LessImportReplacerImpl();</span>
     }
 
     PostCompilationProcessor createPostProcessor() {
-<span class="fc bfc" id="L198" title="All 2 branches covered.">        return postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();</span>
+<span class="fc bfc" id="L197" title="All 2 branches covered.">        return postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();</span>
     }
 
     ExtendedCompiler createSimpleExtendedCompiler(final LessCompiler compiler, final PreCompilationProcessor preProcessor,
             final PostCompilationProcessor postProcessor) {
-<span class="fc" id="L203">        return new SimpleExtendedCompiler(compiler, preProcessor, new CachedSourceFileProvider(cache), postProcessor);</span>
+<span class="fc" id="L202">        return new SimpleExtendedCompiler(compiler, preProcessor, new CachedSourceFileProvider(cache), postProcessor);</span>
     }
 
     CompiledSourceExpirationChecker createCompiledSourceExpirationChecker(final SourceExpirationChecker expirationChecker,
             final SourceFactory sourceFactory) {
-<span class="fc" id="L208">        return new CompiledSourceExpirationCheckerImpl(expirationChecker, cache, cache, sourceFactory);</span>
+<span class="fc" id="L207">        return new CompiledSourceExpirationCheckerImpl(expirationChecker, cache, cache, sourceFactory);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

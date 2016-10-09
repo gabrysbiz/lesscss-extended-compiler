@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Allows you to create an instance of {@link FullCache} which delegates execution of each method to concrete caches.
@@ -26,27 +27,27 @@ public class FullCacheAdapter implements FullCache {
 
     /**
      * The cache responsible for storing source files modification dates.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final SourceModificationDateCache modificationDatesCache;
     /**
      * The cache responsible for storing source files imports paths.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final SourceImportsCache importsCache;
     /**
      * The cache responsible for storing source files code.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final SourceCodeCache sourceCache;
     /**
      * The cache responsible for storing sources compilation dates.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final CompilationDateCache compilationDatesCache;
     /**
      * The cache responsible for storing compiled code.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final CompiledCodeCache compiledCache;
 
@@ -61,91 +62,83 @@ public class FullCacheAdapter implements FullCache {
      * @since 1.0
      */
     public FullCacheAdapter(final SourceModificationDateCache modificationDatesCache, final SourceImportsCache importsCache,
-<span class="fc" id="L64">            final SourceCodeCache sourceCache, final CompilationDateCache compilationDatesCache, final CompiledCodeCache compiledCache) {</span>
-<span class="pc bpc" id="L65" title="1 of 2 branches missed.">        if (modificationDatesCache == null) {</span>
-<span class="nc" id="L66">            throw new IllegalArgumentException(&quot;Source modification dates cache cannot be null&quot;);</span>
-        }
-<span class="fc" id="L68">        this.modificationDatesCache = modificationDatesCache;</span>
-<span class="pc bpc" id="L69" title="1 of 2 branches missed.">        if (importsCache == null) {</span>
-<span class="nc" id="L70">            throw new IllegalArgumentException(&quot;Source imports paths cache cannot be null&quot;);</span>
-        }
-<span class="fc" id="L72">        this.importsCache = importsCache;</span>
-<span class="pc bpc" id="L73" title="1 of 2 branches missed.">        if (sourceCache == null) {</span>
-<span class="nc" id="L74">            throw new IllegalArgumentException(&quot;Source code cache cannot be null&quot;);</span>
-        }
-<span class="fc" id="L76">        this.sourceCache = sourceCache;</span>
-<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (compilationDatesCache == null) {</span>
-<span class="nc" id="L78">            throw new IllegalArgumentException(&quot;Compilation dates cache cannot be null&quot;);</span>
-        }
-<span class="fc" id="L80">        this.compilationDatesCache = compilationDatesCache;</span>
-<span class="pc bpc" id="L81" title="1 of 2 branches missed.">        if (compiledCache == null) {</span>
-<span class="nc" id="L82">            throw new IllegalArgumentException(&quot;Compiled code cache cannot be null&quot;);</span>
-        }
-<span class="fc" id="L84">        this.compiledCache = compiledCache;</span>
-<span class="fc" id="L85">    }</span>
+<span class="fc" id="L65">            final SourceCodeCache sourceCache, final CompilationDateCache compilationDatesCache, final CompiledCodeCache compiledCache) {</span>
+
+<span class="fc" id="L67">        ParameterUtils.verifyNotNull(&quot;source modification dates cache&quot;, modificationDatesCache);</span>
+<span class="fc" id="L68">        ParameterUtils.verifyNotNull(&quot;source imports paths cache&quot;, importsCache);</span>
+<span class="fc" id="L69">        ParameterUtils.verifyNotNull(&quot;source code cache&quot;, sourceCache);</span>
+<span class="fc" id="L70">        ParameterUtils.verifyNotNull(&quot;compilation dates cache&quot;, compilationDatesCache);</span>
+<span class="fc" id="L71">        ParameterUtils.verifyNotNull(&quot;compiled code cache&quot;, compiledCache);</span>
+
+<span class="fc" id="L73">        this.modificationDatesCache = modificationDatesCache;</span>
+<span class="fc" id="L74">        this.importsCache = importsCache;</span>
+<span class="fc" id="L75">        this.sourceCache = sourceCache;</span>
+<span class="fc" id="L76">        this.compilationDatesCache = compilationDatesCache;</span>
+<span class="fc" id="L77">        this.compiledCache = compiledCache;</span>
+<span class="fc" id="L78">    }</span>
 
     public void saveSourceModificationDate(final LessSource source, final Date modificationDate) {
-<span class="fc" id="L88">        modificationDatesCache.saveSourceModificationDate(source, modificationDate);</span>
-<span class="fc" id="L89">    }</span>
+<span class="fc" id="L81">        modificationDatesCache.saveSourceModificationDate(source, modificationDate);</span>
+<span class="fc" id="L82">    }</span>
 
     public boolean hasSourceModificationDate(final LessSource source) {
-<span class="fc" id="L92">        return modificationDatesCache.hasSourceModificationDate(source);</span>
+<span class="fc" id="L85">        return modificationDatesCache.hasSourceModificationDate(source);</span>
     }
 
     public Date getSourceModificationDate(final LessSource source) {
-<span class="fc" id="L96">        return modificationDatesCache.getSourceModificationDate(source);</span>
+<span class="fc" id="L89">        return modificationDatesCache.getSourceModificationDate(source);</span>
     }
 
     public void saveSourceImports(final LessSource source, final List&lt;String&gt; imports) {
-<span class="fc" id="L100">        importsCache.saveSourceImports(source, imports);</span>
-<span class="fc" id="L101">    }</span>
+<span class="fc" id="L93">        importsCache.saveSourceImports(source, imports);</span>
+<span class="fc" id="L94">    }</span>
 
     public boolean hasSourceImports(final LessSource source) {
-<span class="fc" id="L104">        return importsCache.hasSourceImports(source);</span>
+<span class="fc" id="L97">        return importsCache.hasSourceImports(source);</span>
     }
 
     public List&lt;String&gt; getSourceImports(final LessSource source) {
-<span class="fc" id="L108">        return importsCache.getSourceImports(source);</span>
+<span class="fc" id="L101">        return importsCache.getSourceImports(source);</span>
     }
 
     public void saveSourceCode(final LessSource source, final String sourceCode) {
-<span class="fc" id="L112">        sourceCache.saveSourceCode(source, sourceCode);</span>
-<span class="fc" id="L113">    }</span>
+<span class="fc" id="L105">        sourceCache.saveSourceCode(source, sourceCode);</span>
+<span class="fc" id="L106">    }</span>
 
     public boolean hasSourceCode(final LessSource source) {
-<span class="fc" id="L116">        return sourceCache.hasSourceCode(source);</span>
+<span class="fc" id="L109">        return sourceCache.hasSourceCode(source);</span>
     }
 
     public File getSourceFile(final LessSource source) {
-<span class="fc" id="L120">        return sourceCache.getSourceFile(source);</span>
+<span class="fc" id="L113">        return sourceCache.getSourceFile(source);</span>
     }
 
     public String getSourceRelativePath(final LessSource source) {
-<span class="fc" id="L124">        return sourceCache.getSourceRelativePath(source);</span>
+<span class="fc" id="L117">        return sourceCache.getSourceRelativePath(source);</span>
     }
 
     public void saveCompilationDate(final LessSource source, final Date compilationDate) {
-<span class="fc" id="L128">        compilationDatesCache.saveCompilationDate(source, compilationDate);</span>
-<span class="fc" id="L129">    }</span>
+<span class="fc" id="L121">        compilationDatesCache.saveCompilationDate(source, compilationDate);</span>
+<span class="fc" id="L122">    }</span>
 
     public boolean hasCompilationDate(final LessSource source) {
-<span class="fc" id="L132">        return compilationDatesCache.hasCompilationDate(source);</span>
+<span class="fc" id="L125">        return compilationDatesCache.hasCompilationDate(source);</span>
     }
 
     public Date getCompilationDate(final LessSource source) {
-<span class="fc" id="L136">        return compilationDatesCache.getCompilationDate(source);</span>
+<span class="fc" id="L129">        return compilationDatesCache.getCompilationDate(source);</span>
     }
 
     public void saveCompiledCode(final LessSource source, final String compiledCode) {
-<span class="fc" id="L140">        compiledCache.saveCompiledCode(source, compiledCode);</span>
-<span class="fc" id="L141">    }</span>
+<span class="fc" id="L133">        compiledCache.saveCompiledCode(source, compiledCode);</span>
+<span class="fc" id="L134">    }</span>
 
     public boolean hasCompiledCode(final LessSource source) {
-<span class="fc" id="L144">        return compiledCache.hasCompiledCode(source);</span>
+<span class="fc" id="L137">        return compiledCache.hasCompiledCode(source);</span>
     }
 
     public String getCompiledCode(final LessSource source) {
-<span class="fc" id="L148">        return compiledCache.getCompiledCode(source);</span>
+<span class="fc" id="L141">        return compiledCache.getCompiledCode(source);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

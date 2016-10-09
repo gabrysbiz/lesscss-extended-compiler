@@ -6,3 +6,4 @@ biz.gabrys.lesscss.extended.compiler.control.provider
 biz.gabrys.lesscss.extended.compiler.imports
 biz.gabrys.lesscss.extended.compiler.source
 biz.gabrys.lesscss.extended.compiler.storage
+biz.gabrys.lesscss.extended.compiler.util

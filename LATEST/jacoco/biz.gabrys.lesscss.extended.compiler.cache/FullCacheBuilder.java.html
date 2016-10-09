@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import biz.gabrys.lesscss.extended.compiler.storage.DataStorage;
 import biz.gabrys.lesscss.extended.compiler.storage.DataStorageImpl;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link FullCacheImpl}.
@@ -30,9 +31,9 @@ public class FullCacheBuilder {
      * Constructs a new instance.
      * @since 1.0
      */
-<span class="nc" id="L33">    public FullCacheBuilder() {</span>
+<span class="nc" id="L34">    public FullCacheBuilder() {</span>
         // do nothing
-<span class="nc" id="L35">    }</span>
+<span class="nc" id="L36">    }</span>
 
     /**
      * Sets specified working directory.
@@ -42,11 +43,9 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheBuilder withDirectory(final File workingDirectory) {
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        if (workingDirectory == null) {</span>
-<span class="nc" id="L46">            throw new IllegalArgumentException(&quot;Directory cannot be null&quot;);</span>
-        }
-<span class="nc" id="L48">        dataStorage = new DataStorageImpl(workingDirectory);</span>
-<span class="nc" id="L49">        return this;</span>
+<span class="nc" id="L46">        ParameterUtils.verifyNotNull(&quot;directory&quot;, workingDirectory);</span>
+<span class="nc" id="L47">        dataStorage = new DataStorageImpl(workingDirectory);</span>
+<span class="nc" id="L48">        return this;</span>
     }
 
     /**
@@ -57,11 +56,9 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheBuilder withDataStorage(final DataStorage dataStorage) {
-<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (dataStorage == null) {</span>
-<span class="nc" id="L61">            throw new IllegalArgumentException(&quot;Data storage cannot be null&quot;);</span>
-        }
-<span class="nc" id="L63">        this.dataStorage = dataStorage;</span>
-<span class="nc" id="L64">        return this;</span>
+<span class="nc" id="L59">        ParameterUtils.verifyNotNull(&quot;data storage&quot;, dataStorage);</span>
+<span class="nc" id="L60">        this.dataStorage = dataStorage;</span>
+<span class="nc" id="L61">        return this;</span>
     }
 
     /**
@@ -72,14 +69,14 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheImpl create() {
-<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (dataStorage == null) {</span>
+<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (dataStorage == null) {</span>
             try {
-<span class="nc" id="L77">                dataStorage = new DataStorageImpl(TemporaryDirectoryUtils.create());</span>
-<span class="nc" id="L78">            } catch (final IOException e) {</span>
-<span class="nc" id="L79">                throw new UnsupportedOperationException(&quot;Cannot create temporary directory&quot;, e);</span>
-<span class="nc" id="L80">            }</span>
+<span class="nc" id="L74">                dataStorage = new DataStorageImpl(TemporaryDirectoryUtils.create());</span>
+<span class="nc" id="L75">            } catch (final IOException e) {</span>
+<span class="nc" id="L76">                throw new UnsupportedOperationException(&quot;Cannot create temporary directory&quot;, e);</span>
+<span class="nc" id="L77">            }</span>
         }
-<span class="nc" id="L82">        return new FullCacheImpl(dataStorage);</span>
+<span class="nc" id="L79">        return new FullCacheImpl(dataStorage);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

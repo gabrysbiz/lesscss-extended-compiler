@@ -18,6 +18,7 @@ import java.util.List;
 
 import biz.gabrys.lesscss.extended.compiler.source.LessSource;
 import biz.gabrys.lesscss.extended.compiler.storage.DataStorage;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Full cache implementation based on the {@link DataStorage}. It stores files in the flat structure.
@@ -37,19 +38,17 @@ public class FullCacheImpl implements FullCache, DeletableCache {
      * @throws IllegalArgumentException if storage is equal to {@code null}.
      * @since 1.0
      */
-<span class="nc" id="L40">    public FullCacheImpl(final DataStorage storage) {</span>
-<span class="nc bnc" id="L41" title="All 2 branches missed.">        if (storage == null) {</span>
-<span class="nc" id="L42">            throw new IllegalArgumentException(&quot;Data storage cannot be null&quot;);</span>
-        }
-<span class="nc" id="L44">        this.storage = storage;</span>
-<span class="nc" id="L45">    }</span>
+<span class="nc" id="L41">    public FullCacheImpl(final DataStorage storage) {</span>
+<span class="nc" id="L42">        ParameterUtils.verifyNotNull(&quot;data storage&quot;, storage);</span>
+<span class="nc" id="L43">        this.storage = storage;</span>
+<span class="nc" id="L44">    }</span>
 
     public void saveSourceModificationDate(final LessSource source, final Date modificationDate) {
-<span class="nc" id="L48">        storage.put(createFileName(EntryType.MODIFICATION_DATE, source), String.valueOf(modificationDate.getTime()));</span>
-<span class="nc" id="L49">    }</span>
+<span class="nc" id="L47">        storage.put(createFileName(EntryType.MODIFICATION_DATE, source), String.valueOf(modificationDate.getTime()));</span>
+<span class="nc" id="L48">    }</span>
 
     public boolean hasSourceModificationDate(final LessSource source) {
-<span class="nc" id="L52">        return storage.hasData(createFileName(EntryType.MODIFICATION_DATE, source));</span>
+<span class="nc" id="L51">        return storage.hasData(createFileName(EntryType.MODIFICATION_DATE, source));</span>
     }
 
     /**
@@ -58,48 +57,48 @@ public class FullCacheImpl implements FullCache, DeletableCache {
      * @since 1.0
      */
     public Date getSourceModificationDate(final LessSource source) {
-<span class="nc" id="L61">        final String modificationDate = storage.getText(createFileName(EntryType.MODIFICATION_DATE, source));</span>
+<span class="nc" id="L60">        final String modificationDate = storage.getText(createFileName(EntryType.MODIFICATION_DATE, source));</span>
         try {
-<span class="nc" id="L63">            return new Date(Long.parseLong(modificationDate));</span>
-<span class="nc" id="L64">        } catch (final NumberFormatException e) {</span>
-<span class="nc" id="L65">            throw new CacheException(e);</span>
+<span class="nc" id="L62">            return new Date(Long.parseLong(modificationDate));</span>
+<span class="nc" id="L63">        } catch (final NumberFormatException e) {</span>
+<span class="nc" id="L64">            throw new CacheException(e);</span>
         }
     }
 
     public void saveSourceImports(final LessSource source, final List&lt;String&gt; imports) {
-<span class="nc" id="L70">        storage.put(createFileName(EntryType.IMPORTS_LIST, source), imports);</span>
-<span class="nc" id="L71">    }</span>
+<span class="nc" id="L69">        storage.put(createFileName(EntryType.IMPORTS_LIST, source), imports);</span>
+<span class="nc" id="L70">    }</span>
 
     public boolean hasSourceImports(final LessSource source) {
-<span class="nc" id="L74">        return storage.hasData(createFileName(EntryType.IMPORTS_LIST, source));</span>
+<span class="nc" id="L73">        return storage.hasData(createFileName(EntryType.IMPORTS_LIST, source));</span>
     }
 
     public List&lt;String&gt; getSourceImports(final LessSource source) {
-<span class="nc" id="L78">        return storage.getLines(createFileName(EntryType.IMPORTS_LIST, source));</span>
+<span class="nc" id="L77">        return storage.getLines(createFileName(EntryType.IMPORTS_LIST, source));</span>
     }
 
     public void saveSourceCode(final LessSource source, final String sourceCode) {
-<span class="nc" id="L82">        storage.put(createFileName(EntryType.SOURCE_CODE, source), sourceCode);</span>
-<span class="nc" id="L83">    }</span>
+<span class="nc" id="L81">        storage.put(createFileName(EntryType.SOURCE_CODE, source), sourceCode);</span>
+<span class="nc" id="L82">    }</span>
 
     public boolean hasSourceCode(final LessSource source) {
-<span class="nc" id="L86">        return storage.hasData(createFileName(EntryType.SOURCE_CODE, source));</span>
+<span class="nc" id="L85">        return storage.hasData(createFileName(EntryType.SOURCE_CODE, source));</span>
     }
 
     public File getSourceFile(final LessSource source) {
-<span class="nc" id="L90">        return storage.getFile(createFileName(EntryType.SOURCE_CODE, source));</span>
+<span class="nc" id="L89">        return storage.getFile(createFileName(EntryType.SOURCE_CODE, source));</span>
     }
 
     public String getSourceRelativePath(final LessSource source) {
-<span class="nc" id="L94">        return createFileName(EntryType.SOURCE_CODE, source);</span>
+<span class="nc" id="L93">        return createFileName(EntryType.SOURCE_CODE, source);</span>
     }
 
     public void saveCompilationDate(final LessSource source, final Date compilationDate) {
-<span class="nc" id="L98">        storage.put(createFileName(EntryType.COMPILATION_DATE, source), String.valueOf(compilationDate.getTime()));</span>
-<span class="nc" id="L99">    }</span>
+<span class="nc" id="L97">        storage.put(createFileName(EntryType.COMPILATION_DATE, source), String.valueOf(compilationDate.getTime()));</span>
+<span class="nc" id="L98">    }</span>
 
     public boolean hasCompilationDate(final LessSource source) {
-<span class="nc" id="L102">        return storage.hasData(createFileName(EntryType.COMPILATION_DATE, source));</span>
+<span class="nc" id="L101">        return storage.hasData(createFileName(EntryType.COMPILATION_DATE, source));</span>
     }
 
     /**
@@ -108,66 +107,66 @@ public class FullCacheImpl implements FullCache, DeletableCache {
      * @since 1.0
      */
     public Date getCompilationDate(final LessSource source) {
-<span class="nc" id="L111">        final String compilationDate = storage.getText(createFileName(EntryType.COMPILATION_DATE, source));</span>
+<span class="nc" id="L110">        final String compilationDate = storage.getText(createFileName(EntryType.COMPILATION_DATE, source));</span>
         try {
-<span class="nc" id="L113">            return new Date(Long.parseLong(compilationDate));</span>
-<span class="nc" id="L114">        } catch (final NumberFormatException e) {</span>
-<span class="nc" id="L115">            throw new CacheException(e);</span>
+<span class="nc" id="L112">            return new Date(Long.parseLong(compilationDate));</span>
+<span class="nc" id="L113">        } catch (final NumberFormatException e) {</span>
+<span class="nc" id="L114">            throw new CacheException(e);</span>
         }
     }
 
     public void saveCompiledCode(final LessSource source, final String compiledCode) {
-<span class="nc" id="L120">        storage.put(createFileName(EntryType.COMPILED_CODE, source), compiledCode);</span>
-<span class="nc" id="L121">    }</span>
+<span class="nc" id="L119">        storage.put(createFileName(EntryType.COMPILED_CODE, source), compiledCode);</span>
+<span class="nc" id="L120">    }</span>
 
     public boolean hasCompiledCode(final LessSource source) {
-<span class="nc" id="L124">        return storage.hasData(createFileName(EntryType.COMPILED_CODE, source));</span>
+<span class="nc" id="L123">        return storage.hasData(createFileName(EntryType.COMPILED_CODE, source));</span>
     }
 
     public String getCompiledCode(final LessSource source) {
-<span class="nc" id="L128">        return storage.getText(createFileName(EntryType.COMPILED_CODE, source));</span>
+<span class="nc" id="L127">        return storage.getText(createFileName(EntryType.COMPILED_CODE, source));</span>
     }
 
     public void delete(final LessSource source) {
-<span class="nc bnc" id="L132" title="All 2 branches missed.">        for (final EntryType type : EntryType.values()) {</span>
-<span class="nc" id="L133">            storage.delete(createFileName(type, source));</span>
+<span class="nc bnc" id="L131" title="All 2 branches missed.">        for (final EntryType type : EntryType.values()) {</span>
+<span class="nc" id="L132">            storage.delete(createFileName(type, source));</span>
         }
-<span class="nc" id="L135">    }</span>
+<span class="nc" id="L134">    }</span>
 
     public void deleteAll() {
-<span class="nc" id="L138">        storage.deleteAll();</span>
-<span class="nc" id="L139">    }</span>
+<span class="nc" id="L137">        storage.deleteAll();</span>
+<span class="nc" id="L138">    }</span>
 
     private String createFileName(final EntryType type, final LessSource source) {
-<span class="nc" id="L142">        final String path = source.getPath();</span>
-<span class="nc" id="L143">        final int index = path.replace('\\', '/').lastIndexOf('/');</span>
-<span class="nc" id="L144">        final StringBuilder fileName = new StringBuilder(75);</span>
-<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (index &gt; 0) {</span>
-<span class="nc" id="L146">            fileName.append(path.substring(index + 1));</span>
-<span class="nc" id="L147">            fileName.append('-');</span>
+<span class="nc" id="L141">        final String path = source.getPath();</span>
+<span class="nc" id="L142">        final int index = path.replace('\\', '/').lastIndexOf('/');</span>
+<span class="nc" id="L143">        final StringBuilder fileName = new StringBuilder(75);</span>
+<span class="nc bnc" id="L144" title="All 2 branches missed.">        if (index &gt; 0) {</span>
+<span class="nc" id="L145">            fileName.append(path.substring(index + 1));</span>
+<span class="nc" id="L146">            fileName.append('-');</span>
         }
-<span class="nc" id="L149">        final String hashCode = String.valueOf(path.hashCode());</span>
-<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (hashCode.charAt(0) == '-') {</span>
-<span class="nc" id="L151">            fileName.append(hashCode.replace('-', 'n'));</span>
+<span class="nc" id="L148">        final String hashCode = String.valueOf(path.hashCode());</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (hashCode.charAt(0) == '-') {</span>
+<span class="nc" id="L150">            fileName.append(hashCode.replace('-', 'n'));</span>
         } else {
-<span class="nc" id="L153">            fileName.append('p');</span>
-<span class="nc" id="L154">            fileName.append(hashCode);</span>
+<span class="nc" id="L152">            fileName.append('p');</span>
+<span class="nc" id="L153">            fileName.append(hashCode);</span>
         }
-<span class="nc" id="L156">        fileName.append(type.getExtension());</span>
-<span class="nc" id="L157">        return fileName.toString();</span>
+<span class="nc" id="L155">        fileName.append(type.getExtension());</span>
+<span class="nc" id="L156">        return fileName.toString();</span>
     }
 
-<span class="nc" id="L160">    private enum EntryType {</span>
-<span class="nc" id="L161">        MODIFICATION_DATE, IMPORTS_LIST, SOURCE_CODE, COMPILATION_DATE, COMPILED_CODE;</span>
+<span class="nc" id="L159">    private enum EntryType {</span>
+<span class="nc" id="L160">        MODIFICATION_DATE, IMPORTS_LIST, SOURCE_CODE, COMPILATION_DATE, COMPILED_CODE;</span>
 
         private final String extension;
 
-<span class="nc" id="L165">        private EntryType() {</span>
-<span class="nc" id="L166">            extension = '.' + name().toLowerCase().replace('_', '.');</span>
-<span class="nc" id="L167">        }</span>
+<span class="nc" id="L164">        private EntryType() {</span>
+<span class="nc" id="L165">            extension = '.' + name().toLowerCase().replace('_', '.');</span>
+<span class="nc" id="L166">        }</span>
 
         private String getExtension() {
-<span class="nc" id="L170">            return extension;</span>
+<span class="nc" id="L169">            return extension;</span>
         }
     }
 }

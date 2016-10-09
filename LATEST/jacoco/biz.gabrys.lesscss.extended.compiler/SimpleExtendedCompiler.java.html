@@ -31,22 +31,22 @@ public class SimpleExtendedCompiler implements ExtendedCompiler {
 
     /**
      * The native compiler.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final LessCompiler compiler;
     /**
      * The pre compilation processor.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final PreCompilationProcessor preProcessor;
     /**
      * The provider responsible for returning file representation of the {@link LessSource}.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final SourceFileProvider fileProvider;
     /**
      * The post compilation processor.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final PostCompilationProcessor postProcessor;
 
