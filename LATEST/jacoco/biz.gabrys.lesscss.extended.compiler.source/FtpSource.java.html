@@ -37,8 +37,8 @@ public class FtpSource implements LessSource {
     private Date lastModificationDate;
 
     /**
-     * Constructs a new instance and sets URL of the source file with default platform encoding.
-     * @param url the source file URL.
+     * Constructs a new instance and sets {@link URL} of the source file with default platform encoding.
+     * @param url the {@link URL} which pointer to source file.
      * @since 2.0
      */
     public FtpSource(final URL url) {
@@ -46,19 +46,19 @@ public class FtpSource implements LessSource {
 <span class="nc" id="L46">    }</span>
 
     /**
-     * Constructs a new instance and sets URL of the source file and its encoding.
-     * @param url the source file URL.
+     * Constructs a new instance and sets {@link URL} of the source file and its encoding.
+     * @param url the {@link URL} which pointer to source file
      * @param encoding the source file encoding.
      * @since 2.0
      */
-<span class="fc" id="L54">    public FtpSource(final URL url, final String encoding) {</span>
-<span class="fc" id="L55">        this.url = url;</span>
-<span class="fc bfc" id="L56" title="All 2 branches covered.">        port = url.getPort() != -1 ? url.getPort() : FTP.DEFAULT_PORT;</span>
-<span class="fc" id="L57">        this.encoding = encoding;</span>
-<span class="fc" id="L58">    }</span>
+<span class="nc" id="L54">    public FtpSource(final URL url, final String encoding) {</span>
+<span class="nc" id="L55">        this.url = url;</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">        port = url.getPort() != -1 ? url.getPort() : FTP.DEFAULT_PORT;</span>
+<span class="nc" id="L57">        this.encoding = encoding;</span>
+<span class="nc" id="L58">    }</span>
 
     public String getPath() {
-<span class="fc" id="L61">        return url.toString();</span>
+<span class="nc" id="L61">        return url.toString();</span>
     }
 
     public String getEncoding() {
@@ -71,36 +71,36 @@ public class FtpSource implements LessSource {
 <span class="nc" id="L71">        final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();</span>
         try {
 <span class="nc bnc" id="L73" title="All 2 branches missed.">            if (!connection.retrieveFile(url.getPath(), outputStream)) {</span>
-<span class="nc" id="L74">                throw new SourceException(String.format(&quot;Cannot download source \&quot;%s\&quot;, reason: %s&quot;, url, connection.getReplyString()));</span>
+<span class="nc" id="L74">                throw new SourceException(</span>
+<span class="nc" id="L75">                        String.format(&quot;Cannot download source \&quot;%s\&quot; file, reason: %s&quot;, url, connection.getReplyString()));</span>
             }
-<span class="nc" id="L76">            content = outputStream.toString(encoding);</span>
-<span class="nc" id="L77">        } catch (final IOException e) {</span>
-<span class="nc" id="L78">            throw new SourceException(e);</span>
+<span class="nc" id="L77">            content = outputStream.toString(encoding);</span>
+<span class="nc" id="L78">        } catch (final IOException e) {</span>
+<span class="nc" id="L79">            throw new SourceException(String.format(&quot;Cannot download source \&quot;%s\&quot; file&quot;, url), e);</span>
         } finally {
-<span class="nc" id="L80">            disconnect(connection);</span>
-<span class="nc" id="L81">            IOUtils.closeQuietly(outputStream);</span>
-<span class="nc" id="L82">        }</span>
-<span class="nc" id="L83">        lastModificationDate = getModificationDate(getFile());</span>
-<span class="nc" id="L84">        return content;</span>
+<span class="nc" id="L81">            disconnect(connection);</span>
+<span class="nc" id="L82">            IOUtils.closeQuietly(outputStream);</span>
+<span class="nc" id="L83">        }</span>
+<span class="nc" id="L84">        lastModificationDate = getModificationDate();</span>
+<span class="nc" id="L85">        return content;</span>
     }
 
     /**
-     * Returns an encoding of the source code. Before the first {@link #getContent()} call returns current source
-     * encoding. After the first {@link #getContent()} call always returns the source encoding read while downloading
-     * the source contents.
+     * {@inheritDoc} Before the first {@link #getContent()} call returns current source modification time. After the
+     * first {@link #getContent()} call always returns the source modification time read while downloading the source
+     * contents.
      * @return the encoding.
      * @since 2.0
      */
     public Date getLastModificationDate() {
-<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (lastModificationDate != null) {</span>
-<span class="nc" id="L96">            return (Date) lastModificationDate.clone();</span>
+<span class="nc bnc" id="L96" title="All 2 branches missed.">        if (lastModificationDate != null) {</span>
+<span class="nc" id="L97">            return (Date) lastModificationDate.clone();</span>
         }
-
-<span class="nc" id="L99">        final FTPFile file = getFile();</span>
-<span class="nc" id="L100">        return getModificationDate(file);</span>
+<span class="nc" id="L99">        return getModificationDate();</span>
     }
 
-    private static Date getModificationDate(final FTPFile file) {
+    private Date getModificationDate() {
+<span class="nc" id="L103">        final FTPFile file = getFile();</span>
 <span class="nc bnc" id="L104" title="All 2 branches missed.">        if (file.getTimestamp() == null) {</span>
 <span class="nc" id="L105">            return new Date();</span>
         }
@@ -113,10 +113,10 @@ public class FtpSource implements LessSource {
         try {
 <span class="nc" id="L114">            files = connection.listFiles(url.getPath());</span>
 <span class="nc" id="L115">        } catch (final IOException e) {</span>
-<span class="nc" id="L116">            throw new SourceException(e);</span>
+<span class="nc" id="L116">            throw new SourceException(String.format(&quot;Cannot fetch files list from server during fetching file \&quot;%s\&quot; metadata&quot;, url), e);</span>
 <span class="nc" id="L117">        }</span>
 <span class="nc bnc" id="L118" title="All 2 branches missed.">        if (files.length == 0) {</span>
-<span class="nc" id="L119">            throw new SourceException(String.format(&quot;Source file \&quot;%s\&quot; does not exist!&quot;, url));</span>
+<span class="nc" id="L119">            throw new SourceException(String.format(&quot;Source file \&quot;%s\&quot; does not exist&quot;, url));</span>
         }
 <span class="nc" id="L121">        disconnect(connection);</span>
 <span class="nc" id="L122">        return files[0];</span>
@@ -138,7 +138,7 @@ public class FtpSource implements LessSource {
 <span class="nc" id="L138">            connection.setFileType(FTP.BINARY_FILE_TYPE);</span>
 <span class="nc" id="L139">        } catch (final IOException e) {</span>
 <span class="nc" id="L140">            disconnect(connection);</span>
-<span class="nc" id="L141">            throw new SourceException(e);</span>
+<span class="nc" id="L141">            throw new SourceException(String.format(&quot;Cannot download source \&quot;%s\&quot;&quot;, url), e);</span>
 <span class="nc" id="L142">        }</span>
 <span class="nc" id="L143">        return connection;</span>
     }

@@ -27,10 +27,26 @@ import biz.gabrys.lesscss.extended.compiler.source.LessSource;
  */
 public class CachingCompiledCodeExtendedCompiler implements ExtendedCompiler {
 
-    private final ExtendedCompiler compiler;
-    private final CompiledSourceExpirationChecker expirationChecker;
-    private final CompilationDateCache datesCache;
-    private final CompiledCodeCache codeCache;
+    /**
+     * The extended compiler responsible for compiling source files.
+     * @since 2.1
+     */
+    protected final ExtendedCompiler compiler;
+    /**
+     * The checker responsible for determining if the compiled code expired.
+     * @since 2.1
+     */
+    protected final CompiledSourceExpirationChecker expirationChecker;
+    /**
+     * The cache that holds compilation dates.
+     * @since 2.1
+     */
+    protected final CompilationDateCache datesCache;
+    /**
+     * The cache that holds compiled code.
+     * @since 2.1
+     */
+    protected final CompiledCodeCache codeCache;
 
     /**
      * Constructs a new instance.
@@ -41,31 +57,31 @@ public class CachingCompiledCodeExtendedCompiler implements ExtendedCompiler {
      * @since 1.0
      */
     public CachingCompiledCodeExtendedCompiler(final ExtendedCompiler compiler, final CompiledSourceExpirationChecker expirationChecker,
-<span class="fc" id="L44">            final CompilationDateCache datesCache, final CompiledCodeCache codeCache) {</span>
-<span class="fc" id="L45">        this.compiler = compiler;</span>
-<span class="fc" id="L46">        this.expirationChecker = expirationChecker;</span>
-<span class="fc" id="L47">        this.datesCache = datesCache;</span>
-<span class="fc" id="L48">        this.codeCache = codeCache;</span>
-<span class="fc" id="L49">    }</span>
+<span class="fc" id="L60">            final CompilationDateCache datesCache, final CompiledCodeCache codeCache) {</span>
+<span class="fc" id="L61">        this.compiler = compiler;</span>
+<span class="fc" id="L62">        this.expirationChecker = expirationChecker;</span>
+<span class="fc" id="L63">        this.datesCache = datesCache;</span>
+<span class="fc" id="L64">        this.codeCache = codeCache;</span>
+<span class="fc" id="L65">    }</span>
 
     public String compile(final LessSource source) throws CompilerException {
-<span class="fc bfc" id="L52" title="All 2 branches covered.">        if (isExpired(source)) {</span>
-<span class="fc" id="L53">            final String compiledCode = compiler.compile(source);</span>
-<span class="fc" id="L54">            datesCache.saveCompilationDate(source, new Date());</span>
-<span class="fc" id="L55">            codeCache.saveCompiledCode(source, compiledCode);</span>
-<span class="fc" id="L56">            return compiledCode;</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (isExpired(source)) {</span>
+<span class="fc" id="L69">            final String compiledCode = compiler.compile(source);</span>
+<span class="fc" id="L70">            datesCache.saveCompilationDate(source, new Date());</span>
+<span class="fc" id="L71">            codeCache.saveCompiledCode(source, compiledCode);</span>
+<span class="fc" id="L72">            return compiledCode;</span>
         }
-<span class="fc" id="L58">        return codeCache.getCompiledCode(source);</span>
+<span class="fc" id="L74">        return codeCache.getCompiledCode(source);</span>
     }
 
     public String compile(final LessSource source, final CompilerOptions options) throws CompilerException {
-<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (isExpired(source)) {</span>
-<span class="nc" id="L63">            final String compiledCode = compiler.compile(source, options);</span>
-<span class="nc" id="L64">            datesCache.saveCompilationDate(source, new Date());</span>
-<span class="nc" id="L65">            codeCache.saveCompiledCode(source, compiledCode);</span>
-<span class="nc" id="L66">            return compiledCode;</span>
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (isExpired(source)) {</span>
+<span class="fc" id="L79">            final String compiledCode = compiler.compile(source, options);</span>
+<span class="fc" id="L80">            datesCache.saveCompilationDate(source, new Date());</span>
+<span class="fc" id="L81">            codeCache.saveCompiledCode(source, compiledCode);</span>
+<span class="fc" id="L82">            return compiledCode;</span>
         }
-<span class="nc" id="L68">        return codeCache.getCompiledCode(source);</span>
+<span class="fc" id="L84">        return codeCache.getCompiledCode(source);</span>
     }
 
     /**
@@ -75,11 +91,11 @@ public class CachingCompiledCodeExtendedCompiler implements ExtendedCompiler {
      * @since 1.0
      */
     protected boolean isExpired(final LessSource source) {
-<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (!datesCache.hasCompilationDate(source)) {</span>
-<span class="fc" id="L79">            return true;</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (!datesCache.hasCompilationDate(source)) {</span>
+<span class="fc" id="L95">            return true;</span>
         }
-<span class="fc" id="L81">        final Date compilationDate = datesCache.getCompilationDate(source);</span>
-<span class="fc" id="L82">        return expirationChecker.isExpired(source, compilationDate);</span>
+<span class="fc" id="L97">        final Date compilationDate = datesCache.getCompilationDate(source);</span>
+<span class="fc" id="L98">        return expirationChecker.isExpired(source, compilationDate);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

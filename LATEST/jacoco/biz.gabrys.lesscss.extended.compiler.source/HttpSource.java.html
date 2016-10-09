@@ -31,24 +31,24 @@ import org.apache.commons.io.IOUtils;
  */
 public class HttpSource implements LessSource {
 
-<span class="fc" id="L34">    private static final Collection&lt;Integer&gt; REDIRECT_CODES = new HashSet&lt;Integer&gt;(</span>
-<span class="fc" id="L35">            Arrays.asList(HttpURLConnection.HTTP_MOVED_PERM, HttpURLConnection.HTTP_MOVED_TEMP, HttpURLConnection.HTTP_SEE_OTHER));</span>
+<span class="nc" id="L34">    private static final Collection&lt;Integer&gt; REDIRECT_CODES = new HashSet&lt;Integer&gt;(</span>
+<span class="nc" id="L35">            Arrays.asList(HttpURLConnection.HTTP_MOVED_PERM, HttpURLConnection.HTTP_MOVED_TEMP, HttpURLConnection.HTTP_SEE_OTHER));</span>
 
     private final URL url;
     private String encoding;
     private Date lastModificationDate;
 
     /**
-     * Constructs a new instance and sets URL of the source file.
-     * @param url the source file URL.
+     * Constructs a new instance and sets {@link URL} of the source file.
+     * @param url the {@link URL} which pointer to source file
      * @since 1.0
      */
-<span class="fc" id="L46">    public HttpSource(final URL url) {</span>
-<span class="fc" id="L47">        this.url = url;</span>
-<span class="fc" id="L48">    }</span>
+<span class="nc" id="L46">    public HttpSource(final URL url) {</span>
+<span class="nc" id="L47">        this.url = url;</span>
+<span class="nc" id="L48">    }</span>
 
     public String getPath() {
-<span class="fc" id="L51">        return url.toString();</span>
+<span class="nc" id="L51">        return url.toString();</span>
     }
 
     /**
@@ -82,7 +82,7 @@ public class HttpSource implements LessSource {
 <span class="nc" id="L82">            content = IOUtils.toString(connection.getInputStream(), encoding);</span>
 <span class="nc" id="L83">        } catch (final IOException e) {</span>
 <span class="nc" id="L84">            connection.disconnect();</span>
-<span class="nc" id="L85">            throw new SourceException(e);</span>
+<span class="nc" id="L85">            throw new SourceException(String.format(&quot;Cannot read content of the \&quot;%s\&quot; file&quot;, url), e);</span>
 <span class="nc" id="L86">        }</span>
 <span class="nc" id="L87">        lastModificationDate = getModificationDate(connection.getLastModified());</span>
 <span class="nc" id="L88">        connection.disconnect();</span>
@@ -135,7 +135,7 @@ public class HttpSource implements LessSource {
             try {
 <span class="nc" id="L136">                resourceUrl = new URL(location);</span>
 <span class="nc" id="L137">            } catch (final MalformedURLException e) {</span>
-<span class="nc" id="L138">                throw new SourceException(String.format(&quot;Invalid Location header: %s&quot;, location), e);</span>
+<span class="nc" id="L138">                throw new SourceException(String.format(&quot;Invalid \&quot;Location\&quot; header: %s&quot;, location), e);</span>
 <span class="nc" id="L139">            }</span>
 <span class="nc" id="L140">        }</span>
 <span class="nc bnc" id="L141" title="All 2 branches missed.">        if (responseCode != HttpURLConnection.HTTP_OK) {</span>

@@ -36,9 +36,9 @@ public class NonCachingExtendedCompilerBuilder {
      * Constructs a new instance.
      * @since 1.0
      */
-<span class="nc" id="L39">    public NonCachingExtendedCompilerBuilder() {</span>
+<span class="fc" id="L39">    public NonCachingExtendedCompilerBuilder() {</span>
         // do nothing
-<span class="nc" id="L41">    }</span>
+<span class="fc" id="L41">    }</span>
 
     /**
      * Sets native compiler. Default {@link LessCompilerImpl}.
@@ -47,8 +47,8 @@ public class NonCachingExtendedCompilerBuilder {
      * @since 1.0
      */
     public NonCachingExtendedCompilerBuilder withCompiler(final LessCompiler compiler) {
-<span class="nc" id="L50">        this.compiler = compiler;</span>
-<span class="nc" id="L51">        return this;</span>
+<span class="fc" id="L50">        this.compiler = compiler;</span>
+<span class="fc" id="L51">        return this;</span>
     }
 
     /**
@@ -59,8 +59,8 @@ public class NonCachingExtendedCompilerBuilder {
      * @since 1.0
      */
     public NonCachingExtendedCompilerBuilder withPreProcessor(final PreCompilationProcessor preProcessor) {
-<span class="nc" id="L62">        this.preProcessor = preProcessor;</span>
-<span class="nc" id="L63">        return this;</span>
+<span class="fc" id="L62">        this.preProcessor = preProcessor;</span>
+<span class="fc" id="L63">        return this;</span>
     }
 
     /**
@@ -72,8 +72,8 @@ public class NonCachingExtendedCompilerBuilder {
      * @since 1.0
      */
     public NonCachingExtendedCompilerBuilder withFileProvider(final SourceFileProvider fileProvider) {
-<span class="nc" id="L75">        this.fileProvider = fileProvider;</span>
-<span class="nc" id="L76">        return this;</span>
+<span class="fc" id="L75">        this.fileProvider = fileProvider;</span>
+<span class="fc" id="L76">        return this;</span>
     }
 
     /**
@@ -84,8 +84,8 @@ public class NonCachingExtendedCompilerBuilder {
      * @since 1.0
      */
     public NonCachingExtendedCompilerBuilder withPostProcessor(final PostCompilationProcessor postProcessor) {
-<span class="nc" id="L87">        this.postProcessor = postProcessor;</span>
-<span class="nc" id="L88">        return this;</span>
+<span class="fc" id="L87">        this.postProcessor = postProcessor;</span>
+<span class="fc" id="L88">        return this;</span>
     }
 
     /**
@@ -101,12 +101,12 @@ public class NonCachingExtendedCompilerBuilder {
      * @since 1.0
      */
     public ExtendedCompiler create() {
-<span class="nc bnc" id="L104" title="All 2 branches missed.">        final LessCompiler lessCompiler = compiler != null ? compiler : new LessCompilerImpl();</span>
-<span class="nc bnc" id="L105" title="All 2 branches missed.">        final PreCompilationProcessor preProc = preProcessor != null ? preProcessor : new DoNothingPreCompilationProcessor();</span>
-<span class="nc bnc" id="L106" title="All 2 branches missed.">        final SourceFileProvider provider = fileProvider != null ? fileProvider : new SourcePathFileProvider();</span>
-<span class="nc bnc" id="L107" title="All 2 branches missed.">        final PostCompilationProcessor postProc = postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">        final LessCompiler lessCompiler = compiler != null ? compiler : new LessCompilerImpl();</span>
+<span class="fc bfc" id="L105" title="All 2 branches covered.">        final PreCompilationProcessor preProc = preProcessor != null ? preProcessor : new DoNothingPreCompilationProcessor();</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        final SourceFileProvider provider = fileProvider != null ? fileProvider : new SourcePathFileProvider();</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">        final PostCompilationProcessor postProc = postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();</span>
 
-<span class="nc" id="L109">        return new SimpleExtendedCompiler(lessCompiler, preProc, provider, postProc);</span>
+<span class="fc" id="L109">        return new SimpleExtendedCompiler(lessCompiler, preProc, provider, postProc);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

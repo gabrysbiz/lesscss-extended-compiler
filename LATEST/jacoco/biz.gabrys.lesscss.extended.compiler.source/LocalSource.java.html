@@ -57,7 +57,7 @@ public class LocalSource implements LessSource {
         try {
 <span class="fc" id="L58">            return file.getCanonicalPath();</span>
 <span class="nc" id="L59">        } catch (final IOException e) {</span>
-<span class="nc" id="L60">            throw new SourceException(e);</span>
+<span class="nc" id="L60">            throw new SourceException(String.format(&quot;Cannot resolve canonical path for \&quot;%s\&quot; file&quot;, file.getAbsolutePath()), e);</span>
         }
     }
 
@@ -70,7 +70,7 @@ public class LocalSource implements LessSource {
         try {
 <span class="nc" id="L71">            content = FileUtils.readFileToString(file, encoding);</span>
 <span class="nc" id="L72">        } catch (final IOException e) {</span>
-<span class="nc" id="L73">            throw new SourceException(e);</span>
+<span class="nc" id="L73">            throw new SourceException(String.format(&quot;Cannot read content of the \&quot;%s\&quot; file&quot;, file.getAbsolutePath()), e);</span>
 <span class="nc" id="L74">        }</span>
 <span class="nc" id="L75">        lastModificationDate = new Date(file.lastModified());</span>
 <span class="nc" id="L76">        return content;</span>
@@ -110,19 +110,23 @@ public class LocalSource implements LessSource {
 <span class="fc bfc" id="L110" title="All 2 branches covered.">        if (StringUtils.isEmpty(normalizedPath)) {</span>
 <span class="fc" id="L111">            return false;</span>
         }
+<span class="fc" id="L113">        return isAbsoluteNormalizedPath(normalizedPath, windowsOperatingSystem);</span>
+    }
 
-<span class="fc" id="L114">        final char separator = '/';</span>
-<span class="fc" id="L115">        final char firstChar = normalizedPath.charAt(0);</span>
-<span class="fc bfc" id="L116" title="All 2 branches covered.">        if (!windowsOperatingSystem) {</span>
-<span class="fc bfc" id="L117" title="All 2 branches covered.">            return firstChar == separator;</span>
+    static boolean isAbsoluteNormalizedPath(final String normalizedPath, final boolean windowsOperatingSystem) {
+<span class="fc" id="L117">        final char separator = '/';</span>
+<span class="fc" id="L118">        final char firstChar = normalizedPath.charAt(0);</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        if (!windowsOperatingSystem) {</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">            return firstChar == separator;</span>
         }
 
-<span class="pc bpc" id="L120" title="1 of 2 branches missed.">        if (!Character.isLetter(firstChar)) {</span>
-<span class="nc" id="L121">            return false;</span>
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        if (!Character.isLetter(firstChar)) {</span>
+<span class="fc" id="L124">            return false;</span>
         }
 
-<span class="fc" id="L124">        final int colonIndex = normalizedPath.indexOf(':');</span>
-<span class="pc bpc" id="L125" title="2 of 6 branches missed.">        return colonIndex == 1 &amp;&amp; normalizedPath.length() &gt; 2 &amp;&amp; normalizedPath.charAt(2) == separator;</span>
+<span class="fc" id="L127">        final int colonIndex = normalizedPath.indexOf(':');</span>
+<span class="fc" id="L128">        final int separatorIndex = 2;</span>
+<span class="fc bfc" id="L129" title="All 6 branches covered.">        return colonIndex == 1 &amp;&amp; normalizedPath.length() &gt; separatorIndex &amp;&amp; normalizedPath.charAt(separatorIndex) == separator;</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

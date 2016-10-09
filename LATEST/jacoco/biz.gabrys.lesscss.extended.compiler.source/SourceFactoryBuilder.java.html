@@ -21,19 +21,22 @@ import java.util.Map;
  */
 public class SourceFactoryBuilder {
 
-<span class="nc" id="L24">    private final Map&lt;Class&lt;?&gt;, ConcreteSourceFactory&lt;? extends LessSource&gt;&gt; factories = new LinkedHashMap&lt;Class&lt;?&gt;, ConcreteSourceFactory&lt;? extends LessSource&gt;&gt;();</span>
+    private final Map&lt;Class&lt;?&gt;, ConcreteSourceFactory&lt;? extends LessSource&gt;&gt; factories;
 
     /**
      * Constructs a new instance with zero factories.
      * @since 1.0
      */
-<span class="nc" id="L30">    public SourceFactoryBuilder() {</span>
-        // do nothing
-<span class="nc" id="L32">    }</span>
+    public SourceFactoryBuilder() {
+<span class="fc" id="L31">        this(new LinkedHashMap&lt;Class&lt;?&gt;, ConcreteSourceFactory&lt;? extends LessSource&gt;&gt;());</span>
+<span class="fc" id="L32">    }</span>
+
+<span class="fc" id="L34">    SourceFactoryBuilder(final Map&lt;Class&lt;?&gt;, ConcreteSourceFactory&lt;? extends LessSource&gt;&gt; factories) {</span>
+<span class="fc" id="L35">        this.factories = factories;</span>
+<span class="fc" id="L36">    }</span>
 
     /**
-     * Creates a new builder with added standard factories at the end or does nothing if you try to add the same factory
-     * again.
+     * Appends standard factories at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
      * @since 1.0
      * @see HttpSourceFactory
@@ -41,64 +44,72 @@ public class SourceFactoryBuilder {
      * @see LocalSourceFactory
      */
     public SourceFactoryBuilder withStandard() {
-<span class="nc" id="L44">        return withHttp().withFtp().withLocal();</span>
+<span class="fc" id="L47">        return withHttp().withFtp().withLocal();</span>
     }
 
     /**
-     * Creates a new builder with added {@link LocalSourceFactory} at the end or does nothing if you try to add the same
-     * factory again.
+     * Appends {@link LocalSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
      * @since 1.0
      */
     public SourceFactoryBuilder withLocal() {
-<span class="nc bnc" id="L54" title="All 2 branches missed.">        if (!factories.containsKey(LocalSourceFactory.class)) {</span>
-<span class="nc" id="L55">            factories.put(LocalSourceFactory.class, new LocalSourceFactory());</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        if (!factories.containsKey(LocalSourceFactory.class)) {</span>
+<span class="fc" id="L57">            factories.put(LocalSourceFactory.class, new LocalSourceFactory());</span>
         }
-<span class="nc" id="L57">        return this;</span>
+<span class="fc" id="L59">        return this;</span>
     }
 
     /**
-     * Creates a new builder with added {@link HttpSourceFactory} at the end or does nothing if you try to add the same
-     * factory again.
+     * Appends {@link HttpSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
      * @since 1.0
      */
     public SourceFactoryBuilder withHttp() {
-<span class="nc bnc" id="L67" title="All 2 branches missed.">        if (!factories.containsKey(HttpSourceFactory.class)) {</span>
-<span class="nc" id="L68">            factories.put(HttpSourceFactory.class, new HttpSourceFactory());</span>
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!factories.containsKey(HttpSourceFactory.class)) {</span>
+<span class="fc" id="L69">            factories.put(HttpSourceFactory.class, new HttpSourceFactory());</span>
         }
-<span class="nc" id="L70">        return this;</span>
+<span class="fc" id="L71">        return this;</span>
     }
 
     /**
-     * Creates a new builder with added {@link FtpSourceFactory} at the end or does nothing if you try to add the same
-     * factory again.
+     * Appends {@link FtpSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
      * @since 2.0
      */
     public SourceFactoryBuilder withFtp() {
-<span class="nc bnc" id="L80" title="All 2 branches missed.">        if (!factories.containsKey(FtpSourceFactory.class)) {</span>
-<span class="nc" id="L81">            factories.put(FtpSourceFactory.class, new FtpSourceFactory());</span>
+<span class="fc bfc" id="L80" title="All 2 branches covered.">        if (!factories.containsKey(FtpSourceFactory.class)) {</span>
+<span class="fc" id="L81">            factories.put(FtpSourceFactory.class, new FtpSourceFactory());</span>
         }
-<span class="nc" id="L83">        return this;</span>
+<span class="fc" id="L83">        return this;</span>
     }
 
     /**
-     * Creates a new builder with added {@link ConcreteSourceFactory} at the end or does nothing if you try to add the
-     * same factory again.
+     * Appends {@link ClasspathSourceFactory} at the end or does nothing if you try to add the same factory again.
+     * @return {@code this} builder.
+     * @since 2.1
+     */
+    public SourceFactoryBuilder withClasspath() {
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">        if (!factories.containsKey(ClasspathSourceFactory.class)) {</span>
+<span class="fc" id="L93">            factories.put(ClasspathSourceFactory.class, new ClasspathSourceFactory());</span>
+        }
+<span class="fc" id="L95">        return this;</span>
+    }
+
+    /**
+     * Appends {@link ConcreteSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @param factory the concrete source factory.
      * @return {@code this} builder.
      * @throws IllegalArgumentException is factory is equal to {@code null}.
      * @since 1.0
      */
     public SourceFactoryBuilder withCustom(final ConcreteSourceFactory&lt;? extends LessSource&gt; factory) {
-<span class="nc bnc" id="L95" title="All 2 branches missed.">        if (factory == null) {</span>
-<span class="nc" id="L96">            throw new IllegalArgumentException(&quot;Factory cannot be null&quot;);</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">        if (factory == null) {</span>
+<span class="fc" id="L107">            throw new IllegalArgumentException(&quot;Factory cannot be null&quot;);</span>
         }
-<span class="nc bnc" id="L98" title="All 2 branches missed.">        if (!factories.containsKey(factory.getClass())) {</span>
-<span class="nc" id="L99">            factories.put(factory.getClass(), factory);</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">        if (!factories.containsKey(factory.getClass())) {</span>
+<span class="fc" id="L110">            factories.put(factory.getClass(), factory);</span>
         }
-<span class="nc" id="L101">        return this;</span>
+<span class="fc" id="L112">        return this;</span>
     }
 
     /**
@@ -107,7 +118,7 @@ public class SourceFactoryBuilder {
      * @since 1.0
      */
     public SourceFactoryImpl create() {
-<span class="nc" id="L110">        return new SourceFactoryImpl(factories.values());</span>
+<span class="fc" id="L121">        return new SourceFactoryImpl(factories.values());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -14,53 +14,29 @@ package biz.gabrys.lesscss.extended.compiler.source;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Responsible for creating new instances of the {@link HttpSource}.
  * @since 1.0
  */
-public class HttpSourceFactory implements ConcreteSourceFactory&lt;HttpSource&gt; {
+public class HttpSourceFactory extends AbstractUriSourceFactory&lt;HttpSource&gt; {
 
     /**
      * Constructs a new instance.
      * @since 1.0
      */
-<span class="fc" id="L31">    public HttpSourceFactory() {</span>
+<span class="fc" id="L28">    public HttpSourceFactory() {</span>
         // do nothing
-<span class="fc" id="L33">    }</span>
+<span class="fc" id="L30">    }</span>
 
-    public HttpSource createAbsoluteSource(final LessSource source, final String importAbsolutePath) {
-        try {
-<span class="fc" id="L37">            final URI importUri = new URI(importAbsolutePath).normalize();</span>
-<span class="fc" id="L38">            return new HttpSource(importUri.toURL());</span>
-<span class="nc" id="L39">        } catch (final URISyntaxException e) {</span>
-<span class="nc" id="L40">            throw new SourceFactoryException(&quot;Cannot normalize URL&quot;, e);</span>
-<span class="nc" id="L41">        } catch (final MalformedURLException e) {</span>
-<span class="nc" id="L42">            throw new SourceFactoryException(&quot;Cannot create relative URL&quot;, e);</span>
-        }
+    @Override
+    protected HttpSource createSource(final URI uri, final String encoding) throws MalformedURLException {
+<span class="nc" id="L34">        return new HttpSource(uri.toURL());</span>
     }
 
-    public HttpSource createRelativeSource(final LessSource source, final String importRelativePath) {
-        try {
-<span class="fc" id="L48">            final String sourcePath = source.getPath();</span>
-<span class="fc" id="L49">            final String parentPath = sourcePath.substring(0, sourcePath.lastIndexOf('/'));</span>
-<span class="fc" id="L50">            final URI importUri = new URI(parentPath + '/' + importRelativePath).normalize();</span>
-<span class="fc" id="L51">            return new HttpSource(importUri.toURL());</span>
-<span class="nc" id="L52">        } catch (final URISyntaxException e) {</span>
-<span class="nc" id="L53">            throw new SourceFactoryException(&quot;Cannot normalize URL&quot;, e);</span>
-<span class="nc" id="L54">        } catch (final MalformedURLException e) {</span>
-<span class="nc" id="L55">            throw new SourceFactoryException(&quot;Cannot create relative URL&quot;, e);</span>
-        }
-    }
-
-    public boolean isAbsolutePath(final String path) {
-<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (StringUtils.isEmpty(path)) {</span>
-<span class="nc" id="L61">            return false;</span>
-        }
-<span class="nc bnc" id="L63" title="All 4 branches missed.">        return path.startsWith(&quot;http://&quot;) || path.startsWith(&quot;https://&quot;);</span>
+    @Override
+    protected boolean isSupportedPath(final String path) {
+<span class="fc bfc" id="L39" title="All 4 branches covered.">        return path.startsWith(&quot;http://&quot;) || path.startsWith(&quot;https://&quot;);</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
