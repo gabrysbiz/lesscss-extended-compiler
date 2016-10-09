@@ -23,13 +23,13 @@ import org.apache.commons.io.IOUtils;
 
 /**
  * Represents a <a href="http://lesscss.org/">Less</a> source file located in classpath.
- * @since 2.1
+ * @since 2.1.0
  */
 public class ClasspathSource implements LessSource {
 
     /**
      * Stores protocol prefix with colon and slashes.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected static final String PROTOCOL_PREFIX = "classpath://";
 
@@ -41,7 +41,7 @@ public class ClasspathSource implements LessSource {
     /**
      * Constructs a new instance and sets {@link URI} of the source file with default platform encoding.
      * @param uri the {@link URI} which pointer to source file.
-     * @since 2.1
+     * @since 2.1.0
      */
     public ClasspathSource(final URI uri) {
         this(uri, Charset.defaultCharset().toString());
@@ -51,7 +51,7 @@ public class ClasspathSource implements LessSource {
      * Constructs a new instance and sets {@link URI} of the source file and its encoding.
      * @param uri the {@link URI} which pointer to source file.
      * @param encoding the source file encoding.
-     * @since 2.1
+     * @since 2.1.0
      */
     public ClasspathSource(final URI uri, final String encoding) {
         this.uri = uri;
@@ -84,7 +84,7 @@ public class ClasspathSource implements LessSource {
      * first {@link #getContent()} call always returns the source modification time read while reading the source
      * contents.
      * @return the encoding.
-     * @since 2.1
+     * @since 2.1.0
      */
     public Date getLastModificationDate() {
         if (lastModificationDate != null) {

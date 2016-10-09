@@ -1,6 +1,6 @@
 # Extended LessCSS Compiler Changelog
 
-## 2.1-SNAPSHOT
+## 2.1.0-SNAPSHOT
 New Features:
 * Classpath "protocol" support
 

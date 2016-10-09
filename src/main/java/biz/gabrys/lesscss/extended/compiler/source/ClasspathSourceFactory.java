@@ -16,13 +16,13 @@ import java.net.URI;
 
 /**
  * Responsible for creating new instances of the {@link ClasspathSource}.
- * @since 2.1
+ * @since 2.1.0
  */
 public class ClasspathSourceFactory extends AbstractUriSourceFactory<ClasspathSource> {
 
     /**
      * Constructs a new instance.
-     * @since 2.1
+     * @since 2.1.0
      */
     public ClasspathSourceFactory() {
         // do nothing

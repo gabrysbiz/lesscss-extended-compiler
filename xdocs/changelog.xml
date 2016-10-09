@@ -7,7 +7,7 @@
     </properties>
 
     <body>
-        <section id="release-2.1" name="Release 2.1">
+        <section id="release-2.1.0" name="Release 2.1.0">
             <p>New Features:</p>
             <ul>
                 <li>Classpath &quot;protocol&quot; support</li>

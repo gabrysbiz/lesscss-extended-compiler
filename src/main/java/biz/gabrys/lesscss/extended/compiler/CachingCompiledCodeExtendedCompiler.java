@@ -29,22 +29,22 @@ public class CachingCompiledCodeExtendedCompiler implements ExtendedCompiler {
 
     /**
      * The extended compiler responsible for compiling source files.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final ExtendedCompiler compiler;
     /**
      * The checker responsible for determining if the compiled code expired.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final CompiledSourceExpirationChecker expirationChecker;
     /**
      * The cache that holds compilation dates.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final CompilationDateCache datesCache;
     /**
      * The cache that holds compiled code.
-     * @since 2.1
+     * @since 2.1.0
      */
     protected final CompiledCodeCache codeCache;
 

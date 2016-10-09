@@ -86,7 +86,7 @@ public class SourceFactoryBuilder {
     /**
      * Appends {@link ClasspathSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
-     * @since 2.1
+     * @since 2.1.0
      */
     public SourceFactoryBuilder withClasspath() {
         if (!factories.containsKey(ClasspathSourceFactory.class)) {
