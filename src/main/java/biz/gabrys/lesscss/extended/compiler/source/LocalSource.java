@@ -57,7 +57,7 @@ public class LocalSource implements LessSource {
         try {
             return file.getCanonicalPath();
         } catch (final IOException e) {
-            throw new SourceException(e);
+            throw new SourceException(String.format("Cannot resolve canonical path for \"%s\" file", file.getAbsolutePath()), e);
         }
     }
 
@@ -70,7 +70,7 @@ public class LocalSource implements LessSource {
         try {
             content = FileUtils.readFileToString(file, encoding);
         } catch (final IOException e) {
-            throw new SourceException(e);
+            throw new SourceException(String.format("Cannot read content of the \"%s\" file", file.getAbsolutePath()), e);
         }
         lastModificationDate = new Date(file.lastModified());
         return content;
@@ -110,7 +110,10 @@ public class LocalSource implements LessSource {
         if (StringUtils.isEmpty(normalizedPath)) {
             return false;
         }
+        return isAbsoluteNormalizedPath(normalizedPath, windowsOperatingSystem);
+    }
 
+    static boolean isAbsoluteNormalizedPath(final String normalizedPath, final boolean windowsOperatingSystem) {
         final char separator = '/';
         final char firstChar = normalizedPath.charAt(0);
         if (!windowsOperatingSystem) {
@@ -122,6 +125,7 @@ public class LocalSource implements LessSource {
         }
 
         final int colonIndex = normalizedPath.indexOf(':');
-        return colonIndex == 1 && normalizedPath.length() > 2 && normalizedPath.charAt(2) == separator;
+        final int separatorIndex = 2;
+        return colonIndex == 1 && normalizedPath.length() > separatorIndex && normalizedPath.charAt(separatorIndex) == separator;
     }
 }

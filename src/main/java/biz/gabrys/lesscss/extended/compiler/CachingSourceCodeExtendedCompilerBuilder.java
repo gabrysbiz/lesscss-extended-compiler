@@ -147,18 +147,28 @@ public class CachingSourceCodeExtendedCompilerBuilder {
      */
     public ExtendedCompiler create() {
         final LessCompiler lessCompiler = compiler != null ? compiler : new LessCompilerImpl();
+        final PreCompilationProcessor preProc = createPreProcessor(new SourceTreeWithCodeCachingPreparationProcessorBuilder(cache));
+        final PostCompilationProcessor postProc = postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();
+        return new SimpleExtendedCompiler(lessCompiler, preProc, new CachedSourceFileProvider(cache), postProc);
+    }
 
-        final SourceTreeWithCodeCachingPreparationProcessorBuilder builder = new SourceTreeWithCodeCachingPreparationProcessorBuilder(
-                cache);
+    PreCompilationProcessor createPreProcessor(final SourceTreeWithCodeCachingPreparationProcessorBuilder builder) {
         builder.withExpirationChecker(
                 expirationChecker != null ? expirationChecker : new SourceModificationDateBasedExpirationChecker(cache));
         builder.withImportResolver(importResolver != null ? importResolver : new LessImportResolverImpl());
         builder.withImportReplacer(importReplacer != null ? importReplacer : new LessImportReplacerImpl());
-        builder.withSourceFactory(sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create());
-        final PreCompilationProcessor preProc = builder.create();
+        builder.withSourceFactory(createSourceFactory());
+        return builder.create();
+    }
 
-        final PostCompilationProcessor postProc = postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();
+    SourceFactory createSourceFactory() {
+        if (sourceFactory != null) {
+            return sourceFactory;
+        }
+        return createSourceFactoryFromBuilder(new SourceFactoryBuilder());
+    }
 
-        return new SimpleExtendedCompiler(lessCompiler, preProc, new CachedSourceFileProvider(cache), postProc);
+    SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
+        return builder.withStandard().create();
     }
 }

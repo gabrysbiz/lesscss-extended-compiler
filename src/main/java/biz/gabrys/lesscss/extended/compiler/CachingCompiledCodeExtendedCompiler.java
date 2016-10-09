@@ -27,10 +27,26 @@ import biz.gabrys.lesscss.extended.compiler.source.LessSource;
  */
 public class CachingCompiledCodeExtendedCompiler implements ExtendedCompiler {
 
-    private final ExtendedCompiler compiler;
-    private final CompiledSourceExpirationChecker expirationChecker;
-    private final CompilationDateCache datesCache;
-    private final CompiledCodeCache codeCache;
+    /**
+     * The extended compiler responsible for compiling source files.
+     * @since 2.1
+     */
+    protected final ExtendedCompiler compiler;
+    /**
+     * The checker responsible for determining if the compiled code expired.
+     * @since 2.1
+     */
+    protected final CompiledSourceExpirationChecker expirationChecker;
+    /**
+     * The cache that holds compilation dates.
+     * @since 2.1
+     */
+    protected final CompilationDateCache datesCache;
+    /**
+     * The cache that holds compiled code.
+     * @since 2.1
+     */
+    protected final CompiledCodeCache codeCache;
 
     /**
      * Constructs a new instance.

@@ -7,6 +7,12 @@
     </properties>
 
     <body>
+        <section id="release-2.1" name="Release 2.1">
+            <p>New Features:</p>
+            <ul>
+                <li>Classpath &quot;protocol&quot; support</li>
+            </ul>
+        </section>
         <section id="release-2.0" name="Release 2.0">
             <p>New Features:</p>
             <ul>
@@ -15,11 +21,11 @@
             <p>API:</p>
             <ul>
                 <li>
-                    <a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/storage/DataStorage.html">DataStorage#put(fileName, lines)</a>:
+                    <a href="http://lesscss-extended-compiler.projects.gabrys.biz/2.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/storage/DataStorage.html">DataStorage#put(fileName, lines)</a>:
                     changed the type of the parameter <code>lines</code> from <code>java.lang.Iterable</code> to <code>java.util.Collection</code>
                 </li>
                 <li>
-                    <a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/source/ConcreteSourceFactory.html">ConcreteSourceFactory</a> is now generic:
+                    <a href="http://lesscss-extended-compiler.projects.gabrys.biz/2.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/source/ConcreteSourceFactory.html">ConcreteSourceFactory</a> is now generic:
                     <code>ConcreteSourceFactory&lt;T extends LessSource&gt;</code>
                 </li>
             </ul>
@@ -44,6 +50,7 @@
                 </li>
                 <li>Optimization of create new collections</li>
             </ul>
+            <p><a href="http://lesscss-extended-compiler.projects.gabrys.biz/2.0/">See documentation</a></p>
         </section>
         <section id="release-1.0" name="Release 1.0">
             <p>Initial release.</p>

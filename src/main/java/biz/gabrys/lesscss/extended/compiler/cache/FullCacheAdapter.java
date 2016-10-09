@@ -24,11 +24,31 @@ import biz.gabrys.lesscss.extended.compiler.source.LessSource;
  */
 public class FullCacheAdapter implements FullCache {
 
-    private final SourceModificationDateCache modificationDatesCache;
-    private final SourceImportsCache importsCache;
-    private final SourceCodeCache sourceCache;
-    private final CompilationDateCache compilationDatesCache;
-    private final CompiledCodeCache compiledCache;
+    /**
+     * The cache responsible for storing source files modification dates.
+     * @since 2.1
+     */
+    protected final SourceModificationDateCache modificationDatesCache;
+    /**
+     * The cache responsible for storing source files imports paths.
+     * @since 2.1
+     */
+    protected final SourceImportsCache importsCache;
+    /**
+     * The cache responsible for storing source files code.
+     * @since 2.1
+     */
+    protected final SourceCodeCache sourceCache;
+    /**
+     * The cache responsible for storing sources compilation dates.
+     * @since 2.1
+     */
+    protected final CompilationDateCache compilationDatesCache;
+    /**
+     * The cache responsible for storing compiled code.
+     * @since 2.1
+     */
+    protected final CompiledCodeCache compiledCache;
 
     /**
      * Constructs a new instance.

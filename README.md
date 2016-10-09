@@ -11,11 +11,12 @@ Adds features such as:
 * supports sources located at:
  * local drives
  * network protocols: HTTP, HTTPS, FTP
- * [custom - defined by programmers](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/locations.html#custom)
+ * classpath
+ * [custom - defined by programmers](http://lesscss-compiler.projects.gabrys.biz/LATEST/locations.html#custom)
  
 # Compatibility
 The compatibility with the [Less](http://lesscss.org/) language is determined by:
-* native compiler implementation ([biz.gabrys.lesscss.compiler.LessCompiler](http://lesscss-compiler.projects.gabrys.biz/1.1/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html))
+* native compiler implementation ([biz.gabrys.lesscss.compiler.LessCompiler](http://lesscss-compiler.projects.gabrys.biz/1.2.1/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html))
 * supported locations of sources ([see supported locations matrix](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/locations.html#matrix))
 
 # Requirements

@@ -70,7 +70,7 @@ cache.deleteAll(); // or cache.delete(source);
 
 // sets custom option: minify CSS code
 CompilerOptions options = new CompilerOptionsBuilder().setMinified(true).create();
-// returns compiled code from cache
+// compiles file + minification
 String cssCode2 = compiler.compile(source, options);
 cssCode.equals(cssCode2); // false</pre>
         </section>

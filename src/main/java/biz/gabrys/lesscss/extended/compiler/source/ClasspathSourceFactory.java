@@ -12,30 +12,29 @@
  */
 package biz.gabrys.lesscss.extended.compiler.source;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 
 /**
- * Responsible for creating new instances of the {@link FtpSource}.
- * @since 1.0
+ * Responsible for creating new instances of the {@link ClasspathSource}.
+ * @since 2.1
  */
-public class FtpSourceFactory extends AbstractUriSourceFactory<FtpSource> {
+public class ClasspathSourceFactory extends AbstractUriSourceFactory<ClasspathSource> {
 
     /**
      * Constructs a new instance.
-     * @since 1.0
+     * @since 2.1
      */
-    public FtpSourceFactory() {
+    public ClasspathSourceFactory() {
         // do nothing
     }
 
     @Override
-    protected FtpSource createSource(final URI uri, final String encoding) throws MalformedURLException {
-        return new FtpSource(uri.toURL(), encoding);
+    protected ClasspathSource createSource(final URI uri, final String encoding) {
+        return new ClasspathSource(uri, encoding);
     }
 
     @Override
     protected boolean isSupportedPath(final String path) {
-        return path.startsWith("ftp://");
+        return path.startsWith(ClasspathSource.PROTOCOL_PREFIX);
     }
 }

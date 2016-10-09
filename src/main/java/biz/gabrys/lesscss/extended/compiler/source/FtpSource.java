@@ -37,8 +37,8 @@ public class FtpSource implements LessSource {
     private Date lastModificationDate;
 
     /**
-     * Constructs a new instance and sets URL of the source file with default platform encoding.
-     * @param url the source file URL.
+     * Constructs a new instance and sets {@link URL} of the source file with default platform encoding.
+     * @param url the {@link URL} which pointer to source file.
      * @since 2.0
      */
     public FtpSource(final URL url) {
@@ -46,8 +46,8 @@ public class FtpSource implements LessSource {
     }
 
     /**
-     * Constructs a new instance and sets URL of the source file and its encoding.
-     * @param url the source file URL.
+     * Constructs a new instance and sets {@link URL} of the source file and its encoding.
+     * @param url the {@link URL} which pointer to source file
      * @param encoding the source file encoding.
      * @since 2.0
      */
@@ -71,23 +71,24 @@ public class FtpSource implements LessSource {
         final ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
         try {
             if (!connection.retrieveFile(url.getPath(), outputStream)) {
-                throw new SourceException(String.format("Cannot download source \"%s\", reason: %s", url, connection.getReplyString()));
+                throw new SourceException(
+                        String.format("Cannot download source \"%s\" file, reason: %s", url, connection.getReplyString()));
             }
             content = outputStream.toString(encoding);
         } catch (final IOException e) {
-            throw new SourceException(e);
+            throw new SourceException(String.format("Cannot download source \"%s\" file", url), e);
         } finally {
             disconnect(connection);
             IOUtils.closeQuietly(outputStream);
         }
-        lastModificationDate = getModificationDate(getFile());
+        lastModificationDate = getModificationDate();
         return content;
     }
 
     /**
-     * Returns an encoding of the source code. Before the first {@link #getContent()} call returns current source
-     * encoding. After the first {@link #getContent()} call always returns the source encoding read while downloading
-     * the source contents.
+     * {@inheritDoc} Before the first {@link #getContent()} call returns current source modification time. After the
+     * first {@link #getContent()} call always returns the source modification time read while downloading the source
+     * contents.
      * @return the encoding.
      * @since 2.0
      */
@@ -95,12 +96,11 @@ public class FtpSource implements LessSource {
         if (lastModificationDate != null) {
             return (Date) lastModificationDate.clone();
         }
-
-        final FTPFile file = getFile();
-        return getModificationDate(file);
+        return getModificationDate();
     }
 
-    private static Date getModificationDate(final FTPFile file) {
+    private Date getModificationDate() {
+        final FTPFile file = getFile();
         if (file.getTimestamp() == null) {
             return new Date();
         }
@@ -113,10 +113,10 @@ public class FtpSource implements LessSource {
         try {
             files = connection.listFiles(url.getPath());
         } catch (final IOException e) {
-            throw new SourceException(e);
+            throw new SourceException(String.format("Cannot fetch files list from server during fetching file \"%s\" metadata", url), e);
         }
         if (files.length == 0) {
-            throw new SourceException(String.format("Source file \"%s\" does not exist!", url));
+            throw new SourceException(String.format("Source file \"%s\" does not exist", url));
         }
         disconnect(connection);
         return files[0];
@@ -138,7 +138,7 @@ public class FtpSource implements LessSource {
             connection.setFileType(FTP.BINARY_FILE_TYPE);
         } catch (final IOException e) {
             disconnect(connection);
-            throw new SourceException(e);
+            throw new SourceException(String.format("Cannot download source \"%s\"", url), e);
         }
         return connection;
     }

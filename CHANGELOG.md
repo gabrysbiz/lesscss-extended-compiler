@@ -1,5 +1,11 @@
 # Extended LessCSS Compiler Changelog
 
+## 2.1-SNAPSHOT
+New Features:
+* Classpath "protocol" support
+
+[See documentation](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/)
+
 ## 2.0
 New Features:
 * [FTP](https://tools.ietf.org/html/rfc959) protocol support
