@@ -18,6 +18,10 @@ package biz.gabrys.lesscss.extended.compiler.util;
  */
 public final class ParameterUtils {
 
+    private ParameterUtils() {
+        // blocks the possibility of create a new instance
+    }
+
     /**
      * Verifies that a parameter value is not {@code null}.
      * @param name the parameter name.
