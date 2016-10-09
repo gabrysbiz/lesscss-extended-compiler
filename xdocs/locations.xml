@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+    <properties>
+        <title>Locations</title>
+    </properties>
+
+    <body>
+        <section id="matrix" name="Supported locations matrix" >
+            <p>
+                Tables show when locations are supported, depending on:
+            </p>
+            <ul>
+                <li>source code caching availability</li>
+                <li>
+                    native compiler implementation (<a href="http://lesscss-compiler.projects.gabrys.biz/1.0/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html">biz.gabrys.lesscss.compiler.LessCompiler</a>)
+                </li>
+                <li>
+                    source factory implementation
+                    (<a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/source/SourceFactory.html">biz.gabrys.lesscss.extended.compiler.source.SourceFactory</a>)
+                </li>
+            </ul>
+            <table>
+                <caption>Caching source code is disabled</caption>
+                <tr>
+                    <th>Native compiler supports*</th>
+                    <th>Source factory supports</th>
+                    <th>Location is supported</th>
+                </tr>
+                <tr>
+                    <td>yes</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                </tr>
+                <tr>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>no</td>
+                </tr>
+                <tr>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>no</td>
+                </tr>
+                <tr>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>no</td>
+                </tr>
+            </table>
+            <table>
+                <caption>Caching source code is enabled</caption>
+                <tr>
+                    <th>Native compiler supports*</th>
+                    <th>Source factory supports</th>
+                    <th>Location is supported</th>
+                </tr>
+                <tr>
+                    <td>yes</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                </tr>
+                <tr>
+                    <td>yes</td>
+                    <td>no</td>
+                    <td>no</td>
+                </tr>
+                <tr>
+                    <td>no</td>
+                    <td>yes</td>
+                    <td>yes</td>
+                </tr>
+                <tr>
+                    <td>no</td>
+                    <td>no</td>
+                    <td>no</td>
+                </tr>
+            </table>
+            <p>* Native compilers must support at least sources located at local drives</p>
+        </section>
+        <section id="custom" name="Custom locations">
+            <p>
+                If the provided components (native compiler and/or source factory) do not support your location,
+                you can create it on your own. You have to perform the following steps:
+            </p>
+            <ol>
+                <li>
+                    implement
+                    <a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/source/LessSource.html">biz.gabrys.lesscss.extended.compiler.source.LessSource</a>
+                    which represents sources stored at the new location
+                </li>
+                <li>
+                    implement
+                    <a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/source/ConcreteSourceFactory.html">biz.gabrys.lesscss.extended.compiler.source.ConcreteSourceFactory</a>
+                    responsible for creating new instances of sources and add it to the
+                    <a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/source/SourceFactory.html">biz.gabrys.lesscss.extended.compiler.source.SourceFactory</a>
+                </li>
+                <li>
+                    enable support of creation sources located at
+                    <ul>
+                        <li>the new location</li>
+                        <li>local drives</li>
+                    </ul>
+                    in the source factory
+                </li>
+                <li>use extended compiler which caching sources</li>
+                <li>use native compiler which supports sources located at local drives</li>
+            </ol>
+            <pre>// creates source factory with custom and local concrete factories 
+SourceFactory sourceFactory = new SourceFactoryBuilder().withCustom(new CustomConcreteSourceFactory()).withLocal().create();
+
+// creates compiler with created source factory, default native compiler supports sources located at local drives
+FullCache cache = new FullCacheBuilder().withDirectory(new File("/less-cache")).create();
+ExtendedCompiler compiler = new CachingSourceCodeExtendedCompilerBuilder(cache).withSourceFactory(sourceFactory).create();
+
+// creates and compile source file
+LessSource source = new CustomSource(new File("/less/file.less"), "UTF-8");
+String cssCode = compiler.compile(source);</pre>
+        </section>
+    </body>
+</document>

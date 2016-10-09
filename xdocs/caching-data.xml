@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document xmlns="http://maven.apache.org/XDOC/2.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/XDOC/2.0 http://maven.apache.org/xsd/xdoc-2.0.xsd">
+
+    <properties>
+        <title>Caching data</title>
+    </properties>
+
+    <body>
+        <section name="Caching data">
+            <p>The compiler can cache:</p>
+            <ul>
+                <li>nothing</li>
+                <li>compiled code</li>
+                <li>source code</li>
+                <li>source and compiled code</li>
+            </ul>
+            <p>
+                The compiler of the relevant caching strategy can be created by (all located in the package
+                <a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/package-summary.html">biz.gabrys.lesscss.extended.compiler</a>):
+            </p>
+            <ul>
+                <li><a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/NonCachingExtendedCompilerBuilder.html">NonCachingExtendedCompilerBuilder</a></li>
+                <li><a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/CachingCompiledCodeExtendedCompilerBuilder.html">CachingCompiledCodeExtendedCompilerBuilder</a></li>
+                <li><a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/CachingSourceCodeExtendedCompilerBuilder.html">CachingSourceCodeExtendedCompilerBuilder</a></li>
+                <li><a href="apidocs/index.html?biz/gabrys/lesscss/extended/compiler/CachingSourceAndCompiledCodeExtendedCompilerBuilder.html">CachingSourceAndCompiledCodeExtendedCompilerBuilder</a></li>
+            </ul>
+            <p>
+                Builders API simplifies creating compilers. After creating a new builder you can instantly call <code>create()</code>
+                method (it fill not configured object with default implementations).
+            </p>
+            <pre>// creates compiler without cache
+ExtendedCompiler compiler = new NonCachingExtendedCompilerBuilder().create();
+
+// creates cache
+FullCache cache = new FullCacheBuilder().withDirectory(new File("/less-cache")).create();
+// creates compilers with cache
+compiler = new CachingCompiledCodeExtendedCompilerBuilder(cache).create();
+compiler = new CachingSourceCodeExtendedCompilerBuilder(cache).create();
+compiler = new CachingSourceAndCompiledCodeExtendedCompilerBuilder(cache).create();</pre>
+        </section>
+        <section name="Caching compiled code">
+            <p>
+                To reduce the complexity of the mechanism that determines whether the compiler should compile source or return
+                code from the cache, it does not take into account changes in the compiler options (parameters).
+            </p>
+            <pre>// creates compiler &amp; source file
+FullCache cache = new FullCacheBuilder().withDirectory(new File("/less-cache")).create();
+ExtendedCompiler compiler = new CachingCompiledCodeExtendedCompilerBuilder(cache).create();
+LessSource source = new LocalSource(new File("/less/file.less"), "UTF-8");
+
+// compiles file with default options
+String cssCode = compiler.compile(source);
+
+// sets custom option: minify CSS code
+CompilerOptions options = new CompilerOptionsBuilder().setMinified(true).create();
+// returns compiled code from cache
+String cssCode2 = compiler.compile(source, options);
+cssCode.equals(cssCode2); // true</pre>
+            <p>You can force the source compilation by deleting cache entry:</p>
+            <pre>// creates compiler &amp; source file
+FullCache cache = new FullCacheBuilder().withDirectory(new File("/less-cache")).create();
+ExtendedCompiler compiler = new CachingCompiledCodeExtendedCompilerBuilder(cache).create();
+LessSource source = new LocalSource(new File("/less/file.less"), "UTF-8");
+
+// compiles file with default options
+String cssCode = compiler.compile(source);
+
+cache.deleteAll(); // or cache.delete(source);
+
+// sets custom option: minify CSS code
+CompilerOptions options = new CompilerOptionsBuilder().setMinified(true).create();
+// returns compiled code from cache
+String cssCode2 = compiler.compile(source, options);
+cssCode.equals(cssCode2); // false</pre>
+        </section>
+    </body>
+</document>
