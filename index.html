@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en-us">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Extended LessCSS Compiler</title>
+        <meta name="description" content="Extended version of the LessCSS Compiler (Java library which compiles Less source files to the CSS code)." />
+        <meta name="keywords" content="lesscss, css, stylesheets, java, compiler" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Open+Sans:400,700" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen" />
+    </head>
+    <body>
+        <section class="page-header">
+            <h1 class="project-name">Extended LessCSS Compiler</h1>
+            <h2 class="project-tagline">Extended version of the LessCSS Compiler (Java library which compiles Less source files to the CSS code)</h2>
+            <a href="https://github.com/gabrysbiz/lesscss-extended-compiler" class="btn">View on GitHub</a>
+            <a href="1.0/" class="btn">Release 1.0 docs</a>
+            <a href="LATEST/" class="btn" rel="nofollow">LATEST (version under development) docs</a>
+        </section>
+        <section class="main-content">
+            <h1>
+                <a id="about" class="anchor" href="#about" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"/>
+                </a>
+                About
+            </h1>
+            <p>
+                Extended version of the <a href="http://lesscss-compiler.projects.gabrys.biz/">LessCSS Compiler</a> (Java library which compiles
+                <a href="http://lesscss.org/">Less</a> source files to the <a href="http://www.w3.org/Style/CSS/">CSS</a> code).
+                Adds features such as:
+            </p>
+            <ul>
+                <li>
+                    caching (<a href="LATEST/caching-data.html">see caching data</a>):
+                    <ul>
+                        <li>compiled code</li>
+                        <li>source code</li>
+                    </ul>
+                </li>
+                <li>
+                    supports sources located at:
+                    <ul>
+                        <li>local drives</li>
+                        <li>network, protocols: HTTP, HTTPS</li>
+                        <li><a href="LATEST/locations.html#custom">custom - defined by programmers</a></li>
+                    </ul>
+                </li>
+            </ul>
+            <h1>
+                <a id="compatibility" class="anchor" href="#compatibility" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span>
+                </a>
+                Compatibility
+            </h1>
+            <p>
+                The compatibility with the <a href="http://lesscss.org/">Less</a> language is determined by:
+            </p>
+            <ul>
+                <li>
+                    native compiler implementation
+                    (<a href="1.0/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html">biz.gabrys.lesscss.compiler.LessCompiler</a>)
+                </li>
+                <li>
+                    supported locations of sources (<a href="LATEST/locations.html#matrix">see supported locations matrix</a>)
+                </li>
+            </ul>
+            <h1>
+                <a id="requirements" class="anchor" href="#requirements" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span>
+                </a>
+                Requirements
+            </h1>
+            <p>
+                The compiler to run requires:
+            </p>
+            <ul>
+                <li>Java 5.0 or higher</li>
+                <li>Third-Party Dependencies (<a href="LATEST/dependencies.html">see list</a>)</li>
+            </ul>
+            <h1>
+                <a id="license" class="anchor" href="#license" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span>
+                </a>
+                License
+            </h1>
+            <p>
+                The plugin is distributed under open source and commercial friendly &quot;BSD 3-Clause&quot; license:
+            </p>
+            <pre>Copyright (c) 2015, Adam Gabryś
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without modification, 
+are permitted provided that the following conditions are met: 
+1. Redistributions of source code must retain the above copyright notice, this 
+list of conditions and the following disclaimer. 
+2. Redistributions in binary form must reproduce the above copyright notice, 
+this list of conditions and the following disclaimer in the documentation and/or 
+other materials provided with the distribution. 
+3. Neither the name of the gabrys.biz nor the names of its contributors may be 
+used to endorse or promote products derived from this software without specific 
+prior written permission. 
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED 
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE 
+DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE FOR 
+ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES 
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; 
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON 
+ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT 
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS 
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
+            <h1>
+                <a id="download" class="anchor" href="#download" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span>
+                </a>
+                Download
+            </h1>
+            <p>
+                You can download the compiler from docs pages or using various dependency management tools:
+            </p>
+            <ul>
+                <li><a href="https://maven.apache.org/">Apache Maven</a></li>
+                <li><a href="https://buildr.apache.org/">Apache Buildr</a></li>
+                <li><a href="http://ant.apache.org/ivy/">Apache Ivy</a></li>
+                <li><a href="http://docs.groovy-lang.org/latest/html/documentation/grape.html">Groovy Grape</a></li>
+                <li><a href="https://gradle.org/">Gradle</a></li>
+                <li><a href="https://grails.org/">Grails</a></li>
+                <li><a href="http://www.scala-sbt.org/">Scala SBT</a></li>
+                <li><a href="http://leiningen.org/">Leiningen</a></li>
+            </ul>
+            <p>Example for Maven:</p>
+            <pre>&lt;project&gt;
+   ...
+   &lt;dependencies&gt;
+      &lt;dependency&gt;
+         &lt;groupId&gt;biz.gabrys.lesscss&lt;/groupId&gt;
+         &lt;artifactId&gt;extended-compiler&lt;/artifactId&gt;
+         &lt;version&gt;1.0&lt;/version&gt;
+      &lt;/dependency&gt;
+      ...
+   &lt;dependencies&gt;
+   ...
+&lt;/project&gt;</pre>
+            <h1>
+                <a id="versions" class="anchor" href="#versions" aria-hidden="true">
+                    <span aria-hidden="true" class="octicon octicon-link"></span>
+                </a>
+                Versions
+            </h1>
+            <p>
+                <a href="LATEST/" rel="nofollow">LATEST docs</a> - the newest version under development</a>
+            </p>
+            <p>
+                List of all available releases:
+                <a href="1.0/">1.0</a>.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Version</th>
+                        <th>Changelog</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td id="release-1.0">1.0<br />(<a href="1.0/">docs</a>)</td>
+                        <td><p>Initial release</p></td>
+                    </tr>
+                </tbody>
+            </table>
+            <footer class="site-footer">
+                <span class="site-footer-owner"><a href="https://github.com/gabrysbiz/lesscss-compiler">LessCSS Compiler</a> is maintained by <a href="http://www.gabrys.biz/">gabrys.biz</a>.</span>
+                <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+            </footer>
+        </section>
+    </body>
+</html>
