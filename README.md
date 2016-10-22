@@ -12,7 +12,7 @@ Adds features such as:
  * local drives
  * network protocols: HTTP, HTTPS, FTP
  * classpath
- * [custom - defined by programmers](http://lesscss-compiler.projects.gabrys.biz/LATEST/locations.html#custom)
+ * [custom - defined by programmers](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/locations.html#custom)
  
 # Compatibility
 The compatibility with the [Less](http://lesscss.org/) language is determined by:
