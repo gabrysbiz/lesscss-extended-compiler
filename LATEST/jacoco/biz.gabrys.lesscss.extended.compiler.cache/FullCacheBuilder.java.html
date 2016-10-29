@@ -31,9 +31,9 @@ public class FullCacheBuilder {
      * Constructs a new instance.
      * @since 1.0
      */
-<span class="nc" id="L34">    public FullCacheBuilder() {</span>
+<span class="fc" id="L34">    public FullCacheBuilder() {</span>
         // do nothing
-<span class="nc" id="L36">    }</span>
+<span class="fc" id="L36">    }</span>
 
     /**
      * Sets specified working directory.
@@ -43,9 +43,9 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheBuilder withDirectory(final File workingDirectory) {
-<span class="nc" id="L46">        ParameterUtils.verifyNotNull(&quot;directory&quot;, workingDirectory);</span>
-<span class="nc" id="L47">        dataStorage = new DataStorageImpl(workingDirectory);</span>
-<span class="nc" id="L48">        return this;</span>
+<span class="fc" id="L46">        ParameterUtils.verifyNotNull(&quot;directory&quot;, workingDirectory);</span>
+<span class="fc" id="L47">        dataStorage = new DataStorageImpl(workingDirectory);</span>
+<span class="fc" id="L48">        return this;</span>
     }
 
     /**
@@ -56,9 +56,9 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheBuilder withDataStorage(final DataStorage dataStorage) {
-<span class="nc" id="L59">        ParameterUtils.verifyNotNull(&quot;data storage&quot;, dataStorage);</span>
-<span class="nc" id="L60">        this.dataStorage = dataStorage;</span>
-<span class="nc" id="L61">        return this;</span>
+<span class="fc" id="L59">        ParameterUtils.verifyNotNull(&quot;data storage&quot;, dataStorage);</span>
+<span class="fc" id="L60">        this.dataStorage = dataStorage;</span>
+<span class="fc" id="L61">        return this;</span>
     }
 
     /**
@@ -69,14 +69,24 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheImpl create() {
-<span class="nc bnc" id="L72" title="All 2 branches missed.">        if (dataStorage == null) {</span>
-            try {
-<span class="nc" id="L74">                dataStorage = new DataStorageImpl(TemporaryDirectoryUtils.create());</span>
-<span class="nc" id="L75">            } catch (final IOException e) {</span>
-<span class="nc" id="L76">                throw new UnsupportedOperationException(&quot;Cannot create temporary directory&quot;, e);</span>
-<span class="nc" id="L77">            }</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (dataStorage == null) {</span>
+<span class="fc" id="L73">            dataStorage = createFallbackDataStorage();</span>
         }
-<span class="nc" id="L79">        return new FullCacheImpl(dataStorage);</span>
+<span class="fc" id="L75">        return new FullCacheImpl(dataStorage);</span>
+    }
+
+    /**
+     * Creates a new instance of the {@link DataStorage} which will be use as fallback for {@link #create()} method.
+     * @return the new instance of the {@link DataStorage}.
+     * @throws UnsupportedOperationException if cannot create temporary directory.
+     * @since 2.1.0
+     */
+    protected DataStorage createFallbackDataStorage() {
+        try {
+<span class="nc" id="L86">            return new DataStorageImpl(TemporaryDirectoryUtils.create());</span>
+<span class="nc" id="L87">        } catch (final IOException e) {</span>
+<span class="nc" id="L88">            throw new UnsupportedOperationException(&quot;Cannot create temporary directory&quot;, e);</span>
+        }
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

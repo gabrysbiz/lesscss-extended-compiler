@@ -25,8 +25,13 @@ import org.apache.commons.io.FileUtils;
  */
 public class DataStorageImpl implements DataStorage {
 
-<span class="nc" id="L28">    private final Object mutex = new Object();</span>
-    private final File directory;
+<span class="fc" id="L28">    private final Object mutex = new Object();</span>
+
+    /**
+     * The storage working directory.
+     * @since 2.1.0
+     */
+    protected final File workingDirectory;
 
     /**
      * Constructs a new instance.
@@ -34,15 +39,24 @@ public class DataStorageImpl implements DataStorage {
      * @throws IllegalArgumentException if working directory is equal to {@code null}.
      * @since 1.0
      */
-<span class="nc" id="L37">    public DataStorageImpl(final File workingDirectory) {</span>
-<span class="nc bnc" id="L38" title="All 2 branches missed.">        if (workingDirectory == null) {</span>
-<span class="nc" id="L39">            throw new IllegalArgumentException(&quot;Working directory cannot be null&quot;);</span>
+<span class="fc" id="L42">    public DataStorageImpl(final File workingDirectory) {</span>
+<span class="pc bpc" id="L43" title="1 of 2 branches missed.">        if (workingDirectory == null) {</span>
+<span class="nc" id="L44">            throw new IllegalArgumentException(&quot;Working directory cannot be null&quot;);</span>
         }
-<span class="nc" id="L41">        directory = workingDirectory;</span>
-<span class="nc" id="L42">    }</span>
+<span class="fc" id="L46">        this.workingDirectory = workingDirectory;</span>
+<span class="fc" id="L47">    }</span>
+
+    /**
+     * Returns the working directory.
+     * @return the working directory.
+     * @since 2.1.0
+     */
+    public File getWorkingDirectory() {
+<span class="fc" id="L55">        return workingDirectory;</span>
+    }
 
     public boolean hasData(final String fileName) {
-<span class="nc bnc" id="L45" title="All 2 branches missed.">        return getFile(fileName) != null;</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">        return getFile(fileName) != null;</span>
     }
 
     /**
@@ -51,24 +65,24 @@ public class DataStorageImpl implements DataStorage {
      * @since 1.0
      */
     public void put(final String fileName, final File file) {
-<span class="nc" id="L54">        synchronized (mutex) {</span>
-<span class="nc" id="L55">            final File cache = getFilePreparedForPut(fileName);</span>
+<span class="nc" id="L68">        synchronized (mutex) {</span>
+<span class="nc" id="L69">            final File cache = getFilePreparedForPut(fileName);</span>
             try {
-<span class="nc" id="L57">                FileUtils.copyFile(file, cache);</span>
-<span class="nc" id="L58">            } catch (final IOException e) {</span>
-<span class="nc" id="L59">                throw new DataStorageException(e);</span>
-<span class="nc" id="L60">            }</span>
-<span class="nc" id="L61">        }</span>
-<span class="nc" id="L62">    }</span>
+<span class="nc" id="L71">                FileUtils.copyFile(file, cache);</span>
+<span class="nc" id="L72">            } catch (final IOException e) {</span>
+<span class="nc" id="L73">                throw new DataStorageException(e);</span>
+<span class="nc" id="L74">            }</span>
+<span class="nc" id="L75">        }</span>
+<span class="nc" id="L76">    }</span>
 
     public File getFile(final String fileName) {
-<span class="nc" id="L65">        synchronized (mutex) {</span>
-<span class="nc" id="L66">            final File file = new File(directory, fileName);</span>
-<span class="nc bnc" id="L67" title="All 2 branches missed.">            if (file.exists()) {</span>
-<span class="nc" id="L68">                return file;</span>
+<span class="nc" id="L79">        synchronized (mutex) {</span>
+<span class="nc" id="L80">            final File file = new File(workingDirectory, fileName);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">            if (file.exists()) {</span>
+<span class="nc" id="L82">                return file;</span>
             }
-<span class="nc" id="L70">            return null;</span>
-<span class="nc" id="L71">        }</span>
+<span class="nc" id="L84">            return null;</span>
+<span class="nc" id="L85">        }</span>
     }
 
     /**
@@ -77,15 +91,15 @@ public class DataStorageImpl implements DataStorage {
      * @since 1.0
      */
     public void put(final String fileName, final String text) {
-<span class="nc" id="L80">        synchronized (mutex) {</span>
-<span class="nc" id="L81">            final File cache = getFilePreparedForPut(fileName);</span>
+<span class="nc" id="L94">        synchronized (mutex) {</span>
+<span class="nc" id="L95">            final File cache = getFilePreparedForPut(fileName);</span>
             try {
-<span class="nc" id="L83">                FileUtils.write(cache, text);</span>
-<span class="nc" id="L84">            } catch (final IOException e) {</span>
-<span class="nc" id="L85">                throw new DataStorageException(e);</span>
-<span class="nc" id="L86">            }</span>
-<span class="nc" id="L87">        }</span>
-<span class="nc" id="L88">    }</span>
+<span class="nc" id="L97">                FileUtils.write(cache, text);</span>
+<span class="nc" id="L98">            } catch (final IOException e) {</span>
+<span class="nc" id="L99">                throw new DataStorageException(e);</span>
+<span class="nc" id="L100">            }</span>
+<span class="nc" id="L101">        }</span>
+<span class="nc" id="L102">    }</span>
 
     /**
      * {@inheritDoc}
@@ -93,17 +107,17 @@ public class DataStorageImpl implements DataStorage {
      * @since 1.0
      */
     public String getText(final String fileName) {
-<span class="nc" id="L96">        synchronized (mutex) {</span>
-<span class="nc" id="L97">            final File cache = getFile(fileName);</span>
-<span class="nc bnc" id="L98" title="All 2 branches missed.">            if (cache == null) {</span>
-<span class="nc" id="L99">                return null;</span>
+<span class="nc" id="L110">        synchronized (mutex) {</span>
+<span class="nc" id="L111">            final File cache = getFile(fileName);</span>
+<span class="nc bnc" id="L112" title="All 2 branches missed.">            if (cache == null) {</span>
+<span class="nc" id="L113">                return null;</span>
             }
             try {
-<span class="nc" id="L102">                return FileUtils.readFileToString(cache);</span>
-<span class="nc" id="L103">            } catch (final IOException e) {</span>
-<span class="nc" id="L104">                throw new DataStorageException(e);</span>
+<span class="nc" id="L116">                return FileUtils.readFileToString(cache);</span>
+<span class="nc" id="L117">            } catch (final IOException e) {</span>
+<span class="nc" id="L118">                throw new DataStorageException(e);</span>
             }
-<span class="nc" id="L106">        }</span>
+<span class="nc" id="L120">        }</span>
     }
 
     /**
@@ -112,15 +126,15 @@ public class DataStorageImpl implements DataStorage {
      * @since 2.0
      */
     public void put(final String fileName, final Collection&lt;String&gt; lines) {
-<span class="nc" id="L115">        synchronized (mutex) {</span>
-<span class="nc" id="L116">            final File cache = getFilePreparedForPut(fileName);</span>
+<span class="nc" id="L129">        synchronized (mutex) {</span>
+<span class="nc" id="L130">            final File cache = getFilePreparedForPut(fileName);</span>
             try {
-<span class="nc" id="L118">                FileUtils.writeLines(cache, lines);</span>
-<span class="nc" id="L119">            } catch (final IOException e) {</span>
-<span class="nc" id="L120">                throw new DataStorageException(e);</span>
-<span class="nc" id="L121">            }</span>
-<span class="nc" id="L122">        }</span>
-<span class="nc" id="L123">    }</span>
+<span class="nc" id="L132">                FileUtils.writeLines(cache, lines);</span>
+<span class="nc" id="L133">            } catch (final IOException e) {</span>
+<span class="nc" id="L134">                throw new DataStorageException(e);</span>
+<span class="nc" id="L135">            }</span>
+<span class="nc" id="L136">        }</span>
+<span class="nc" id="L137">    }</span>
 
     /**
      * {@inheritDoc}
@@ -128,17 +142,17 @@ public class DataStorageImpl implements DataStorage {
      * @since 1.0
      */
     public List&lt;String&gt; getLines(final String fileName) {
-<span class="nc" id="L131">        synchronized (mutex) {</span>
-<span class="nc" id="L132">            final File cache = getFile(fileName);</span>
-<span class="nc bnc" id="L133" title="All 2 branches missed.">            if (cache == null) {</span>
-<span class="nc" id="L134">                return null;</span>
+<span class="nc" id="L145">        synchronized (mutex) {</span>
+<span class="nc" id="L146">            final File cache = getFile(fileName);</span>
+<span class="nc bnc" id="L147" title="All 2 branches missed.">            if (cache == null) {</span>
+<span class="nc" id="L148">                return null;</span>
             }
             try {
-<span class="nc" id="L137">                return FileUtils.readLines(cache);</span>
-<span class="nc" id="L138">            } catch (final IOException e) {</span>
-<span class="nc" id="L139">                throw new DataStorageException(e);</span>
+<span class="nc" id="L151">                return FileUtils.readLines(cache);</span>
+<span class="nc" id="L152">            } catch (final IOException e) {</span>
+<span class="nc" id="L153">                throw new DataStorageException(e);</span>
             }
-<span class="nc" id="L141">        }</span>
+<span class="nc" id="L155">        }</span>
     }
 
     /**
@@ -147,17 +161,17 @@ public class DataStorageImpl implements DataStorage {
      * @since 1.0
      */
     public void delete(final String fileName) {
-<span class="nc" id="L150">        synchronized (mutex) {</span>
-<span class="nc" id="L151">            getFilePreparedForPut(fileName);</span>
-<span class="nc" id="L152">        }</span>
-<span class="nc" id="L153">    }</span>
+<span class="nc" id="L164">        synchronized (mutex) {</span>
+<span class="nc" id="L165">            getFilePreparedForPut(fileName);</span>
+<span class="nc" id="L166">        }</span>
+<span class="nc" id="L167">    }</span>
 
     private File getFilePreparedForPut(final String fileName) {
-<span class="nc" id="L156">        final File file = new File(directory, fileName);</span>
-<span class="nc bnc" id="L157" title="All 4 branches missed.">        if (file.exists() &amp;&amp; !file.delete()) {</span>
-<span class="nc" id="L158">            throw new DataStorageException(String.format(&quot;Cannot remove old source file \&quot;%s\&quot;&quot;, file));</span>
+<span class="nc" id="L170">        final File file = new File(workingDirectory, fileName);</span>
+<span class="nc bnc" id="L171" title="All 4 branches missed.">        if (file.exists() &amp;&amp; !file.delete()) {</span>
+<span class="nc" id="L172">            throw new DataStorageException(String.format(&quot;Cannot remove old source file \&quot;%s\&quot;&quot;, file));</span>
         }
-<span class="nc" id="L160">        return file;</span>
+<span class="nc" id="L174">        return file;</span>
     }
 
     /**
@@ -166,13 +180,13 @@ public class DataStorageImpl implements DataStorage {
      * @since 1.0
      */
     public void deleteAll() {
-<span class="nc" id="L169">        synchronized (mutex) {</span>
+<span class="nc" id="L183">        synchronized (mutex) {</span>
             try {
-<span class="nc" id="L171">                FileUtils.cleanDirectory(directory);</span>
-<span class="nc" id="L172">            } catch (final IOException e) {</span>
-<span class="nc" id="L173">                throw new DataStorageException(e);</span>
-<span class="nc" id="L174">            }</span>
-<span class="nc" id="L175">        }</span>
-<span class="nc" id="L176">    }</span>
+<span class="nc" id="L185">                FileUtils.cleanDirectory(workingDirectory);</span>
+<span class="nc" id="L186">            } catch (final IOException e) {</span>
+<span class="nc" id="L187">                throw new DataStorageException(e);</span>
+<span class="nc" id="L188">            }</span>
+<span class="nc" id="L189">        }</span>
+<span class="nc" id="L190">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

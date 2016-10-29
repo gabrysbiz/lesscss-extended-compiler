@@ -1,12 +1,12 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,TemporaryDirectoryUtils,47,0,4,0,8,0,4,0,2,0
-Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,FullCacheImpl.EntryType,87,0,0,0,6,0,5,0,5,0
-Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,FullCacheImpl,240,0,6,0,49,0,23,0,20,0
+Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,FullCacheImpl.EntryType,5,82,0,0,0,10,1,4,1,4
+Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,FullCacheImpl,0,258,1,5,0,51,1,23,0,21
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,FullCacheAdapter,0,118,0,0,0,33,0,17,0,17
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,FullCacheAdapterBuilder,0,75,0,0,0,24,0,7,0,7
-Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,FullCacheBuilder,45,0,2,0,14,0,5,0,4,0
-Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,CacheException,13,0,0,0,6,0,3,0,3,0
-Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.storage,DataStorageImpl,269,0,14,0,68,0,18,0,11,0
+Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,FullCacheBuilder,12,35,0,2,3,11,1,5,1,4
+Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.cache,CacheException,9,4,0,0,4,2,2,1,2,1
+Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.storage,DataStorageImpl,256,16,13,1,63,6,17,2,10,2
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.storage,DataStorageException,13,0,0,0,6,0,3,0,3,0
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.util,ParameterUtils,3,22,0,4,2,6,1,3,1,1
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.control.processor,SourceTreeWithCodeCachingPreparationProcessor,0,88,0,2,0,20,0,3,0,2
@@ -19,14 +19,14 @@ Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.control.processor
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.control.expiration,CompiledSourceExpirationCheckerImpl,8,83,1,9,1,20,2,8,1,4
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.control.expiration,SourceModificationDateBasedExpirationChecker,0,23,0,2,0,7,0,3,0,2
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.control.expiration,SourceAlwaysExpiredChecker,0,5,0,0,0,3,0,2,0,2
-Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.imports,LessImportOperation,41,61,3,3,10,13,9,2,6,2
+Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.imports,LessImportOperation,39,61,3,3,9,12,9,2,6,2
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.imports,LessImportResolverImpl,0,115,0,18,0,24,0,13,0,4
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.imports,LessImportReplacerImpl,0,76,0,2,0,15,0,3,0,2
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler.imports,ImportException,9,4,0,0,4,2,2,1,2,1
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler,CachingSourceAndCompiledCodeExtendedCompilerBuilder,0,195,0,12,0,39,0,24,0,18
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler,CachingSourceCodeExtendedCompilerBuilder,0,141,0,12,0,29,0,17,0,11
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler,NonCachingExtendedCompilerBuilder,0,71,0,8,0,15,0,10,0,6
-Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler,ExtendedCompilerException,9,4,0,0,4,2,2,1,2,1
+Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler,ExtendedCompilerException,5,8,0,0,2,4,1,2,1,2
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler,CachingCompiledCodeExtendedCompiler,0,90,0,6,0,22,0,7,0,4
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler,CachingCompiledCodeExtendedCompilerBuilder,0,182,0,12,0,40,0,22,0,16
 Extended LessCSS Compiler,biz.gabrys.lesscss.extended.compiler,SimpleExtendedCompiler,0,56,0,0,0,14,0,3,0,3

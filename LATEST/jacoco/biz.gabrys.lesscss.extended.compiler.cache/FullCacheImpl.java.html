@@ -39,17 +39,26 @@ public class FullCacheImpl implements FullCache, DeletableCache {
      * @throws IllegalArgumentException if storage is equal to {@code null}.
      * @since 1.0
      */
-<span class="nc" id="L42">    public FullCacheImpl(final DataStorage storage) {</span>
-<span class="nc" id="L43">        ParameterUtils.verifyNotNull(&quot;data storage&quot;, storage);</span>
-<span class="nc" id="L44">        this.storage = storage;</span>
-<span class="nc" id="L45">    }</span>
+<span class="fc" id="L42">    public FullCacheImpl(final DataStorage storage) {</span>
+<span class="fc" id="L43">        ParameterUtils.verifyNotNull(&quot;data storage&quot;, storage);</span>
+<span class="fc" id="L44">        this.storage = storage;</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Returns the data storage.
+     * @return the data storage.
+     * @since 2.1.0
+     */
+    public DataStorage getStorage() {
+<span class="fc" id="L53">        return storage;</span>
+    }
 
     public void saveSourceModificationDate(final LessSource source, final Date modificationDate) {
-<span class="nc" id="L48">        storage.put(createFileName(EntryType.MODIFICATION_DATE, source), String.valueOf(modificationDate.getTime()));</span>
-<span class="nc" id="L49">    }</span>
+<span class="fc" id="L57">        storage.put(createFileName(EntryType.MODIFICATION_DATE, source), String.valueOf(modificationDate.getTime()));</span>
+<span class="fc" id="L58">    }</span>
 
     public boolean hasSourceModificationDate(final LessSource source) {
-<span class="nc" id="L52">        return storage.hasData(createFileName(EntryType.MODIFICATION_DATE, source));</span>
+<span class="fc" id="L61">        return storage.hasData(createFileName(EntryType.MODIFICATION_DATE, source));</span>
     }
 
     /**
@@ -58,48 +67,48 @@ public class FullCacheImpl implements FullCache, DeletableCache {
      * @since 1.0
      */
     public Date getSourceModificationDate(final LessSource source) {
-<span class="nc" id="L61">        final String modificationDate = storage.getText(createFileName(EntryType.MODIFICATION_DATE, source));</span>
+<span class="fc" id="L70">        final String modificationDate = storage.getText(createFileName(EntryType.MODIFICATION_DATE, source));</span>
         try {
-<span class="nc" id="L63">            return new Date(Long.parseLong(modificationDate));</span>
-<span class="nc" id="L64">        } catch (final NumberFormatException e) {</span>
-<span class="nc" id="L65">            throw new CacheException(e);</span>
+<span class="fc" id="L72">            return new Date(Long.parseLong(modificationDate));</span>
+<span class="fc" id="L73">        } catch (final NumberFormatException e) {</span>
+<span class="fc" id="L74">            throw new CacheException(e);</span>
         }
     }
 
     public void saveSourceImports(final LessSource source, final List&lt;String&gt; imports) {
-<span class="nc" id="L70">        storage.put(createFileName(EntryType.IMPORTS_LIST, source), imports);</span>
-<span class="nc" id="L71">    }</span>
+<span class="fc" id="L79">        storage.put(createFileName(EntryType.IMPORTS_LIST, source), imports);</span>
+<span class="fc" id="L80">    }</span>
 
     public boolean hasSourceImports(final LessSource source) {
-<span class="nc" id="L74">        return storage.hasData(createFileName(EntryType.IMPORTS_LIST, source));</span>
+<span class="fc" id="L83">        return storage.hasData(createFileName(EntryType.IMPORTS_LIST, source));</span>
     }
 
     public List&lt;String&gt; getSourceImports(final LessSource source) {
-<span class="nc" id="L78">        return storage.getLines(createFileName(EntryType.IMPORTS_LIST, source));</span>
+<span class="fc" id="L87">        return storage.getLines(createFileName(EntryType.IMPORTS_LIST, source));</span>
     }
 
     public void saveSourceCode(final LessSource source, final String sourceCode) {
-<span class="nc" id="L82">        storage.put(createFileName(EntryType.SOURCE_CODE, source), sourceCode);</span>
-<span class="nc" id="L83">    }</span>
+<span class="fc" id="L91">        storage.put(createFileName(EntryType.SOURCE_CODE, source), sourceCode);</span>
+<span class="fc" id="L92">    }</span>
 
     public boolean hasSourceCode(final LessSource source) {
-<span class="nc" id="L86">        return storage.hasData(createFileName(EntryType.SOURCE_CODE, source));</span>
+<span class="fc" id="L95">        return storage.hasData(createFileName(EntryType.SOURCE_CODE, source));</span>
     }
 
     public File getSourceFile(final LessSource source) {
-<span class="nc" id="L90">        return storage.getFile(createFileName(EntryType.SOURCE_CODE, source));</span>
+<span class="fc" id="L99">        return storage.getFile(createFileName(EntryType.SOURCE_CODE, source));</span>
     }
 
     public String getSourceRelativePath(final LessSource source) {
-<span class="nc" id="L94">        return createFileName(EntryType.SOURCE_CODE, source);</span>
+<span class="fc" id="L103">        return createFileName(EntryType.SOURCE_CODE, source);</span>
     }
 
     public void saveCompilationDate(final LessSource source, final Date compilationDate) {
-<span class="nc" id="L98">        storage.put(createFileName(EntryType.COMPILATION_DATE, source), String.valueOf(compilationDate.getTime()));</span>
-<span class="nc" id="L99">    }</span>
+<span class="fc" id="L107">        storage.put(createFileName(EntryType.COMPILATION_DATE, source), String.valueOf(compilationDate.getTime()));</span>
+<span class="fc" id="L108">    }</span>
 
     public boolean hasCompilationDate(final LessSource source) {
-<span class="nc" id="L102">        return storage.hasData(createFileName(EntryType.COMPILATION_DATE, source));</span>
+<span class="fc" id="L111">        return storage.hasData(createFileName(EntryType.COMPILATION_DATE, source));</span>
     }
 
     /**
@@ -108,66 +117,107 @@ public class FullCacheImpl implements FullCache, DeletableCache {
      * @since 1.0
      */
     public Date getCompilationDate(final LessSource source) {
-<span class="nc" id="L111">        final String compilationDate = storage.getText(createFileName(EntryType.COMPILATION_DATE, source));</span>
+<span class="fc" id="L120">        final String compilationDate = storage.getText(createFileName(EntryType.COMPILATION_DATE, source));</span>
         try {
-<span class="nc" id="L113">            return new Date(Long.parseLong(compilationDate));</span>
-<span class="nc" id="L114">        } catch (final NumberFormatException e) {</span>
-<span class="nc" id="L115">            throw new CacheException(e);</span>
+<span class="fc" id="L122">            return new Date(Long.parseLong(compilationDate));</span>
+<span class="fc" id="L123">        } catch (final NumberFormatException e) {</span>
+<span class="fc" id="L124">            throw new CacheException(e);</span>
         }
     }
 
     public void saveCompiledCode(final LessSource source, final String compiledCode) {
-<span class="nc" id="L120">        storage.put(createFileName(EntryType.COMPILED_CODE, source), compiledCode);</span>
-<span class="nc" id="L121">    }</span>
+<span class="fc" id="L129">        storage.put(createFileName(EntryType.COMPILED_CODE, source), compiledCode);</span>
+<span class="fc" id="L130">    }</span>
 
     public boolean hasCompiledCode(final LessSource source) {
-<span class="nc" id="L124">        return storage.hasData(createFileName(EntryType.COMPILED_CODE, source));</span>
+<span class="fc" id="L133">        return storage.hasData(createFileName(EntryType.COMPILED_CODE, source));</span>
     }
 
     public String getCompiledCode(final LessSource source) {
-<span class="nc" id="L128">        return storage.getText(createFileName(EntryType.COMPILED_CODE, source));</span>
+<span class="fc" id="L137">        return storage.getText(createFileName(EntryType.COMPILED_CODE, source));</span>
     }
 
     public void delete(final LessSource source) {
-<span class="nc bnc" id="L132" title="All 2 branches missed.">        for (final EntryType type : EntryType.values()) {</span>
-<span class="nc" id="L133">            storage.delete(createFileName(type, source));</span>
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        for (final EntryType type : EntryType.values()) {</span>
+<span class="fc" id="L142">            storage.delete(createFileName(type, source));</span>
         }
-<span class="nc" id="L135">    }</span>
+<span class="fc" id="L144">    }</span>
 
     public void deleteAll() {
-<span class="nc" id="L138">        storage.deleteAll();</span>
-<span class="nc" id="L139">    }</span>
+<span class="fc" id="L147">        storage.deleteAll();</span>
+<span class="fc" id="L148">    }</span>
 
-    private static String createFileName(final EntryType type, final LessSource source) {
-<span class="nc" id="L142">        final String path = source.getPath();</span>
-<span class="nc" id="L143">        final int index = path.replace('\\', '/').lastIndexOf('/');</span>
-<span class="nc" id="L144">        final StringBuilder fileName = new StringBuilder(75);</span>
-<span class="nc bnc" id="L145" title="All 2 branches missed.">        if (index &gt; 0) {</span>
-<span class="nc" id="L146">            fileName.append(path.substring(index + 1));</span>
-<span class="nc" id="L147">            fileName.append('-');</span>
+    /**
+     * Creates a file name for cache entry.
+     * @param type the cache entry type.
+     * @param source the {@link LessSource}.
+     * @return the file name.
+     * @since 2.1.0
+     */
+    protected String createFileName(final EntryType type, final LessSource source) {
+<span class="fc" id="L158">        final String path = source.getPath();</span>
+<span class="fc" id="L159">        final int index = path.replace('\\', '/').lastIndexOf('/');</span>
+<span class="fc" id="L160">        final StringBuilder fileName = new StringBuilder(75);</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (index &gt; 0) {</span>
+<span class="fc" id="L162">            fileName.append(path.substring(index + 1));</span>
+<span class="fc" id="L163">            fileName.append('-');</span>
         }
-<span class="nc" id="L149">        final String hashCode = String.valueOf(path.hashCode());</span>
-<span class="nc bnc" id="L150" title="All 2 branches missed.">        if (hashCode.charAt(0) == '-') {</span>
-<span class="nc" id="L151">            fileName.append(hashCode.replace('-', 'n'));</span>
+<span class="fc" id="L165">        final int hashCode = path.hashCode();</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (hashCode &lt; 0) {</span>
+<span class="fc" id="L167">            fileName.append('n');</span>
+<span class="fc" id="L168">            fileName.append(Math.abs(hashCode));</span>
         } else {
-<span class="nc" id="L153">            fileName.append('p');</span>
-<span class="nc" id="L154">            fileName.append(hashCode);</span>
+<span class="fc" id="L170">            fileName.append('p');</span>
+<span class="fc" id="L171">            fileName.append(hashCode);</span>
         }
-<span class="nc" id="L156">        fileName.append(type.getExtension());</span>
-<span class="nc" id="L157">        return fileName.toString();</span>
+<span class="fc" id="L173">        fileName.append(type.getExtension());</span>
+<span class="fc" id="L174">        return fileName.toString();</span>
     }
 
-<span class="nc" id="L160">    private enum EntryType {</span>
-<span class="nc" id="L161">        MODIFICATION_DATE, IMPORTS_LIST, SOURCE_CODE, COMPILATION_DATE, COMPILED_CODE;</span>
+    /**
+     * Represents available cache entries types.
+     * @since 2.1.0
+     */
+<span class="pc" id="L181">    protected enum EntryType {</span>
+        /**
+         * Modification date entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L186">        MODIFICATION_DATE,</span>
+        /**
+         * Imports list entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L191">        IMPORTS_LIST,</span>
+        /**
+         * Source code entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L196">        SOURCE_CODE,</span>
+        /**
+         * Compilation date entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L201">        COMPILATION_DATE,</span>
+        /**
+         * Compiled code entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L206">        COMPILED_CODE;</span>
 
         private final String extension;
 
-<span class="nc" id="L165">        EntryType() {</span>
-<span class="nc" id="L166">            extension = '.' + name().toLowerCase(Locale.ENGLISH).replace('_', '.');</span>
-<span class="nc" id="L167">        }</span>
+<span class="fc" id="L210">        EntryType() {</span>
+<span class="fc" id="L211">            extension = '.' + name().toLowerCase(Locale.ENGLISH).replace('_', '.');</span>
+<span class="fc" id="L212">        }</span>
 
-        private String getExtension() {
-<span class="nc" id="L170">            return extension;</span>
+        /**
+         * Returns an extension of the cache entry in form {@code .type}.
+         * @return the entry extension.
+         * @since 2.1.0
+         */
+        public String getExtension() {
+<span class="fc" id="L220">            return extension;</span>
         }
     }
 }
