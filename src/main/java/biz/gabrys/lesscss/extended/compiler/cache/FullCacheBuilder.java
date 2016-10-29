@@ -70,12 +70,22 @@ public class FullCacheBuilder {
      */
     public FullCacheImpl create() {
         if (dataStorage == null) {
-            try {
-                dataStorage = new DataStorageImpl(TemporaryDirectoryUtils.create());
-            } catch (final IOException e) {
-                throw new UnsupportedOperationException("Cannot create temporary directory", e);
-            }
+            dataStorage = createFallbackDataStorage();
         }
         return new FullCacheImpl(dataStorage);
+    }
+
+    /**
+     * Creates a new instance of the {@link DataStorage} which will be use as fallback for {@link #create()} method.
+     * @return the new instance of the {@link DataStorage}.
+     * @throws UnsupportedOperationException if cannot create temporary directory.
+     * @since 2.1.0
+     */
+    protected DataStorage createFallbackDataStorage() {
+        try {
+            return new DataStorageImpl(TemporaryDirectoryUtils.create());
+        } catch (final IOException e) {
+            throw new UnsupportedOperationException("Cannot create temporary directory", e);
+        }
     }
 }

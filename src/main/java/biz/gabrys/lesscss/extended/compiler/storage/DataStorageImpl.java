@@ -26,7 +26,12 @@ import org.apache.commons.io.FileUtils;
 public class DataStorageImpl implements DataStorage {
 
     private final Object mutex = new Object();
-    private final File directory;
+
+    /**
+     * The storage working directory.
+     * @since 2.1.0
+     */
+    protected final File workingDirectory;
 
     /**
      * Constructs a new instance.
@@ -38,7 +43,16 @@ public class DataStorageImpl implements DataStorage {
         if (workingDirectory == null) {
             throw new IllegalArgumentException("Working directory cannot be null");
         }
-        directory = workingDirectory;
+        this.workingDirectory = workingDirectory;
+    }
+
+    /**
+     * Returns the working directory.
+     * @return the working directory.
+     * @since 2.1.0
+     */
+    public File getWorkingDirectory() {
+        return workingDirectory;
     }
 
     public boolean hasData(final String fileName) {
@@ -63,7 +77,7 @@ public class DataStorageImpl implements DataStorage {
 
     public File getFile(final String fileName) {
         synchronized (mutex) {
-            final File file = new File(directory, fileName);
+            final File file = new File(workingDirectory, fileName);
             if (file.exists()) {
                 return file;
             }
@@ -153,7 +167,7 @@ public class DataStorageImpl implements DataStorage {
     }
 
     private File getFilePreparedForPut(final String fileName) {
-        final File file = new File(directory, fileName);
+        final File file = new File(workingDirectory, fileName);
         if (file.exists() && !file.delete()) {
             throw new DataStorageException(String.format("Cannot remove old source file \"%s\"", file));
         }
@@ -168,7 +182,7 @@ public class DataStorageImpl implements DataStorage {
     public void deleteAll() {
         synchronized (mutex) {
             try {
-                FileUtils.cleanDirectory(directory);
+                FileUtils.cleanDirectory(workingDirectory);
             } catch (final IOException e) {
                 throw new DataStorageException(e);
             }
