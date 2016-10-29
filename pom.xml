@@ -95,7 +95,8 @@
         <dependency>
             <groupId>commons-net</groupId>
             <artifactId>commons-net</artifactId>
-            <version>3.5</version>
+            <!-- latest compatible with JDK 1.5 -->
+            <version>3.4</version>
         </dependency>
 
         <dependency>
