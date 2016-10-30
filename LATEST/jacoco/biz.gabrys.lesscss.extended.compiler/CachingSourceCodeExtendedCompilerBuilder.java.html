@@ -161,14 +161,11 @@ public class CachingSourceCodeExtendedCompilerBuilder {
     }
 
     SourceFactory createSourceFactory() {
-<span class="fc bfc" id="L164" title="All 2 branches covered.">        if (sourceFactory != null) {</span>
-<span class="fc" id="L165">            return sourceFactory;</span>
-        }
-<span class="fc" id="L167">        return createSourceFactoryFromBuilder(new SourceFactoryBuilder());</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());</span>
     }
 
     SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
-<span class="fc" id="L171">        return builder.withStandard().create();</span>
+<span class="fc" id="L168">        return builder.withStandard().create();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

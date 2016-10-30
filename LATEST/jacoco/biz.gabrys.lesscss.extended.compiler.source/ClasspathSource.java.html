@@ -13,6 +13,7 @@
 package biz.gabrys.lesscss.extended.compiler.source;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -44,8 +45,8 @@ public class ClasspathSource implements LessSource {
      * @since 2.1.0
      */
     public ClasspathSource(final URI uri) {
-<span class="nc" id="L47">        this(uri, Charset.defaultCharset().toString());</span>
-<span class="nc" id="L48">    }</span>
+<span class="nc" id="L48">        this(uri, Charset.defaultCharset().toString());</span>
+<span class="nc" id="L49">    }</span>
 
     /**
      * Constructs a new instance and sets {@link URI} of the source file and its encoding.
@@ -53,30 +54,36 @@ public class ClasspathSource implements LessSource {
      * @param encoding the source file encoding.
      * @since 2.1.0
      */
-<span class="nc" id="L56">    public ClasspathSource(final URI uri, final String encoding) {</span>
-<span class="nc" id="L57">        this.uri = uri;</span>
-<span class="nc" id="L58">        path = uri.toString().substring(PROTOCOL_PREFIX.length());</span>
-<span class="nc" id="L59">        this.encoding = encoding;</span>
-<span class="nc" id="L60">    }</span>
+<span class="nc" id="L57">    public ClasspathSource(final URI uri, final String encoding) {</span>
+<span class="nc" id="L58">        this.uri = uri;</span>
+<span class="nc" id="L59">        path = uri.toString().substring(PROTOCOL_PREFIX.length());</span>
+<span class="nc" id="L60">        this.encoding = encoding;</span>
+<span class="nc" id="L61">    }</span>
 
     public String getPath() {
-<span class="nc" id="L63">        return uri.toString();</span>
+<span class="nc" id="L64">        return uri.toString();</span>
     }
 
     public String getEncoding() {
-<span class="nc" id="L67">        return encoding;</span>
+<span class="nc" id="L68">        return encoding;</span>
     }
 
     public String getContent() {
-<span class="nc" id="L71">        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="nc" id="L72">        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="nc" id="L73">        final InputStream stream = classLoader.getResourceAsStream(path);</span>
+<span class="nc bnc" id="L74" title="All 2 branches missed.">        if (stream == null) {</span>
+<span class="nc" id="L75">            throw new SourceException(String.format(&quot;Cannot find resource \&quot;%s\&quot; in classpath&quot;, path));</span>
+        }
         final String content;
         try {
-<span class="nc" id="L74">            content = IOUtils.toString(classLoader.getResourceAsStream(path), encoding);</span>
-<span class="nc" id="L75">        } catch (final IOException e) {</span>
-<span class="nc" id="L76">            throw new SourceException(String.format(&quot;Cannot read content of the \&quot;%s\&quot; resource&quot;, path), e);</span>
-<span class="nc" id="L77">        }</span>
-<span class="nc" id="L78">        lastModificationDate = getModificationDate();</span>
-<span class="nc" id="L79">        return content;</span>
+<span class="nc" id="L79">            content = IOUtils.toString(stream, encoding);</span>
+<span class="nc" id="L80">        } catch (final IOException e) {</span>
+<span class="nc" id="L81">            throw new SourceException(String.format(&quot;Cannot read content of the \&quot;%s\&quot; resource&quot;, path), e);</span>
+        } finally {
+<span class="nc" id="L83">            IOUtils.closeQuietly(stream);</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc" id="L85">        lastModificationDate = getModificationDate();</span>
+<span class="nc" id="L86">        return content;</span>
     }
 
     /**
@@ -87,22 +94,25 @@ public class ClasspathSource implements LessSource {
      * @since 2.1.0
      */
     public Date getLastModificationDate() {
-<span class="nc bnc" id="L90" title="All 2 branches missed.">        if (lastModificationDate != null) {</span>
-<span class="nc" id="L91">            return (Date) lastModificationDate.clone();</span>
+<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (lastModificationDate != null) {</span>
+<span class="nc" id="L98">            return (Date) lastModificationDate.clone();</span>
         }
-<span class="nc" id="L93">        return getModificationDate();</span>
+<span class="nc" id="L100">        return getModificationDate();</span>
     }
 
     private Date getModificationDate() {
-<span class="nc" id="L97">        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();</span>
-<span class="nc" id="L98">        final URL resource = classLoader.getResource(path);</span>
+<span class="nc" id="L104">        final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();</span>
+<span class="nc" id="L105">        final URL resource = classLoader.getResource(path);</span>
+<span class="nc bnc" id="L106" title="All 2 branches missed.">        if (resource == null) {</span>
+<span class="nc" id="L107">            throw new SourceException(String.format(&quot;Cannot find resource \&quot;%s\&quot; in classpath&quot;, path));</span>
+        }
         final URLConnection connection;
         try {
-<span class="nc" id="L101">            connection = resource.openConnection();</span>
-<span class="nc" id="L102">        } catch (final IOException e) {</span>
-<span class="nc" id="L103">            throw new SourceException(String.format(&quot;Cannot read last modification date for \&quot;%s\&quot; resource&quot;, path), e);</span>
-<span class="nc" id="L104">        }</span>
-<span class="nc" id="L105">        return new Date(connection.getLastModified());</span>
+<span class="nc" id="L111">            connection = resource.openConnection();</span>
+<span class="nc" id="L112">        } catch (final IOException e) {</span>
+<span class="nc" id="L113">            throw new SourceException(String.format(&quot;Cannot read last modification date for \&quot;%s\&quot; resource&quot;, path), e);</span>
+<span class="nc" id="L114">        }</span>
+<span class="nc" id="L115">        return new Date(connection.getLastModified());</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

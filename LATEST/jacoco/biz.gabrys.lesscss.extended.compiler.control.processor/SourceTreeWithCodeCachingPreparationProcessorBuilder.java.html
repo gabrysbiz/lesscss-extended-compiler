@@ -132,11 +132,31 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessor create() {
-<span class="pc bpc" id="L135" title="1 of 2 branches missed.">        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();</span>
-<span class="pc bpc" id="L136" title="1 of 2 branches missed.">        final LessImportResolver resolver = importResolver != null ? importResolver : new LessImportResolverImpl();</span>
-<span class="pc bpc" id="L137" title="1 of 2 branches missed.">        final LessImportReplacer replacer = importReplacer != null ? importReplacer : new LessImportReplacerImpl();</span>
-<span class="pc bpc" id="L138" title="1 of 2 branches missed.">        final SourceFactory factory = sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create();</span>
+<span class="fc" id="L135">        final SourceExpirationChecker checker = createExpirationChecker();</span>
+<span class="fc" id="L136">        final LessImportResolver resolver = createImportResolver();</span>
+<span class="fc" id="L137">        final LessImportReplacer replacer = createImportReplacer();</span>
+<span class="fc" id="L138">        final SourceFactory factory = createSourceFactory();</span>
 <span class="fc" id="L139">        return new SourceTreeWithCodeCachingPreparationProcessor(checker, datesCache, importsCache, codeCache, resolver, replacer, factory);</span>
+    }
+
+    SourceExpirationChecker createExpirationChecker() {
+<span class="fc bfc" id="L143" title="All 2 branches covered.">        return expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();</span>
+    }
+
+    LessImportResolver createImportResolver() {
+<span class="fc bfc" id="L147" title="All 2 branches covered.">        return importResolver != null ? importResolver : new LessImportResolverImpl();</span>
+    }
+
+    LessImportReplacer createImportReplacer() {
+<span class="fc bfc" id="L151" title="All 2 branches covered.">        return importReplacer != null ? importReplacer : new LessImportReplacerImpl();</span>
+    }
+
+    SourceFactory createSourceFactory() {
+<span class="fc bfc" id="L155" title="All 2 branches covered.">        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());</span>
+    }
+
+    SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
+<span class="fc" id="L159">        return builder.withStandard().create();</span>
     }
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
