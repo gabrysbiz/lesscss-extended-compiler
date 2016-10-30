@@ -40,12 +40,12 @@ public class SourceTreePreparationProcessor extends AbstractSourceTreePreparatio
      * The cache responsible for storing source files modification dates.
      * @since 2.1.0
      */
-    private final SourceModificationDateCache datesCache;
+    protected SourceModificationDateCache datesCache;
     /**
      * The resolver responsible for returning a list of import operations.
      * @since 2.1.0
      */
-    private final LessImportResolver importResolver;
+    protected LessImportResolver importResolver;
 
     /**
      * Constructs a new instance.

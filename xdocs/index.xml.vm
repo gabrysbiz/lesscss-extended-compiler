@@ -23,13 +23,7 @@
                 <li>supports sources located at:
                     <ul>
                         <li>local drives</li>
-                        <li>network protocols:
-                            <ul>
-                                <li>HTTP</li>
-                                <li>HTTPS</li>
-                                <li>FTP</li>
-                            </ul>
-                        </li>
+                        <li>network protocols: HTTP, HTTPS, FTP</li>
                         <li>classpath (prefix <code>classpath://</code>)</li>
                         <li><a href="locations.html#custom">custom - defined by programmers</a></li>
                     </ul>

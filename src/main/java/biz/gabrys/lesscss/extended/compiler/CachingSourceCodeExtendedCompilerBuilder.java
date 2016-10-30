@@ -161,10 +161,7 @@ public class CachingSourceCodeExtendedCompilerBuilder {
     }
 
     SourceFactory createSourceFactory() {
-        if (sourceFactory != null) {
-            return sourceFactory;
-        }
-        return createSourceFactoryFromBuilder(new SourceFactoryBuilder());
+        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());
     }
 
     SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {

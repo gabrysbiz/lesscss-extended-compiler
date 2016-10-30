@@ -132,9 +132,9 @@ public class CachingCompiledCodeExtendedCompilerBuilder {
      * <li>{@link LessImportResolverImpl}</li>
      * <li>{@link SourceFactory} created by {@link SourceFactoryBuilder} with:
      * <ul>
-     * <li>standard factories ({@link SourceFactoryBuilder#withStandard()}) when compiler is not an instance of
+     * <li>standard factories ({@link SourceFactoryBuilder#withStandard()}) when compiler is not an instance of the
      * {@link LessCompilerImpl}</li>
-     * <li>local factory ({@link SourceFactoryBuilder#withLocal()}) when compiler is an instance of
+     * <li>local factory ({@link SourceFactoryBuilder#withLocal()}) when compiler is an instance of the
      * {@link LessCompilerImpl}</li>
      * </ul>
      * </li>
@@ -159,10 +159,7 @@ public class CachingCompiledCodeExtendedCompilerBuilder {
     }
 
     SourceFactory createSourceFactory(final LessCompiler compiler) {
-        if (sourceFactory != null) {
-            return sourceFactory;
-        }
-        return createSourceFactoryFromBuilder(compiler, new SourceFactoryBuilder());
+        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(compiler, new SourceFactoryBuilder());
     }
 
     SourceFactory createSourceFactoryFromBuilder(final LessCompiler compiler, final SourceFactoryBuilder builder) {

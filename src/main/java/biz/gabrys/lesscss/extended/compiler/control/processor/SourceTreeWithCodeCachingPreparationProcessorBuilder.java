@@ -132,10 +132,30 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessor create() {
-        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();
-        final LessImportResolver resolver = importResolver != null ? importResolver : new LessImportResolverImpl();
-        final LessImportReplacer replacer = importReplacer != null ? importReplacer : new LessImportReplacerImpl();
-        final SourceFactory factory = sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create();
+        final SourceExpirationChecker checker = createExpirationChecker();
+        final LessImportResolver resolver = createImportResolver();
+        final LessImportReplacer replacer = createImportReplacer();
+        final SourceFactory factory = createSourceFactory();
         return new SourceTreeWithCodeCachingPreparationProcessor(checker, datesCache, importsCache, codeCache, resolver, replacer, factory);
+    }
+
+    SourceExpirationChecker createExpirationChecker() {
+        return expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();
+    }
+
+    LessImportResolver createImportResolver() {
+        return importResolver != null ? importResolver : new LessImportResolverImpl();
+    }
+
+    LessImportReplacer createImportReplacer() {
+        return importReplacer != null ? importReplacer : new LessImportReplacerImpl();
+    }
+
+    SourceFactory createSourceFactory() {
+        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());
+    }
+
+    SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
+        return builder.withStandard().create();
     }
 }

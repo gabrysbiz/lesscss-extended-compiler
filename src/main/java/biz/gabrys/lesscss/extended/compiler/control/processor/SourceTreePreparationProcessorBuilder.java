@@ -64,6 +64,17 @@ public class SourceTreePreparationProcessorBuilder {
     }
 
     /**
+     * Sets specified {@link SourceExpirationChecker}.
+     * @param expirationChecker the source expiration checker.
+     * @return {@code this} builder.
+     * @since 2.1.0
+     */
+    public SourceTreePreparationProcessorBuilder withExpirationChecker(final SourceExpirationChecker expirationChecker) {
+        this.expirationChecker = expirationChecker;
+        return this;
+    }
+
+    /**
      * Sets specified {@link LessImportResolver}.
      * @param importResolver the import resolver.
      * @return {@code this} builder.
@@ -98,9 +109,25 @@ public class SourceTreePreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreePreparationProcessor create() {
-        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();
-        final LessImportResolver resolver = importResolver != null ? importResolver : new LessImportResolverImpl();
-        final SourceFactory factory = sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create();
+        final SourceExpirationChecker checker = createExpirationChecker();
+        final LessImportResolver resolver = createImportResolver();
+        final SourceFactory factory = createSourceFactory();
         return new SourceTreePreparationProcessor(checker, datesCache, importsCache, resolver, factory);
+    }
+
+    SourceExpirationChecker createExpirationChecker() {
+        return expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();
+    }
+
+    LessImportResolver createImportResolver() {
+        return importResolver != null ? importResolver : new LessImportResolverImpl();
+    }
+
+    SourceFactory createSourceFactory() {
+        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());
+    }
+
+    SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
+        return builder.withStandard().create();
     }
 }
