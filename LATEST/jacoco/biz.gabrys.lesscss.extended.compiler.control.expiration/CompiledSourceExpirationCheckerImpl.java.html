@@ -75,8 +75,8 @@ public class CompiledSourceExpirationCheckerImpl implements CompiledSourceExpira
 
     /**
      * Tests whether a compiled code for a source file expired. This method is called recursively for the source and all
-     * of its imports (until find the first expired file). To avoid imports loop, it processes only sources which path
-     * is not contained by the set.
+     * of its imports (until find the first expired file). To avoid imports loop, it processes only sources whose paths
+     * are not contained by the set.
      * @param source the source file.
      * @param lastCompilationDate the date of last compilation.
      * @param checkedSourcesPaths set with checked sources paths.
