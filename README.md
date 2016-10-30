@@ -11,7 +11,7 @@ Adds features such as:
 * supports sources located at:
  * local drives
  * network protocols: HTTP, HTTPS, FTP
- * classpath
+ * classpath (prefix `classpath://`)
  * [custom - defined by programmers](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/locations.html#custom)
  
 # Compatibility

@@ -4,6 +4,12 @@
 New Features:
 * Classpath "protocol" support
 
+API:
+* [AbstractSourceTreePreparationProcessor#expirationChecker](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html) is no longer `final`
+* [AbstractSourceTreePreparationProcessor#importsCache](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html) is no longer `final`
+* [AbstractSourceTreePreparationProcessor#sourceFactory](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html) is no longer `final`
+* [FullCacheImpl#storage](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/cache/FullCacheImpl.html) is no longer `final`
+
 [See documentation](http://lesscss-extended-compiler.projects.gabrys.biz/LATEST/)
 
 ## 2.0

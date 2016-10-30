@@ -28,10 +28,26 @@ import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
  */
 public class CompiledSourceExpirationCheckerImpl implements CompiledSourceExpirationChecker {
 
-    private final SourceExpirationChecker expirationChecker;
-    private final SourceModificationDateCache datesCache;
-    private final SourceImportsCache importsCache;
-    private final SourceFactory sourceFactory;
+    /**
+     * The individual source files expiration checker.
+     * @since 2.1.0
+     */
+    protected SourceExpirationChecker expirationChecker;
+    /**
+     * The cache responsible for storing source files dates.
+     * @since 2.1.0
+     */
+    protected SourceModificationDateCache datesCache;
+    /**
+     * The cache responsible for storing source files imports lists.
+     * @since 2.1.0
+     */
+    protected SourceImportsCache importsCache;
+    /**
+     * The factory responsible for creating new instances of the {@link LessSource}.
+     * @since 2.1.0
+     */
+    protected SourceFactory sourceFactory;
 
     /**
      * Constructs a new instance.

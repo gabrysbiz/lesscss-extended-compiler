@@ -30,7 +30,7 @@
                                 <li>FTP</li>
                             </ul>
                         </li>
-                        <li>classpath</li>
+                        <li>classpath (prefix <code>classpath://</code>)</li>
                         <li><a href="locations.html#custom">custom - defined by programmers</a></li>
                     </ul>
                 </li>

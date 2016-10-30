@@ -12,6 +12,25 @@
             <ul>
                 <li>Classpath &quot;protocol&quot; support</li>
             </ul>
+            <p>API:</p>
+            <ul>
+                <li>
+                    <a href="../apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html">AbstractSourceTreePreparationProcessor#expirationChecker</a>
+                    is no longer <code>final</code>
+                </li>
+                <li>
+                    <a href="../apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html">AbstractSourceTreePreparationProcessor#importsCache</a>
+                    is no longer <code>final</code>
+                </li>
+                <li>
+                    <a href="../apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html">AbstractSourceTreePreparationProcessor#sourceFactory</a>
+                    is no longer <code>final</code>
+                </li>
+                <li>
+                    <a href="../apidocs/index.html?biz/gabrys/lesscss/extended/compiler/cache/FullCacheImpl.html">FullCacheImpl#storage</a>
+                    is no longer <code>final</code>
+                </li>
+            </ul>
         </section>
         <section id="release-2.0" name="Release 2.0">
             <p>New Features:</p>

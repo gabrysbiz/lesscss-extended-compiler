@@ -36,7 +36,15 @@ import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
  */
 public class SourceTreePreparationProcessor extends AbstractSourceTreePreparationProcessor {
 
+    /**
+     * The cache responsible for storing source files modification dates.
+     * @since 2.1.0
+     */
     private final SourceModificationDateCache datesCache;
+    /**
+     * The resolver responsible for returning a list of import operations.
+     * @since 2.1.0
+     */
     private final LessImportResolver importResolver;
 
     /**
@@ -44,7 +52,7 @@ public class SourceTreePreparationProcessor extends AbstractSourceTreePreparatio
      * @param expirationChecker the checker responsible for determining if the source file expired.
      * @param datesCache the cache responsible for storing source files modification dates.
      * @param importsCache the cache responsible for storing source files imports lists.
-     * @param importResolver the <a href="http://lesscss.org/">Less</a> import resolver.
+     * @param importResolver the resolver responsible for returning a list of import operations.
      * @param sourceFactory the factory responsible for creating new instances of the {@link LessSource}.
      * @since 1.0
      */
