@@ -13,6 +13,7 @@
 package biz.gabrys.lesscss.extended.compiler.source;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
@@ -69,11 +70,17 @@ public class ClasspathSource implements LessSource {
 
     public String getContent() {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        final InputStream stream = classLoader.getResourceAsStream(path);
+        if (stream == null) {
+            throw new SourceException(String.format("Cannot find resource \"%s\" in classpath", path));
+        }
         final String content;
         try {
-            content = IOUtils.toString(classLoader.getResourceAsStream(path), encoding);
+            content = IOUtils.toString(stream, encoding);
         } catch (final IOException e) {
             throw new SourceException(String.format("Cannot read content of the \"%s\" resource", path), e);
+        } finally {
+            IOUtils.closeQuietly(stream);
         }
         lastModificationDate = getModificationDate();
         return content;
@@ -96,6 +103,9 @@ public class ClasspathSource implements LessSource {
     private Date getModificationDate() {
         final ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         final URL resource = classLoader.getResource(path);
+        if (resource == null) {
+            throw new SourceException(String.format("Cannot find resource \"%s\" in classpath", path));
+        }
         final URLConnection connection;
         try {
             connection = resource.openConnection();
