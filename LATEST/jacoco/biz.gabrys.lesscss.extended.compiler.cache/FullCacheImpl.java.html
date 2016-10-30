@@ -31,7 +31,7 @@ public class FullCacheImpl implements FullCache, DeletableCache {
      * The data storage.
      * @since 1.0
      */
-    protected final DataStorage storage;
+    protected DataStorage storage;
 
     /**
      * Constructs a new instance.

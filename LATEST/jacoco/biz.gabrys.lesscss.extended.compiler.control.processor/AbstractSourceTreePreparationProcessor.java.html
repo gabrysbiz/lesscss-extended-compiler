@@ -31,17 +31,17 @@ public abstract class AbstractSourceTreePreparationProcessor implements PreCompi
      * The checker responsible for determining if the source file expired.
      * @since 1.0
      */
-    protected final SourceExpirationChecker expirationChecker;
+    protected SourceExpirationChecker expirationChecker;
     /**
      * The cache responsible for storing source files imports lists.
      * @since 1.0
      */
-    protected final SourceImportsCache importsCache;
+    protected SourceImportsCache importsCache;
     /**
      * The factory responsible for creating new instances of the {@link LessSource}.
      * @since 1.0
      */
-    protected final SourceFactory sourceFactory;
+    protected SourceFactory sourceFactory;
 
     /**
      * Constructs a new instance.

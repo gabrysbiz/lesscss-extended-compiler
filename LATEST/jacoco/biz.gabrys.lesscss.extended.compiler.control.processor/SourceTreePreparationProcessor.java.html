@@ -36,7 +36,15 @@ import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
  */
 public class SourceTreePreparationProcessor extends AbstractSourceTreePreparationProcessor {
 
+    /**
+     * The cache responsible for storing source files modification dates.
+     * @since 2.1.0
+     */
     private final SourceModificationDateCache datesCache;
+    /**
+     * The resolver responsible for returning a list of import operations.
+     * @since 2.1.0
+     */
     private final LessImportResolver importResolver;
 
     /**
@@ -44,29 +52,29 @@ public class SourceTreePreparationProcessor extends AbstractSourceTreePreparatio
      * @param expirationChecker the checker responsible for determining if the source file expired.
      * @param datesCache the cache responsible for storing source files modification dates.
      * @param importsCache the cache responsible for storing source files imports lists.
-     * @param importResolver the &lt;a href=&quot;http://lesscss.org/&quot;&gt;Less&lt;/a&gt; import resolver.
+     * @param importResolver the resolver responsible for returning a list of import operations.
      * @param sourceFactory the factory responsible for creating new instances of the {@link LessSource}.
      * @since 1.0
      */
     public SourceTreePreparationProcessor(final SourceExpirationChecker expirationChecker, final SourceModificationDateCache datesCache,
             final SourceImportsCache importsCache, final LessImportResolver importResolver, final SourceFactory sourceFactory) {
-<span class="fc" id="L53">        super(expirationChecker, importsCache, sourceFactory);</span>
-<span class="fc" id="L54">        this.datesCache = datesCache;</span>
-<span class="fc" id="L55">        this.importResolver = importResolver;</span>
-<span class="fc" id="L56">    }</span>
+<span class="fc" id="L61">        super(expirationChecker, importsCache, sourceFactory);</span>
+<span class="fc" id="L62">        this.datesCache = datesCache;</span>
+<span class="fc" id="L63">        this.importResolver = importResolver;</span>
+<span class="fc" id="L64">    }</span>
 
     @Override
     protected void prepareWhenExpired(final LessSource source, final Set&lt;String&gt; preparedSourcesPaths) {
-<span class="fc" id="L60">        final String sourceCode = source.getContent();</span>
-<span class="fc" id="L61">        datesCache.saveSourceModificationDate(source, source.getLastModificationDate());</span>
-<span class="fc" id="L62">        final Collection&lt;LessImportOperation&gt; operations = importResolver.resolve(sourceCode);</span>
-<span class="fc" id="L63">        final List&lt;String&gt; imports = new ArrayList&lt;String&gt;(operations.size());</span>
-<span class="fc bfc" id="L64" title="All 2 branches covered.">        for (final LessImportOperation operation : operations) {</span>
-<span class="fc" id="L65">            final LessSource importSource = sourceFactory.create(source, operation.getComputedPath());</span>
-<span class="fc" id="L66">            imports.add(operation.getComputedPath());</span>
-<span class="fc" id="L67">            prepare(importSource, preparedSourcesPaths);</span>
-<span class="fc" id="L68">        }</span>
-<span class="fc" id="L69">        importsCache.saveSourceImports(source, imports);</span>
-<span class="fc" id="L70">    }</span>
+<span class="fc" id="L68">        final String sourceCode = source.getContent();</span>
+<span class="fc" id="L69">        datesCache.saveSourceModificationDate(source, source.getLastModificationDate());</span>
+<span class="fc" id="L70">        final Collection&lt;LessImportOperation&gt; operations = importResolver.resolve(sourceCode);</span>
+<span class="fc" id="L71">        final List&lt;String&gt; imports = new ArrayList&lt;String&gt;(operations.size());</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for (final LessImportOperation operation : operations) {</span>
+<span class="fc" id="L73">            final LessSource importSource = sourceFactory.create(source, operation.getComputedPath());</span>
+<span class="fc" id="L74">            imports.add(operation.getComputedPath());</span>
+<span class="fc" id="L75">            prepare(importSource, preparedSourcesPaths);</span>
+<span class="fc" id="L76">        }</span>
+<span class="fc" id="L77">        importsCache.saveSourceImports(source, imports);</span>
+<span class="fc" id="L78">    }</span>
 }
 </pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

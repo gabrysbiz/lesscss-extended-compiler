@@ -29,27 +29,27 @@ public class FullCacheAdapter implements FullCache {
      * The cache responsible for storing source files modification dates.
      * @since 2.1.0
      */
-    protected final SourceModificationDateCache modificationDatesCache;
+    protected SourceModificationDateCache modificationDatesCache;
     /**
      * The cache responsible for storing source files imports paths.
      * @since 2.1.0
      */
-    protected final SourceImportsCache importsCache;
+    protected SourceImportsCache importsCache;
     /**
      * The cache responsible for storing source files code.
      * @since 2.1.0
      */
-    protected final SourceCodeCache sourceCache;
+    protected SourceCodeCache sourceCache;
     /**
      * The cache responsible for storing sources compilation dates.
      * @since 2.1.0
      */
-    protected final CompilationDateCache compilationDatesCache;
+    protected CompilationDateCache compilationDatesCache;
     /**
      * The cache responsible for storing compiled code.
      * @since 2.1.0
      */
-    protected final CompiledCodeCache compiledCache;
+    protected CompiledCodeCache compiledCache;
 
     /**
      * Constructs a new instance.
