@@ -77,7 +77,6 @@ public class CachingCompiledCodeExtendedCompilerBuilder {
     public CachingCompiledCodeExtendedCompilerBuilder withExpirationChecker(final SourceExpirationChecker expirationChecker) {
         this.expirationChecker = expirationChecker;
         return this;
-
     }
 
     /**
