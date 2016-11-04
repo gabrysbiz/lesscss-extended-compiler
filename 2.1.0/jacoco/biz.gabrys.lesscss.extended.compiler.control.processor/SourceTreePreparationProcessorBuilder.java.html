@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SourceTreePreparationProcessorBuilder.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.control.processor</a> &gt; <span class="el_source">SourceTreePreparationProcessorBuilder.java</span></div><h1>SourceTreePreparationProcessorBuilder.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.control.processor;
+
+import biz.gabrys.lesscss.extended.compiler.cache.FullCache;
+import biz.gabrys.lesscss.extended.compiler.cache.SourceImportsCache;
+import biz.gabrys.lesscss.extended.compiler.cache.SourceModificationDateCache;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.SourceAlwaysExpiredChecker;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.SourceExpirationChecker;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
+import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
+
+/**
+ * Responsible for creating new instances of the {@link SourceTreePreparationProcessor}.
+ * @since 1.0
+ */
+public class SourceTreePreparationProcessorBuilder {
+
+    private final SourceModificationDateCache datesCache;
+    private final SourceImportsCache importsCache;
+
+    private SourceExpirationChecker expirationChecker;
+    private LessImportResolver importResolver;
+    private SourceFactory sourceFactory;
+
+    /**
+     * Constructs a new instance and sets cache.
+     * @param cache the cache responsible for storing data.
+     * @throws IllegalArgumentException if cache is equal to {@code null}.
+     * @since 1.0
+     */
+<span class="fc" id="L45">    public SourceTreePreparationProcessorBuilder(final FullCache cache) {</span>
+<span class="fc" id="L46">        ParameterUtils.verifyNotNull(&quot;cache&quot;, cache);</span>
+<span class="fc" id="L47">        datesCache = cache;</span>
+<span class="fc" id="L48">        importsCache = cache;</span>
+<span class="fc" id="L49">    }</span>
+
+    /**
+     * Constructs a new instance and sets caches.
+     * @param datesCache the cache responsible for storing source files modification dates.
+     * @param importsCache the cache responsible for storing source files imports list.
+     * @throws IllegalArgumentException if at least one cache is equal to {@code null}.
+     * @since 1.0
+     */
+<span class="nc" id="L58">    public SourceTreePreparationProcessorBuilder(final SourceModificationDateCache datesCache, final SourceImportsCache importsCache) {</span>
+<span class="nc" id="L59">        ParameterUtils.verifyNotNull(&quot;dates cache&quot;, datesCache);</span>
+<span class="nc" id="L60">        ParameterUtils.verifyNotNull(&quot;imports cache&quot;, importsCache);</span>
+
+<span class="nc" id="L62">        this.datesCache = datesCache;</span>
+<span class="nc" id="L63">        this.importsCache = importsCache;</span>
+<span class="nc" id="L64">    }</span>
+
+    /**
+     * Sets specified {@link SourceExpirationChecker}.
+     * @param expirationChecker the source expiration checker.
+     * @return {@code this} builder.
+     * @since 2.1.0
+     */
+    public SourceTreePreparationProcessorBuilder withExpirationChecker(final SourceExpirationChecker expirationChecker) {
+<span class="fc" id="L73">        this.expirationChecker = expirationChecker;</span>
+<span class="fc" id="L74">        return this;</span>
+    }
+
+    /**
+     * Sets specified {@link LessImportResolver}.
+     * @param importResolver the import resolver.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public SourceTreePreparationProcessorBuilder withImportResolver(final LessImportResolver importResolver) {
+<span class="fc" id="L84">        this.importResolver = importResolver;</span>
+<span class="fc" id="L85">        return this;</span>
+    }
+
+    /**
+     * Sets specified {@link SourceFactory}.
+     * @param sourceFactory the source factory.
+     * @return {@code this} builder.
+     * @since 1.0
+     */
+    public SourceTreePreparationProcessorBuilder withSourceFactory(final SourceFactory sourceFactory) {
+<span class="fc" id="L95">        this.sourceFactory = sourceFactory;</span>
+<span class="fc" id="L96">        return this;</span>
+    }
+
+    /**
+     * Crates a new instance of the {@link SourceTreePreparationProcessor}. If you do not set some specific
+     * implementations explicitly, then the following default ones are used:
+     * &lt;ul&gt;
+     * &lt;li&gt;{@link SourceAlwaysExpiredChecker}&lt;/li&gt;
+     * &lt;li&gt;{@link LessImportResolverImpl}&lt;/li&gt;
+     * &lt;li&gt;{@link SourceFactory} created by {@link SourceFactoryBuilder} with standard factories (
+     * {@link SourceFactoryBuilder#withStandard()})&lt;/li&gt;
+     * &lt;/ul&gt;
+     * @return the new instance of the {@link SourceTreePreparationProcessor}.
+     * @since 1.0
+     */
+    public SourceTreePreparationProcessor create() {
+<span class="fc" id="L112">        final SourceExpirationChecker checker = createExpirationChecker();</span>
+<span class="fc" id="L113">        final LessImportResolver resolver = createImportResolver();</span>
+<span class="fc" id="L114">        final SourceFactory factory = createSourceFactory();</span>
+<span class="fc" id="L115">        return new SourceTreePreparationProcessor(checker, datesCache, importsCache, resolver, factory);</span>
+    }
+
+    SourceExpirationChecker createExpirationChecker() {
+<span class="fc bfc" id="L119" title="All 2 branches covered.">        return expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();</span>
+    }
+
+    LessImportResolver createImportResolver() {
+<span class="fc bfc" id="L123" title="All 2 branches covered.">        return importResolver != null ? importResolver : new LessImportResolverImpl();</span>
+    }
+
+    SourceFactory createSourceFactory() {
+<span class="fc bfc" id="L127" title="All 2 branches covered.">        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());</span>
+    }
+
+    SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
+<span class="fc" id="L131">        return builder.withStandard().create();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

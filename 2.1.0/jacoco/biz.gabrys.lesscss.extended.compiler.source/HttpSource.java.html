@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>HttpSource.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.source</a> &gt; <span class="el_source">HttpSource.java</span></div><h1>HttpSource.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.source;
+
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
+
+import org.apache.commons.io.IOUtils;
+
+/**
+ * Represents a &lt;a href=&quot;http://lesscss.org/&quot;&gt;Less&lt;/a&gt; source file accessible via
+ * &lt;a href=&quot;http://www.w3.org/Protocols/&quot;&gt;HTTP&lt;/a&gt; or HTTPS.
+ * @since 1.0
+ */
+public class HttpSource implements LessSource {
+
+<span class="nc" id="L34">    private static final Collection&lt;Integer&gt; REDIRECT_CODES = new HashSet&lt;Integer&gt;(</span>
+<span class="nc" id="L35">            Arrays.asList(HttpURLConnection.HTTP_MOVED_PERM, HttpURLConnection.HTTP_MOVED_TEMP, HttpURLConnection.HTTP_SEE_OTHER));</span>
+
+    private final URL url;
+    private String encoding;
+    private Date lastModificationDate;
+
+    /**
+     * Constructs a new instance and sets {@link URL} of the source file.
+     * @param url the {@link URL} which pointer to source file
+     * @since 1.0
+     */
+<span class="nc" id="L46">    public HttpSource(final URL url) {</span>
+<span class="nc" id="L47">        this.url = url;</span>
+<span class="nc" id="L48">    }</span>
+
+    public String getPath() {
+<span class="nc" id="L51">        return url.toString();</span>
+    }
+
+    /**
+     * Returns an encoding of the source code. Before the first {@link #getContent()} call returns current source
+     * encoding. After the first {@link #getContent()} call always returns the source encoding read while downloading
+     * the source contents.
+     * @return the encoding.
+     * @since 1.0
+     */
+    public String getEncoding() {
+<span class="nc bnc" id="L62" title="All 2 branches missed.">        if (encoding != null) {</span>
+<span class="nc" id="L63">            return encoding;</span>
+        }
+
+<span class="nc" id="L66">        final HttpURLConnection connection = makeConnection(false);</span>
+<span class="nc" id="L67">        return getEncodingFromContentType(connection.getContentType());</span>
+    }
+
+    private static String getEncodingFromContentType(final String contentType) {
+<span class="nc bnc" id="L71" title="All 4 branches missed.">        if (contentType == null || !contentType.contains(&quot;charset=&quot;)) {</span>
+<span class="nc" id="L72">            return Charset.defaultCharset().toString();</span>
+        }
+<span class="nc" id="L74">        return contentType.substring(contentType.lastIndexOf('=') + 1);</span>
+    }
+
+    public String getContent() {
+<span class="nc" id="L78">        final HttpURLConnection connection = makeConnection(true);</span>
+<span class="nc" id="L79">        encoding = getEncodingFromContentType(connection.getContentType());</span>
+        String content;
+        try {
+<span class="nc" id="L82">            content = IOUtils.toString(connection.getInputStream(), encoding);</span>
+<span class="nc" id="L83">        } catch (final IOException e) {</span>
+<span class="nc" id="L84">            connection.disconnect();</span>
+<span class="nc" id="L85">            throw new SourceException(String.format(&quot;Cannot read content of the \&quot;%s\&quot; file&quot;, url), e);</span>
+<span class="nc" id="L86">        }</span>
+<span class="nc" id="L87">        lastModificationDate = getModificationDate(connection.getLastModified());</span>
+<span class="nc" id="L88">        connection.disconnect();</span>
+<span class="nc" id="L89">        return content;</span>
+    }
+
+    /**
+     * {@inheritDoc} Before the first {@link #getContent()} call returns current source modification time. After the
+     * first {@link #getContent()} call always returns the source modification time read while downloading the source
+     * contents.
+     * @since 1.0
+     */
+    public Date getLastModificationDate() {
+<span class="nc bnc" id="L99" title="All 2 branches missed.">        if (lastModificationDate != null) {</span>
+<span class="nc" id="L100">            return (Date) lastModificationDate.clone();</span>
+        }
+
+<span class="nc" id="L103">        final HttpURLConnection connection = makeConnection(false);</span>
+<span class="nc" id="L104">        final Date date = getModificationDate(connection.getLastModified());</span>
+<span class="nc" id="L105">        connection.disconnect();</span>
+<span class="nc" id="L106">        return date;</span>
+    }
+
+    private static Date getModificationDate(final long modificationDate) {
+<span class="nc bnc" id="L110" title="All 2 branches missed.">        if (modificationDate == 0) {</span>
+<span class="nc" id="L111">            return new Date();</span>
+        }
+<span class="nc" id="L113">        return new Date(modificationDate);</span>
+    }
+
+    private HttpURLConnection makeConnection(final boolean fetchResponseBody) {
+        HttpURLConnection connection;
+        int responseCode;
+<span class="nc" id="L119">        URL resourceUrl = url;</span>
+<span class="nc" id="L120">        boolean redirected = false;</span>
+        while (true) {
+            try {
+<span class="nc" id="L123">                connection = (HttpURLConnection) resourceUrl.openConnection();</span>
+<span class="nc bnc" id="L124" title="All 2 branches missed.">                connection.setRequestMethod(fetchResponseBody ? &quot;GET&quot; : &quot;HEAD&quot;);</span>
+<span class="nc" id="L125">                responseCode = connection.getResponseCode();</span>
+<span class="nc" id="L126">            } catch (final IOException e) {</span>
+<span class="nc" id="L127">                throw new SourceException(e);</span>
+<span class="nc" id="L128">            }</span>
+
+<span class="nc bnc" id="L130" title="All 2 branches missed.">            if (!REDIRECT_CODES.contains(responseCode)) {</span>
+<span class="nc" id="L131">                break;</span>
+            }
+<span class="nc" id="L133">            redirected = true;</span>
+<span class="nc" id="L134">            final String location = connection.getHeaderField(&quot;Location&quot;);</span>
+            try {
+<span class="nc" id="L136">                resourceUrl = new URL(location);</span>
+<span class="nc" id="L137">            } catch (final MalformedURLException e) {</span>
+<span class="nc" id="L138">                throw new SourceException(String.format(&quot;Invalid \&quot;Location\&quot; header: %s&quot;, location), e);</span>
+<span class="nc" id="L139">            }</span>
+<span class="nc" id="L140">        }</span>
+<span class="nc bnc" id="L141" title="All 2 branches missed.">        if (responseCode != HttpURLConnection.HTTP_OK) {</span>
+<span class="nc" id="L142">            throw new SourceException(createDownloadErrorMessage(resourceUrl, redirected, responseCode));</span>
+        }
+<span class="nc" id="L144">        return connection;</span>
+    }
+
+    private String createDownloadErrorMessage(final URL resourceUrl, final boolean redirected, final int responseCode) {
+<span class="nc" id="L148">        String redirectedText = &quot;&quot;;</span>
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (redirected) {</span>
+<span class="nc" id="L150">            redirectedText = String.format(&quot;redirected from \&quot;%s\&quot;, &quot;, url);</span>
+        }
+<span class="nc" id="L152">        throw new SourceException(</span>
+<span class="nc" id="L153">                String.format(&quot;Cannot download source \&quot;%s\&quot; (%serror code: %s)&quot;, resourceUrl, redirectedText, responseCode));</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

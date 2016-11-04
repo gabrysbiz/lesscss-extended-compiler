@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SimpleExtendedCompiler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler</a> &gt; <span class="el_source">SimpleExtendedCompiler.java</span></div><h1>SimpleExtendedCompiler.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler;
+
+import java.io.File;
+
+import biz.gabrys.lesscss.compiler.CompilerException;
+import biz.gabrys.lesscss.compiler.CompilerOptions;
+import biz.gabrys.lesscss.compiler.LessCompiler;
+import biz.gabrys.lesscss.extended.compiler.control.processor.PostCompilationProcessor;
+import biz.gabrys.lesscss.extended.compiler.control.processor.PreCompilationProcessor;
+import biz.gabrys.lesscss.extended.compiler.control.provider.SourceFileProvider;
+import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+
+/**
+ * Compiler which wraps the native {@link LessCompiler Less compiler} expanding it with preparing source files before
+ * &amp;amp; compiled code after the compilation process.
+ * @since 1.0
+ */
+public class SimpleExtendedCompiler implements ExtendedCompiler {
+
+    /**
+     * The native compiler.
+     * @since 2.1.0
+     */
+    protected LessCompiler compiler;
+    /**
+     * The pre compilation processor.
+     * @since 2.1.0
+     */
+    protected PreCompilationProcessor preProcessor;
+    /**
+     * The provider responsible for returning file representation of the {@link LessSource}.
+     * @since 2.1.0
+     */
+    protected SourceFileProvider fileProvider;
+    /**
+     * The post compilation processor.
+     * @since 2.1.0
+     */
+    protected PostCompilationProcessor postProcessor;
+
+    /**
+     * Constructs a new instance.
+     * @param compiler the native compiler.
+     * @param preProcessor the pre compilation processor.
+     * @param fileProvider the provider responsible for returning file representation of the {@link LessSource}.
+     * @param postProcessor the post compilation processor.
+     * @since 1.0
+     */
+    public SimpleExtendedCompiler(final LessCompiler compiler, final PreCompilationProcessor preProcessor,
+<span class="fc" id="L62">            final SourceFileProvider fileProvider, final PostCompilationProcessor postProcessor) {</span>
+<span class="fc" id="L63">        this.compiler = compiler;</span>
+<span class="fc" id="L64">        this.preProcessor = preProcessor;</span>
+<span class="fc" id="L65">        this.fileProvider = fileProvider;</span>
+<span class="fc" id="L66">        this.postProcessor = postProcessor;</span>
+<span class="fc" id="L67">    }</span>
+
+    public String compile(final LessSource source) throws CompilerException {
+<span class="fc" id="L70">        preProcessor.prepare(source);</span>
+<span class="fc" id="L71">        final File sourceFile = fileProvider.getFile(source);</span>
+<span class="fc" id="L72">        final String compiledCode = compiler.compile(sourceFile);</span>
+<span class="fc" id="L73">        return postProcessor.prepare(source, compiledCode);</span>
+    }
+
+    public String compile(final LessSource source, final CompilerOptions options) throws CompilerException {
+<span class="fc" id="L77">        preProcessor.prepare(source);</span>
+<span class="fc" id="L78">        final File sourceFile = fileProvider.getFile(source);</span>
+<span class="fc" id="L79">        final String compiledCode = compiler.compile(sourceFile, options);</span>
+<span class="fc" id="L80">        return postProcessor.prepare(source, compiledCode);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

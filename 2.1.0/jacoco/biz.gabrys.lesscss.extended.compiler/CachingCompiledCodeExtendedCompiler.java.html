@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CachingCompiledCodeExtendedCompiler.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler</a> &gt; <span class="el_source">CachingCompiledCodeExtendedCompiler.java</span></div><h1>CachingCompiledCodeExtendedCompiler.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler;
+
+import java.util.Date;
+
+import biz.gabrys.lesscss.compiler.CompilerException;
+import biz.gabrys.lesscss.compiler.CompilerOptions;
+import biz.gabrys.lesscss.extended.compiler.cache.CompilationDateCache;
+import biz.gabrys.lesscss.extended.compiler.cache.CompiledCodeCache;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.CompiledSourceExpirationChecker;
+import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+
+/**
+ * Compiler which wraps other extended compiler expanding it with caching compiled code.
+ * @since 1.0
+ */
+public class CachingCompiledCodeExtendedCompiler implements ExtendedCompiler {
+
+    /**
+     * The extended compiler responsible for compiling source files.
+     * @since 2.1.0
+     */
+    protected ExtendedCompiler compiler;
+    /**
+     * The checker responsible for determining if the compiled code expired.
+     * @since 2.1.0
+     */
+    protected CompiledSourceExpirationChecker expirationChecker;
+    /**
+     * The cache that holds compilation dates.
+     * @since 2.1.0
+     */
+    protected CompilationDateCache datesCache;
+    /**
+     * The cache that holds compiled code.
+     * @since 2.1.0
+     */
+    protected CompiledCodeCache codeCache;
+
+    /**
+     * Constructs a new instance.
+     * @param compiler the extended compiler responsible for compiling source files.
+     * @param expirationChecker the checker responsible for determining if the compiled code expired.
+     * @param datesCache the cache that holds compilation dates.
+     * @param codeCache the cache that holds compiled code.
+     * @since 1.0
+     */
+    public CachingCompiledCodeExtendedCompiler(final ExtendedCompiler compiler, final CompiledSourceExpirationChecker expirationChecker,
+<span class="fc" id="L60">            final CompilationDateCache datesCache, final CompiledCodeCache codeCache) {</span>
+<span class="fc" id="L61">        this.compiler = compiler;</span>
+<span class="fc" id="L62">        this.expirationChecker = expirationChecker;</span>
+<span class="fc" id="L63">        this.datesCache = datesCache;</span>
+<span class="fc" id="L64">        this.codeCache = codeCache;</span>
+<span class="fc" id="L65">    }</span>
+
+    public String compile(final LessSource source) throws CompilerException {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (isExpired(source)) {</span>
+<span class="fc" id="L69">            final String compiledCode = compiler.compile(source);</span>
+<span class="fc" id="L70">            datesCache.saveCompilationDate(source, new Date());</span>
+<span class="fc" id="L71">            codeCache.saveCompiledCode(source, compiledCode);</span>
+<span class="fc" id="L72">            return compiledCode;</span>
+        }
+<span class="fc" id="L74">        return codeCache.getCompiledCode(source);</span>
+    }
+
+    public String compile(final LessSource source, final CompilerOptions options) throws CompilerException {
+<span class="fc bfc" id="L78" title="All 2 branches covered.">        if (isExpired(source)) {</span>
+<span class="fc" id="L79">            final String compiledCode = compiler.compile(source, options);</span>
+<span class="fc" id="L80">            datesCache.saveCompilationDate(source, new Date());</span>
+<span class="fc" id="L81">            codeCache.saveCompiledCode(source, compiledCode);</span>
+<span class="fc" id="L82">            return compiledCode;</span>
+        }
+<span class="fc" id="L84">        return codeCache.getCompiledCode(source);</span>
+    }
+
+    /**
+     * Tests whether source file requires compilation.
+     * @param source the source file.
+     * @return {@code true} whether source file requires compilation, otherwise {@code false}.
+     * @since 1.0
+     */
+    protected boolean isExpired(final LessSource source) {
+<span class="fc bfc" id="L94" title="All 2 branches covered.">        if (!datesCache.hasCompilationDate(source)) {</span>
+<span class="fc" id="L95">            return true;</span>
+        }
+<span class="fc" id="L97">        final Date compilationDate = datesCache.getCompilationDate(source);</span>
+<span class="fc" id="L98">        return expirationChecker.isExpired(source, compilationDate);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FtpSourceFactory.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.source</a> &gt; <span class="el_source">FtpSourceFactory.java</span></div><h1>FtpSourceFactory.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.source;
+
+import java.net.MalformedURLException;
+import java.net.URI;
+
+/**
+ * Responsible for creating new instances of the {@link FtpSource}.
+ * @since 1.0
+ */
+public class FtpSourceFactory extends AbstractUriSourceFactory&lt;FtpSource&gt; {
+
+    /**
+     * Constructs a new instance.
+     * @since 1.0
+     */
+<span class="fc" id="L28">    public FtpSourceFactory() {</span>
+        // do nothing
+<span class="fc" id="L30">    }</span>
+
+    @Override
+    protected FtpSource createSource(final URI uri, final String encoding) throws MalformedURLException {
+<span class="nc" id="L34">        return new FtpSource(uri.toURL(), encoding);</span>
+    }
+
+    @Override
+    protected boolean isSupportedPath(final String path) {
+<span class="fc" id="L39">        return path.startsWith(&quot;ftp://&quot;);</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

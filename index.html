@@ -16,7 +16,7 @@
             <h1 class="project-name">Extended LessCSS Compiler</h1>
             <h2 class="project-tagline">Extended version of the LessCSS Compiler (Java library which compiles Less source files to the CSS code)</h2>
             <a href="https://github.com/gabrysbiz/lesscss-extended-compiler" class="btn">View on GitHub</a>
-            <a href="2.0/" class="btn">Release 2.0 docs</a>
+            <a href="2.1.0/" class="btn">Release 2.1.0 docs</a>
             <a href="LATEST/" class="btn" rel="nofollow">LATEST (version under development) docs</a>
         </section>
         <section class="main-content">
@@ -33,7 +33,7 @@
             </p>
             <ul>
                 <li>
-                    caching (<a href="2.0/caching-data.html">see caching data</a>):
+                    caching (<a href="2.1.0/caching-data.html">see caching data</a>):
                     <ul>
                         <li>compiled code</li>
                         <li>source code</li>
@@ -44,7 +44,8 @@
                     <ul>
                         <li>local drives</li>
                         <li>network protocols: HTTP, HTTPS, FTP</li>
-                        <li><a href="2.0/locations.html#custom">custom - defined by programmers</a></li>
+                        <li>classpath (prefix <code>classpath://</code>)</li>
+                        <li><a href="2.1.0/locations.html#custom">custom - defined by programmers</a></li>
                     </ul>
                 </li>
             </ul>
@@ -60,10 +61,10 @@
             <ul>
                 <li>
                     native compiler implementation
-                    (<a href="http://lesscss-compiler.projects.gabrys.biz/1.1/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html">biz.gabrys.lesscss.compiler.LessCompiler</a>)
+                    (<a href="http://lesscss-compiler.projects.gabrys.biz/1.2.1/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html">biz.gabrys.lesscss.compiler.LessCompiler</a>)
                 </li>
                 <li>
-                    supported locations of sources (<a href="2.0/locations.html#matrix">see supported locations matrix</a>)
+                    supported locations of sources (<a href="2.1.0/locations.html#matrix">see supported locations matrix</a>)
                 </li>
             </ul>
             <h1>
@@ -77,7 +78,7 @@
             </p>
             <ul>
                 <li>Java 5.0 or higher</li>
-                <li>Third-Party Dependencies (<a href="2.0/dependencies.html">see list</a>)</li>
+                <li>Third-Party Dependencies (<a href="2.1.0/dependencies.html">see list</a>)</li>
             </ul>
             <h1>
                 <a id="license" class="anchor" href="#license" aria-hidden="true">
@@ -138,7 +139,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
       &lt;dependency&gt;
          &lt;groupId&gt;biz.gabrys.lesscss&lt;/groupId&gt;
          &lt;artifactId&gt;extended-compiler&lt;/artifactId&gt;
-         &lt;version&gt;2.0&lt;/version&gt;
+         &lt;version&gt;2.1.0&lt;/version&gt;
       &lt;/dependency&gt;
       ...
    &lt;dependencies&gt;
@@ -155,6 +156,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
             </p>
             <p>
                 List of all available releases:
+                <a href="2.1.0/">2.1.0</a>,
                 <a href="2.0/">2.0</a>,
                 <a href="1.0/">1.0</a>.
             </p>
@@ -166,6 +168,34 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.</pre>
                     </tr>
                 </thead>
                 <tbody>
+                    <tr>
+                        <td id="release-2.1.0">2.1.0<br />(<a href="2.1.0/">docs</a>)</td>
+                        <td>
+                            <p>New Features:</p>
+                            <ul>
+                                <li>Classpath &quot;protocol&quot; support</li>
+                            </ul>
+                            <p>API:</p>
+                            <ul>
+                                <li>
+                                    <a href="2.1.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html">AbstractSourceTreePreparationProcessor#expirationChecker</a>
+                                    is no longer <code>final</code>
+                                </li>
+                                <li>
+                                    <a href="2.1.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html">AbstractSourceTreePreparationProcessor#importsCache</a>
+                                    is no longer <code>final</code>
+                                </li>
+                                <li>
+                                    <a href="2.1.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html">AbstractSourceTreePreparationProcessor#sourceFactory</a>
+                                    is no longer <code>final</code>
+                                </li>
+                                <li>
+                                    <a href="2.1.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/cache/FullCacheImpl.html">FullCacheImpl#storage</a>
+                                    is no longer <code>final</code>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
                     <tr>
                         <td id="release-2.0">2.0<br />(<a href="2.0/">docs</a>)</td>
                         <td>

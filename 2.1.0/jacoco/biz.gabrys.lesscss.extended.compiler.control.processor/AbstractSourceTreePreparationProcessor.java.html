@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>AbstractSourceTreePreparationProcessor.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.control.processor</a> &gt; <span class="el_source">AbstractSourceTreePreparationProcessor.java</span></div><h1>AbstractSourceTreePreparationProcessor.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.control.processor;
+
+import java.util.HashSet;
+import java.util.Set;
+
+import biz.gabrys.lesscss.extended.compiler.cache.SourceImportsCache;
+import biz.gabrys.lesscss.extended.compiler.control.expiration.SourceExpirationChecker;
+import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
+
+/**
+ * Helps in implementing pre compilation processors responsible for preparing source file with imports (deep, imports of
+ * imports). It executes preparation only for expired sources.
+ * @since 1.0
+ */
+public abstract class AbstractSourceTreePreparationProcessor implements PreCompilationProcessor {
+
+    /**
+     * The checker responsible for determining if the source file expired.
+     * @since 1.0
+     */
+    protected SourceExpirationChecker expirationChecker;
+    /**
+     * The cache responsible for storing source files imports lists.
+     * @since 1.0
+     */
+    protected SourceImportsCache importsCache;
+    /**
+     * The factory responsible for creating new instances of the {@link LessSource}.
+     * @since 1.0
+     */
+    protected SourceFactory sourceFactory;
+
+    /**
+     * Constructs a new instance.
+     * @param expirationChecker the checker responsible for determining if the source file expired.
+     * @param importsCache the cache responsible for storing source files imports lists.
+     * @param sourceFactory the factory responsible for creating new instances of the {@link LessSource}.
+     * @since 1.0
+     */
+    protected AbstractSourceTreePreparationProcessor(final SourceExpirationChecker expirationChecker, final SourceImportsCache importsCache,
+<span class="fc" id="L54">            final SourceFactory sourceFactory) {</span>
+<span class="fc" id="L55">        this.expirationChecker = expirationChecker;</span>
+<span class="fc" id="L56">        this.importsCache = importsCache;</span>
+<span class="fc" id="L57">        this.sourceFactory = sourceFactory;</span>
+<span class="fc" id="L58">    }</span>
+
+    /**
+     * {@inheritDoc} This method delegates work to the {@link #prepare(LessSource, Set)} (set is empty).
+     * @since 1.0
+     */
+    public void prepare(final LessSource source) {
+<span class="nc" id="L65">        prepare(source, new HashSet&lt;String&gt;());</span>
+<span class="nc" id="L66">    }</span>
+
+    /**
+     * Prepares a source file to the compilation process. This method is called recursively for the source and all of
+     * its imports. To avoid imports loop, it processes only sources whose paths are not contained by the set.
+     * @param source the source file.
+     * @param preparedSourcesPaths set with prepared sources path.
+     * @since 1.0
+     */
+    protected void prepare(final LessSource source, final Set&lt;String&gt; preparedSourcesPaths) {
+<span class="fc" id="L76">        final String path = source.getPath();</span>
+<span class="pc bpc" id="L77" title="1 of 2 branches missed.">        if (preparedSourcesPaths.contains(path)) {</span>
+<span class="nc" id="L78">            return;</span>
+        }
+<span class="fc" id="L80">        preparedSourcesPaths.add(path);</span>
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (expirationChecker.isExpired(source)) {</span>
+<span class="fc" id="L82">            prepareWhenExpired(source, preparedSourcesPaths);</span>
+        } else {
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            for (final String importPath : importsCache.getSourceImports(source)) {</span>
+<span class="fc" id="L85">                final LessSource importedSource = sourceFactory.create(source, importPath);</span>
+<span class="fc" id="L86">                prepare(importedSource, preparedSourcesPaths);</span>
+<span class="fc" id="L87">            }</span>
+        }
+<span class="fc" id="L89">    }</span>
+
+    /**
+     * Prepares a source file to the compilation process. Called only when source expired (determines by checker). If
+     * this method should prepare the source import, then you must call {@link #prepare(LessSource, Set)}.
+     * @param source the source file.
+     * @param preparedSourcesPaths set with prepared sources paths.
+     * @since 1.0
+     */
+    protected abstract void prepareWhenExpired(LessSource source, final Set&lt;String&gt; preparedSourcesPaths);
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>

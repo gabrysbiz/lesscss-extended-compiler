@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FullCacheImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Extended LessCSS Compiler</a> &gt; <a href="index.source.html" class="el_package">biz.gabrys.lesscss.extended.compiler.cache</a> &gt; <span class="el_source">FullCacheImpl.java</span></div><h1>FullCacheImpl.java</h1><pre class="source lang-java linenums">/*
+ * Extended LessCSS Compiler
+ * http://lesscss-extended-compiler.projects.gabrys.biz/
+ *
+ * Copyright (c) 2015 Adam Gabryś
+ *
+ * This file is licensed under the BSD 3-Clause (the &quot;License&quot;).
+ * You may not use this file except in compliance with the License.
+ * You may obtain:
+ *  - a copy of the License at project page
+ *  - a template of the License at https://opensource.org/licenses/BSD-3-Clause
+ */
+package biz.gabrys.lesscss.extended.compiler.cache;
+
+import java.io.File;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+import biz.gabrys.lesscss.extended.compiler.storage.DataStorage;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
+
+/**
+ * Full cache implementation based on the {@link DataStorage}. It stores files in the flat structure.
+ * @since 1.0
+ */
+public class FullCacheImpl implements FullCache, DeletableCache {
+
+    /**
+     * The data storage.
+     * @since 1.0
+     */
+    protected DataStorage storage;
+
+    /**
+     * Constructs a new instance.
+     * @param storage the data storage.
+     * @throws IllegalArgumentException if storage is equal to {@code null}.
+     * @since 1.0
+     */
+<span class="fc" id="L42">    public FullCacheImpl(final DataStorage storage) {</span>
+<span class="fc" id="L43">        ParameterUtils.verifyNotNull(&quot;data storage&quot;, storage);</span>
+<span class="fc" id="L44">        this.storage = storage;</span>
+<span class="fc" id="L45">    }</span>
+
+    /**
+     * Returns the data storage.
+     * @return the data storage.
+     * @since 2.1.0
+     */
+    public DataStorage getStorage() {
+<span class="fc" id="L53">        return storage;</span>
+    }
+
+    public void saveSourceModificationDate(final LessSource source, final Date modificationDate) {
+<span class="fc" id="L57">        storage.put(createFileName(EntryType.MODIFICATION_DATE, source), String.valueOf(modificationDate.getTime()));</span>
+<span class="fc" id="L58">    }</span>
+
+    public boolean hasSourceModificationDate(final LessSource source) {
+<span class="fc" id="L61">        return storage.hasData(createFileName(EntryType.MODIFICATION_DATE, source));</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws CacheException if an error occurs during read modification date.
+     * @since 1.0
+     */
+    public Date getSourceModificationDate(final LessSource source) {
+<span class="fc" id="L70">        final String modificationDate = storage.getText(createFileName(EntryType.MODIFICATION_DATE, source));</span>
+        try {
+<span class="fc" id="L72">            return new Date(Long.parseLong(modificationDate));</span>
+<span class="fc" id="L73">        } catch (final NumberFormatException e) {</span>
+<span class="fc" id="L74">            throw new CacheException(e);</span>
+        }
+    }
+
+    public void saveSourceImports(final LessSource source, final List&lt;String&gt; imports) {
+<span class="fc" id="L79">        storage.put(createFileName(EntryType.IMPORTS_LIST, source), imports);</span>
+<span class="fc" id="L80">    }</span>
+
+    public boolean hasSourceImports(final LessSource source) {
+<span class="fc" id="L83">        return storage.hasData(createFileName(EntryType.IMPORTS_LIST, source));</span>
+    }
+
+    public List&lt;String&gt; getSourceImports(final LessSource source) {
+<span class="fc" id="L87">        return storage.getLines(createFileName(EntryType.IMPORTS_LIST, source));</span>
+    }
+
+    public void saveSourceCode(final LessSource source, final String sourceCode) {
+<span class="fc" id="L91">        storage.put(createFileName(EntryType.SOURCE_CODE, source), sourceCode);</span>
+<span class="fc" id="L92">    }</span>
+
+    public boolean hasSourceCode(final LessSource source) {
+<span class="fc" id="L95">        return storage.hasData(createFileName(EntryType.SOURCE_CODE, source));</span>
+    }
+
+    public File getSourceFile(final LessSource source) {
+<span class="fc" id="L99">        return storage.getFile(createFileName(EntryType.SOURCE_CODE, source));</span>
+    }
+
+    public String getSourceRelativePath(final LessSource source) {
+<span class="fc" id="L103">        return createFileName(EntryType.SOURCE_CODE, source);</span>
+    }
+
+    public void saveCompilationDate(final LessSource source, final Date compilationDate) {
+<span class="fc" id="L107">        storage.put(createFileName(EntryType.COMPILATION_DATE, source), String.valueOf(compilationDate.getTime()));</span>
+<span class="fc" id="L108">    }</span>
+
+    public boolean hasCompilationDate(final LessSource source) {
+<span class="fc" id="L111">        return storage.hasData(createFileName(EntryType.COMPILATION_DATE, source));</span>
+    }
+
+    /**
+     * {@inheritDoc}
+     * @throws CacheException if an error occurs during read compilation date.
+     * @since 1.0
+     */
+    public Date getCompilationDate(final LessSource source) {
+<span class="fc" id="L120">        final String compilationDate = storage.getText(createFileName(EntryType.COMPILATION_DATE, source));</span>
+        try {
+<span class="fc" id="L122">            return new Date(Long.parseLong(compilationDate));</span>
+<span class="fc" id="L123">        } catch (final NumberFormatException e) {</span>
+<span class="fc" id="L124">            throw new CacheException(e);</span>
+        }
+    }
+
+    public void saveCompiledCode(final LessSource source, final String compiledCode) {
+<span class="fc" id="L129">        storage.put(createFileName(EntryType.COMPILED_CODE, source), compiledCode);</span>
+<span class="fc" id="L130">    }</span>
+
+    public boolean hasCompiledCode(final LessSource source) {
+<span class="fc" id="L133">        return storage.hasData(createFileName(EntryType.COMPILED_CODE, source));</span>
+    }
+
+    public String getCompiledCode(final LessSource source) {
+<span class="fc" id="L137">        return storage.getText(createFileName(EntryType.COMPILED_CODE, source));</span>
+    }
+
+    public void delete(final LessSource source) {
+<span class="fc bfc" id="L141" title="All 2 branches covered.">        for (final EntryType type : EntryType.values()) {</span>
+<span class="fc" id="L142">            storage.delete(createFileName(type, source));</span>
+        }
+<span class="fc" id="L144">    }</span>
+
+    public void deleteAll() {
+<span class="fc" id="L147">        storage.deleteAll();</span>
+<span class="fc" id="L148">    }</span>
+
+    /**
+     * Creates a file name for cache entry.
+     * @param type the cache entry type.
+     * @param source the {@link LessSource}.
+     * @return the file name.
+     * @since 2.1.0
+     */
+    protected String createFileName(final EntryType type, final LessSource source) {
+<span class="fc" id="L158">        final String path = source.getPath();</span>
+<span class="fc" id="L159">        final int index = path.replace('\\', '/').lastIndexOf('/');</span>
+<span class="fc" id="L160">        final StringBuilder fileName = new StringBuilder(75);</span>
+<span class="pc bpc" id="L161" title="1 of 2 branches missed.">        if (index &gt; 0) {</span>
+<span class="fc" id="L162">            fileName.append(path.substring(index + 1));</span>
+<span class="fc" id="L163">            fileName.append('-');</span>
+        }
+<span class="fc" id="L165">        final int hashCode = path.hashCode();</span>
+<span class="fc bfc" id="L166" title="All 2 branches covered.">        if (hashCode &lt; 0) {</span>
+<span class="fc" id="L167">            fileName.append('n');</span>
+<span class="fc" id="L168">            fileName.append(Math.abs(hashCode));</span>
+        } else {
+<span class="fc" id="L170">            fileName.append('p');</span>
+<span class="fc" id="L171">            fileName.append(hashCode);</span>
+        }
+<span class="fc" id="L173">        fileName.append(type.getExtension());</span>
+<span class="fc" id="L174">        return fileName.toString();</span>
+    }
+
+    /**
+     * Represents available cache entries types.
+     * @since 2.1.0
+     */
+<span class="pc" id="L181">    protected enum EntryType {</span>
+        /**
+         * Modification date entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L186">        MODIFICATION_DATE,</span>
+        /**
+         * Imports list entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L191">        IMPORTS_LIST,</span>
+        /**
+         * Source code entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L196">        SOURCE_CODE,</span>
+        /**
+         * Compilation date entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L201">        COMPILATION_DATE,</span>
+        /**
+         * Compiled code entry.
+         * @since 2.1.0
+         */
+<span class="fc" id="L206">        COMPILED_CODE;</span>
+
+        private final String extension;
+
+<span class="fc" id="L210">        EntryType() {</span>
+<span class="fc" id="L211">            extension = '.' + name().toLowerCase(Locale.ENGLISH).replace('_', '.');</span>
+<span class="fc" id="L212">        }</span>
+
+        /**
+         * Returns an extension of the cache entry in form {@code .type}.
+         * @return the entry extension.
+         * @since 2.1.0
+         */
+        public String getExtension() {
+<span class="fc" id="L220">            return extension;</span>
+        }
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.7.201606060606</span></div></body></html>
