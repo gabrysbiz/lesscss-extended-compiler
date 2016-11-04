@@ -24,10 +24,12 @@ import biz.gabrys.lesscss.extended.compiler.control.processor.PostCompilationPro
 import biz.gabrys.lesscss.extended.compiler.control.processor.PreCompilationProcessor;
 import biz.gabrys.lesscss.extended.compiler.control.processor.SourceTreePreparationProcessorBuilder;
 import biz.gabrys.lesscss.extended.compiler.control.provider.CachedSourceFileProvider;
+import biz.gabrys.lesscss.extended.compiler.control.provider.SourceFileProvider;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link ExtendedCompiler} which cache compiled code.
@@ -50,9 +52,7 @@ public class CachingCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingCompiledCodeExtendedCompilerBuilder(final FullCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("cache", cache);
         this.cache = cache;
     }
 
@@ -77,7 +77,6 @@ public class CachingCompiledCodeExtendedCompilerBuilder {
     public CachingCompiledCodeExtendedCompilerBuilder withExpirationChecker(final SourceExpirationChecker expirationChecker) {
         this.expirationChecker = expirationChecker;
         return this;
-
     }
 
     /**
@@ -132,9 +131,9 @@ public class CachingCompiledCodeExtendedCompilerBuilder {
      * <li>{@link LessImportResolverImpl}</li>
      * <li>{@link SourceFactory} created by {@link SourceFactoryBuilder} with:
      * <ul>
-     * <li>standard factories ({@link SourceFactoryBuilder#withStandard()}) when compiler is not an instance of
+     * <li>standard factories ({@link SourceFactoryBuilder#withStandard()}) when compiler is not an instance of the
      * {@link LessCompilerImpl}</li>
-     * <li>local factory ({@link SourceFactoryBuilder#withLocal()}) when compiler is an instance of
+     * <li>local factory ({@link SourceFactoryBuilder#withLocal()}) when compiler is an instance of the
      * {@link LessCompilerImpl}</li>
      * </ul>
      * </li>
@@ -144,32 +143,59 @@ public class CachingCompiledCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public ExtendedCompiler create() {
-        final LessCompiler lessCompiler = compiler != null ? compiler : new LessCompilerImpl();
-
-        final SourceTreePreparationProcessorBuilder builder = new SourceTreePreparationProcessorBuilder(cache);
-        builder.withImportResolver(importResolver != null ? importResolver : new LessImportResolverImpl());
-        if (sourceFactory != null) {
-            builder.withSourceFactory(sourceFactory);
-        } else {
-            final SourceFactoryBuilder sourceFactoryBuilder = new SourceFactoryBuilder();
-            if (lessCompiler instanceof LessCompilerImpl) {
-                sourceFactoryBuilder.withLocal();
-            } else {
-                sourceFactoryBuilder.withStandard();
-            }
-            builder.withSourceFactory(sourceFactoryBuilder.create());
-        }
-        final PreCompilationProcessor preProc = builder.create();
-
-        final PostCompilationProcessor postProc = postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();
-
-        final ExtendedCompiler extendedCompiler = new SimpleExtendedCompiler(lessCompiler, preProc, new CachedSourceFileProvider(cache),
-                postProc);
-
-        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker
-                : new SourceModificationDateBasedExpirationChecker(cache);
-        final CompiledSourceExpirationChecker compiledSourceChecker = new CompiledSourceExpirationCheckerImpl(checker, cache, cache,
-                sourceFactory);
+        final LessCompiler localCompiler = createLessCompiler();
+        final SourceFactory localSourceFactory = createSourceFactory(localCompiler);
+        final SourceTreePreparationProcessorBuilder sourceTreeBuilder = new SourceTreePreparationProcessorBuilder(cache);
+        final PreCompilationProcessor localPreProcessor = createPreProcessor(sourceTreeBuilder, localSourceFactory);
+        final PostCompilationProcessor localPostProcessor = createPostProcessor();
+        final ExtendedCompiler extendedCompiler = createSimpleExtendedCompiler(localCompiler, localPreProcessor, localPostProcessor);
+        final CompiledSourceExpirationChecker compiledSourceChecker = createCompiledSourceExpirationChecker(localSourceFactory);
         return new CachingCompiledCodeExtendedCompiler(extendedCompiler, compiledSourceChecker, cache, cache);
+    }
+
+    LessCompiler createLessCompiler() {
+        return compiler != null ? compiler : new LessCompilerImpl();
+    }
+
+    SourceFactory createSourceFactory(final LessCompiler compiler) {
+        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(compiler, new SourceFactoryBuilder());
+    }
+
+    SourceFactory createSourceFactoryFromBuilder(final LessCompiler compiler, final SourceFactoryBuilder builder) {
+        if (compiler instanceof LessCompilerImpl) {
+            builder.withLocal();
+        } else {
+            builder.withStandard();
+        }
+        return builder.create();
+    }
+
+    PreCompilationProcessor createPreProcessor(final SourceTreePreparationProcessorBuilder builder, final SourceFactory sourceFactory) {
+        builder.withImportResolver(createImportResolver());
+        builder.withSourceFactory(sourceFactory);
+        return builder.create();
+    }
+
+    LessImportResolver createImportResolver() {
+        return importResolver != null ? importResolver : new LessImportResolverImpl();
+    }
+
+    PostCompilationProcessor createPostProcessor() {
+        return postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();
+    }
+
+    ExtendedCompiler createSimpleExtendedCompiler(final LessCompiler compiler, final PreCompilationProcessor preProcessor,
+            final PostCompilationProcessor postProcessor) {
+        final SourceFileProvider fileProvider = new CachedSourceFileProvider(cache);
+        return new SimpleExtendedCompiler(compiler, preProcessor, fileProvider, postProcessor);
+    }
+
+    CompiledSourceExpirationChecker createCompiledSourceExpirationChecker(final SourceFactory sourceFactory) {
+        final SourceExpirationChecker checker = createSourceExpirationChecker();
+        return new CompiledSourceExpirationCheckerImpl(checker, cache, cache, sourceFactory);
+    }
+
+    SourceExpirationChecker createSourceExpirationChecker() {
+        return expirationChecker != null ? expirationChecker : new SourceModificationDateBasedExpirationChecker(cache);
     }
 }

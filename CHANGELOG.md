@@ -1,5 +1,17 @@
 # Extended LessCSS Compiler Changelog
 
+## 2.1.0
+New Features:
+* Classpath "protocol" support
+
+API:
+* [AbstractSourceTreePreparationProcessor#expirationChecker](http://lesscss-extended-compiler.projects.gabrys.biz/2.1.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html) is no longer `final`
+* [AbstractSourceTreePreparationProcessor#importsCache](http://lesscss-extended-compiler.projects.gabrys.biz/2.1.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html) is no longer `final`
+* [AbstractSourceTreePreparationProcessor#sourceFactory](http://lesscss-extended-compiler.projects.gabrys.biz/2.1.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/control/processor/AbstractSourceTreePreparationProcessor.html) is no longer `final`
+* [FullCacheImpl#storage](http://lesscss-extended-compiler.projects.gabrys.biz/2.1.0/apidocs/index.html?biz/gabrys/lesscss/extended/compiler/cache/FullCacheImpl.html) is no longer `final`
+
+[See documentation](http://lesscss-extended-compiler.projects.gabrys.biz/2.1.0/)
+
 ## 2.0
 New Features:
 * [FTP](https://tools.ietf.org/html/rfc959) protocol support

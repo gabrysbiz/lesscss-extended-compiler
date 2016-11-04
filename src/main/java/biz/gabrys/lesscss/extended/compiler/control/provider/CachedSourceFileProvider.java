@@ -23,7 +23,11 @@ import biz.gabrys.lesscss.extended.compiler.source.LessSource;
  */
 public class CachedSourceFileProvider implements SourceFileProvider {
 
-    private final SourceCodeCache cache;
+    /**
+     * The cache responsible for storing files with source code.
+     * @since 2.1.0
+     */
+    protected SourceCodeCache cache;
 
     /**
      * Constructs a new instance.

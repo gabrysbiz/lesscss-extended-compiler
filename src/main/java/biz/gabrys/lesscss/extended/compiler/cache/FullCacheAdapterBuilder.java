@@ -12,6 +12,8 @@
  */
 package biz.gabrys.lesscss.extended.compiler.cache;
 
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
+
 /**
  * Responsible for creating new instances of the {@link FullCacheAdapter}.
  * @since 1.0
@@ -31,9 +33,7 @@ public class FullCacheAdapterBuilder {
      * @since 1.0
      */
     public FullCacheAdapterBuilder(final FullCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Full cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("full cache", cache);
         modificationDatesCache = cache;
         importsCache = cache;
         sourceCache = cache;
@@ -49,9 +49,7 @@ public class FullCacheAdapterBuilder {
      * @since 1.0
      */
     public FullCacheAdapterBuilder withSourceModificationDateCache(final SourceModificationDateCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Source modification dates cannot be null");
-        }
+        ParameterUtils.verifyNotNull("source modification dates", cache);
         modificationDatesCache = cache;
         return this;
     }
@@ -64,9 +62,7 @@ public class FullCacheAdapterBuilder {
      * @since 1.0
      */
     public FullCacheAdapterBuilder withSourceImportsPathsCache(final SourceImportsCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Source imports paths cannot be null");
-        }
+        ParameterUtils.verifyNotNull("source imports paths", cache);
         importsCache = cache;
         return this;
     }
@@ -79,9 +75,7 @@ public class FullCacheAdapterBuilder {
      * @since 1.0
      */
     public FullCacheAdapterBuilder withSourceCodeCache(final SourceCodeCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Source code cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("source code cache", cache);
         sourceCache = cache;
         return this;
     }
@@ -94,9 +88,7 @@ public class FullCacheAdapterBuilder {
      * @since 1.0
      */
     public FullCacheAdapterBuilder withCompilationDateCache(final CompilationDateCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Compilation dates cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("compilation dates cache", cache);
         compilationDatesCache = cache;
         return this;
     }
@@ -109,9 +101,7 @@ public class FullCacheAdapterBuilder {
      * @since 1.0
      */
     public FullCacheAdapterBuilder withCompiledCodeCache(final CompiledCodeCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Compiled code cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("compiled code cache", cache);
         compiledCache = cache;
         return this;
     }

@@ -15,25 +15,30 @@ package biz.gabrys.lesscss.extended.compiler.source;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
+
 /**
  * Responsible for creating new instances of the {@link SourceFactoryImpl}.
  * @since 1.0
  */
 public class SourceFactoryBuilder {
 
-    private final Map<Class<?>, ConcreteSourceFactory<? extends LessSource>> factories = new LinkedHashMap<Class<?>, ConcreteSourceFactory<? extends LessSource>>();
+    private final Map<Class<?>, ConcreteSourceFactory<? extends LessSource>> factories;
 
     /**
      * Constructs a new instance with zero factories.
      * @since 1.0
      */
     public SourceFactoryBuilder() {
-        // do nothing
+        this(new LinkedHashMap<Class<?>, ConcreteSourceFactory<? extends LessSource>>());
+    }
+
+    SourceFactoryBuilder(final Map<Class<?>, ConcreteSourceFactory<? extends LessSource>> factories) {
+        this.factories = factories;
     }
 
     /**
-     * Creates a new builder with added standard factories at the end or does nothing if you try to add the same factory
-     * again.
+     * Appends standard factories at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
      * @since 1.0
      * @see HttpSourceFactory
@@ -45,8 +50,7 @@ public class SourceFactoryBuilder {
     }
 
     /**
-     * Creates a new builder with added {@link LocalSourceFactory} at the end or does nothing if you try to add the same
-     * factory again.
+     * Appends {@link LocalSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
      * @since 1.0
      */
@@ -58,8 +62,7 @@ public class SourceFactoryBuilder {
     }
 
     /**
-     * Creates a new builder with added {@link HttpSourceFactory} at the end or does nothing if you try to add the same
-     * factory again.
+     * Appends {@link HttpSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
      * @since 1.0
      */
@@ -71,8 +74,7 @@ public class SourceFactoryBuilder {
     }
 
     /**
-     * Creates a new builder with added {@link FtpSourceFactory} at the end or does nothing if you try to add the same
-     * factory again.
+     * Appends {@link FtpSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @return {@code this} builder.
      * @since 2.0
      */
@@ -84,17 +86,26 @@ public class SourceFactoryBuilder {
     }
 
     /**
-     * Creates a new builder with added {@link ConcreteSourceFactory} at the end or does nothing if you try to add the
-     * same factory again.
+     * Appends {@link ClasspathSourceFactory} at the end or does nothing if you try to add the same factory again.
+     * @return {@code this} builder.
+     * @since 2.1.0
+     */
+    public SourceFactoryBuilder withClasspath() {
+        if (!factories.containsKey(ClasspathSourceFactory.class)) {
+            factories.put(ClasspathSourceFactory.class, new ClasspathSourceFactory());
+        }
+        return this;
+    }
+
+    /**
+     * Appends {@link ConcreteSourceFactory} at the end or does nothing if you try to add the same factory again.
      * @param factory the concrete source factory.
      * @return {@code this} builder.
      * @throws IllegalArgumentException is factory is equal to {@code null}.
      * @since 1.0
      */
     public SourceFactoryBuilder withCustom(final ConcreteSourceFactory<? extends LessSource> factory) {
-        if (factory == null) {
-            throw new IllegalArgumentException("Factory cannot be null");
-        }
+        ParameterUtils.verifyNotNull("factory", factory);
         if (!factories.containsKey(factory.getClass())) {
             factories.put(factory.getClass(), factory);
         }

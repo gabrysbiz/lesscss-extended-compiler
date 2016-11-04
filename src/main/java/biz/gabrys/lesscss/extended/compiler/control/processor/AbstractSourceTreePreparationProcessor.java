@@ -31,17 +31,17 @@ public abstract class AbstractSourceTreePreparationProcessor implements PreCompi
      * The checker responsible for determining if the source file expired.
      * @since 1.0
      */
-    protected final SourceExpirationChecker expirationChecker;
+    protected SourceExpirationChecker expirationChecker;
     /**
      * The cache responsible for storing source files imports lists.
      * @since 1.0
      */
-    protected final SourceImportsCache importsCache;
+    protected SourceImportsCache importsCache;
     /**
      * The factory responsible for creating new instances of the {@link LessSource}.
      * @since 1.0
      */
-    protected final SourceFactory sourceFactory;
+    protected SourceFactory sourceFactory;
 
     /**
      * Constructs a new instance.
@@ -67,7 +67,7 @@ public abstract class AbstractSourceTreePreparationProcessor implements PreCompi
 
     /**
      * Prepares a source file to the compilation process. This method is called recursively for the source and all of
-     * its imports. To avoid imports loop, it processes only sources which path is not contained by the set.
+     * its imports. To avoid imports loop, it processes only sources whose paths are not contained by the set.
      * @param source the source file.
      * @param preparedSourcesPaths set with prepared sources path.
      * @since 1.0

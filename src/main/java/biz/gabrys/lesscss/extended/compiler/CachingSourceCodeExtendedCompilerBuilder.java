@@ -28,6 +28,7 @@ import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link ExtendedCompiler} which cache source code.
@@ -51,9 +52,7 @@ public class CachingSourceCodeExtendedCompilerBuilder {
      * @since 1.0
      */
     public CachingSourceCodeExtendedCompilerBuilder(final FullCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("cache", cache);
         this.cache = cache;
     }
 
@@ -147,18 +146,25 @@ public class CachingSourceCodeExtendedCompilerBuilder {
      */
     public ExtendedCompiler create() {
         final LessCompiler lessCompiler = compiler != null ? compiler : new LessCompilerImpl();
+        final PreCompilationProcessor preProc = createPreProcessor(new SourceTreeWithCodeCachingPreparationProcessorBuilder(cache));
+        final PostCompilationProcessor postProc = postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();
+        return new SimpleExtendedCompiler(lessCompiler, preProc, new CachedSourceFileProvider(cache), postProc);
+    }
 
-        final SourceTreeWithCodeCachingPreparationProcessorBuilder builder = new SourceTreeWithCodeCachingPreparationProcessorBuilder(
-                cache);
+    PreCompilationProcessor createPreProcessor(final SourceTreeWithCodeCachingPreparationProcessorBuilder builder) {
         builder.withExpirationChecker(
                 expirationChecker != null ? expirationChecker : new SourceModificationDateBasedExpirationChecker(cache));
         builder.withImportResolver(importResolver != null ? importResolver : new LessImportResolverImpl());
         builder.withImportReplacer(importReplacer != null ? importReplacer : new LessImportReplacerImpl());
-        builder.withSourceFactory(sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create());
-        final PreCompilationProcessor preProc = builder.create();
+        builder.withSourceFactory(createSourceFactory());
+        return builder.create();
+    }
 
-        final PostCompilationProcessor postProc = postProcessor != null ? postProcessor : new DoNothingPostCompilationProcessor();
+    SourceFactory createSourceFactory() {
+        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());
+    }
 
-        return new SimpleExtendedCompiler(lessCompiler, preProc, new CachedSourceFileProvider(cache), postProc);
+    SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
+        return builder.withStandard().create();
     }
 }

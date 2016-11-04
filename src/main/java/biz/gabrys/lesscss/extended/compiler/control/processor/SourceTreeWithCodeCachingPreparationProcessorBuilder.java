@@ -24,6 +24,7 @@ import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link SourceTreeWithCodeCachingPreparationProcessor}.
@@ -47,9 +48,7 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessorBuilder(final FullCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("cache", cache);
         datesCache = cache;
         importsCache = cache;
         codeCache = cache;
@@ -65,17 +64,13 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      */
     public SourceTreeWithCodeCachingPreparationProcessorBuilder(final SourceModificationDateCache datesCache,
             final SourceImportsCache importsCache, final SourceCodeCache codeCache) {
-        if (datesCache == null) {
-            throw new IllegalArgumentException("Dates cache cannot be null");
-        }
+
+        ParameterUtils.verifyNotNull("dates cache", datesCache);
+        ParameterUtils.verifyNotNull("imports cache", importsCache);
+        ParameterUtils.verifyNotNull("code cache", codeCache);
+
         this.datesCache = datesCache;
-        if (importsCache == null) {
-            throw new IllegalArgumentException("Imports cache cannot be null");
-        }
         this.importsCache = importsCache;
-        if (codeCache == null) {
-            throw new IllegalArgumentException("Code cache cannot be null");
-        }
         this.codeCache = codeCache;
     }
 
@@ -137,10 +132,30 @@ public class SourceTreeWithCodeCachingPreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreeWithCodeCachingPreparationProcessor create() {
-        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();
-        final LessImportResolver resolver = importResolver != null ? importResolver : new LessImportResolverImpl();
-        final LessImportReplacer replacer = importReplacer != null ? importReplacer : new LessImportReplacerImpl();
-        final SourceFactory factory = sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create();
+        final SourceExpirationChecker checker = createExpirationChecker();
+        final LessImportResolver resolver = createImportResolver();
+        final LessImportReplacer replacer = createImportReplacer();
+        final SourceFactory factory = createSourceFactory();
         return new SourceTreeWithCodeCachingPreparationProcessor(checker, datesCache, importsCache, codeCache, resolver, replacer, factory);
+    }
+
+    SourceExpirationChecker createExpirationChecker() {
+        return expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();
+    }
+
+    LessImportResolver createImportResolver() {
+        return importResolver != null ? importResolver : new LessImportResolverImpl();
+    }
+
+    LessImportReplacer createImportReplacer() {
+        return importReplacer != null ? importReplacer : new LessImportReplacerImpl();
+    }
+
+    SourceFactory createSourceFactory() {
+        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());
+    }
+
+    SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
+        return builder.withStandard().create();
     }
 }

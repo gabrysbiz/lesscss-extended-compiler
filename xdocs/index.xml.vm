@@ -23,13 +23,8 @@
                 <li>supports sources located at:
                     <ul>
                         <li>local drives</li>
-                        <li>network protocols:
-                            <ul>
-                                <li>HTTP</li>
-                                <li>HTTPS</li>
-                                <li>FTP</li>
-                            </ul>
-                        </li>
+                        <li>network protocols: HTTP, HTTPS, FTP</li>
+                        <li>classpath (prefix <code>classpath://</code>)</li>
                         <li><a href="locations.html#custom">custom - defined by programmers</a></li>
                     </ul>
                 </li>
@@ -40,7 +35,7 @@
                  The compatibility with the <a href="http://lesscss.org/">Less</a> language is determined by:
              </p>
              <ul>
-                 <li>native compiler implementation (<a href="http://lesscss-compiler.projects.gabrys.biz/1.1/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html">biz.gabrys.lesscss.compiler.LessCompiler</a>)</li>
+                 <li>native compiler implementation (<a href="http://lesscss-compiler.projects.gabrys.biz/1.2.1/apidocs/index.html?biz/gabrys/lesscss/compiler/LessCompiler.html">biz.gabrys.lesscss.compiler.LessCompiler</a>)</li>
                  <li>supported locations of sources (<a href="locations.html#matrix">see supported locations matrix</a>)</li>
              </ul>
         </section>

@@ -22,18 +22,38 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
  */
 public class LessImportOperation {
 
-    private final String path;
-    private final String computedPath;
-    private final String option;
-    private final String computedOption;
-    private final String sourceCode;
+    /**
+     * The source path.
+     * @since 2.1.0
+     */
+    protected String path;
+    /**
+     * The computed source path.
+     * @since 2.1.0
+     */
+    protected String computedPath;
+    /**
+     * The import option.
+     * @since 2.1.0
+     */
+    protected String option;
+    /**
+     * The computed import option.
+     * @since 2.1.0
+     */
+    protected String computedOption;
+    /**
+     * The source code.
+     * @since 2.1.0
+     */
+    protected String sourceCode;
 
     /**
-     * Constructs a new instance and sets file path, path, option and source code.
-     * @param path the path.
-     * @param computedPath the file path.
-     * @param option the option.
-     * @param computedOption the computed option.
+     * Constructs a new instance and sets file path, computed path, option, computed option and source code.
+     * @param path the source path.
+     * @param computedPath the computed source path.
+     * @param option the import option.
+     * @param computedOption the computed import option.
      * @param sourceCode the source code.
      * @since 1.0
      */
@@ -56,8 +76,8 @@ public class LessImportOperation {
     }
 
     /**
-     * Returns a computed path.
-     * @return the computed path.
+     * Returns a computed source path.
+     * @return the computed source path.
      * @since 1.0
      * @see <a href="http://lesscss.org/features/#import-directives-feature-file-extensions">File extensions</a>
      */
@@ -66,8 +86,8 @@ public class LessImportOperation {
     }
 
     /**
-     * Returns an option.
-     * @return the option or {@code null} if not specified.
+     * Returns an import option.
+     * @return the import option or {@code null} if not specified.
      * @since 1.0
      * @see <a href="http://lesscss.org/features/#import-options">Import Options</a>
      */
@@ -76,8 +96,8 @@ public class LessImportOperation {
     }
 
     /**
-     * Returns a computed option.
-     * @return the computed option.
+     * Returns a computed import option.
+     * @return the computed import option.
      * @since 1.0
      * @see <a href="http://lesscss.org/features/#import-options">Import Options</a>
      */
@@ -105,10 +125,7 @@ public class LessImportOperation {
         if (this == obj) {
             return true;
         }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
+        if (obj == null || getClass() != obj.getClass()) {
             return false;
         }
         final LessImportOperation other = (LessImportOperation) obj;

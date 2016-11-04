@@ -21,6 +21,7 @@ import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolver;
 import biz.gabrys.lesscss.extended.compiler.imports.LessImportResolverImpl;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
 import biz.gabrys.lesscss.extended.compiler.source.SourceFactoryBuilder;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link SourceTreePreparationProcessor}.
@@ -42,9 +43,7 @@ public class SourceTreePreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreePreparationProcessorBuilder(final FullCache cache) {
-        if (cache == null) {
-            throw new IllegalArgumentException("Cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("cache", cache);
         datesCache = cache;
         importsCache = cache;
     }
@@ -57,14 +56,22 @@ public class SourceTreePreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreePreparationProcessorBuilder(final SourceModificationDateCache datesCache, final SourceImportsCache importsCache) {
-        if (datesCache == null) {
-            throw new IllegalArgumentException("Dates cache cannot be null");
-        }
+        ParameterUtils.verifyNotNull("dates cache", datesCache);
+        ParameterUtils.verifyNotNull("imports cache", importsCache);
+
         this.datesCache = datesCache;
-        if (importsCache == null) {
-            throw new IllegalArgumentException("Imports cache cannot be null");
-        }
         this.importsCache = importsCache;
+    }
+
+    /**
+     * Sets specified {@link SourceExpirationChecker}.
+     * @param expirationChecker the source expiration checker.
+     * @return {@code this} builder.
+     * @since 2.1.0
+     */
+    public SourceTreePreparationProcessorBuilder withExpirationChecker(final SourceExpirationChecker expirationChecker) {
+        this.expirationChecker = expirationChecker;
+        return this;
     }
 
     /**
@@ -102,9 +109,25 @@ public class SourceTreePreparationProcessorBuilder {
      * @since 1.0
      */
     public SourceTreePreparationProcessor create() {
-        final SourceExpirationChecker checker = expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();
-        final LessImportResolver resolver = importResolver != null ? importResolver : new LessImportResolverImpl();
-        final SourceFactory factory = sourceFactory != null ? sourceFactory : new SourceFactoryBuilder().withStandard().create();
+        final SourceExpirationChecker checker = createExpirationChecker();
+        final LessImportResolver resolver = createImportResolver();
+        final SourceFactory factory = createSourceFactory();
         return new SourceTreePreparationProcessor(checker, datesCache, importsCache, resolver, factory);
+    }
+
+    SourceExpirationChecker createExpirationChecker() {
+        return expirationChecker != null ? expirationChecker : new SourceAlwaysExpiredChecker();
+    }
+
+    LessImportResolver createImportResolver() {
+        return importResolver != null ? importResolver : new LessImportResolverImpl();
+    }
+
+    SourceFactory createSourceFactory() {
+        return sourceFactory != null ? sourceFactory : createSourceFactoryFromBuilder(new SourceFactoryBuilder());
+    }
+
+    SourceFactory createSourceFactoryFromBuilder(final SourceFactoryBuilder builder) {
+        return builder.withStandard().create();
     }
 }

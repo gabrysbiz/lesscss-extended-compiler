@@ -17,6 +17,7 @@ import java.util.Date;
 import java.util.List;
 
 import biz.gabrys.lesscss.extended.compiler.source.LessSource;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Allows you to create an instance of {@link FullCache} which delegates execution of each method to concrete caches.
@@ -24,11 +25,31 @@ import biz.gabrys.lesscss.extended.compiler.source.LessSource;
  */
 public class FullCacheAdapter implements FullCache {
 
-    private final SourceModificationDateCache modificationDatesCache;
-    private final SourceImportsCache importsCache;
-    private final SourceCodeCache sourceCache;
-    private final CompilationDateCache compilationDatesCache;
-    private final CompiledCodeCache compiledCache;
+    /**
+     * The cache responsible for storing source files modification dates.
+     * @since 2.1.0
+     */
+    protected SourceModificationDateCache modificationDatesCache;
+    /**
+     * The cache responsible for storing source files imports paths.
+     * @since 2.1.0
+     */
+    protected SourceImportsCache importsCache;
+    /**
+     * The cache responsible for storing source files code.
+     * @since 2.1.0
+     */
+    protected SourceCodeCache sourceCache;
+    /**
+     * The cache responsible for storing sources compilation dates.
+     * @since 2.1.0
+     */
+    protected CompilationDateCache compilationDatesCache;
+    /**
+     * The cache responsible for storing compiled code.
+     * @since 2.1.0
+     */
+    protected CompiledCodeCache compiledCache;
 
     /**
      * Constructs a new instance.
@@ -42,25 +63,17 @@ public class FullCacheAdapter implements FullCache {
      */
     public FullCacheAdapter(final SourceModificationDateCache modificationDatesCache, final SourceImportsCache importsCache,
             final SourceCodeCache sourceCache, final CompilationDateCache compilationDatesCache, final CompiledCodeCache compiledCache) {
-        if (modificationDatesCache == null) {
-            throw new IllegalArgumentException("Source modification dates cache cannot be null");
-        }
+
+        ParameterUtils.verifyNotNull("source modification dates cache", modificationDatesCache);
+        ParameterUtils.verifyNotNull("source imports paths cache", importsCache);
+        ParameterUtils.verifyNotNull("source code cache", sourceCache);
+        ParameterUtils.verifyNotNull("compilation dates cache", compilationDatesCache);
+        ParameterUtils.verifyNotNull("compiled code cache", compiledCache);
+
         this.modificationDatesCache = modificationDatesCache;
-        if (importsCache == null) {
-            throw new IllegalArgumentException("Source imports paths cache cannot be null");
-        }
         this.importsCache = importsCache;
-        if (sourceCache == null) {
-            throw new IllegalArgumentException("Source code cache cannot be null");
-        }
         this.sourceCache = sourceCache;
-        if (compilationDatesCache == null) {
-            throw new IllegalArgumentException("Compilation dates cache cannot be null");
-        }
         this.compilationDatesCache = compilationDatesCache;
-        if (compiledCache == null) {
-            throw new IllegalArgumentException("Compiled code cache cannot be null");
-        }
         this.compiledCache = compiledCache;
     }
 

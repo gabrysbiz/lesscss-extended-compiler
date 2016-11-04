@@ -28,10 +28,26 @@ import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
  */
 public class CompiledSourceExpirationCheckerImpl implements CompiledSourceExpirationChecker {
 
-    private final SourceExpirationChecker expirationChecker;
-    private final SourceModificationDateCache datesCache;
-    private final SourceImportsCache importsCache;
-    private final SourceFactory sourceFactory;
+    /**
+     * The individual source files expiration checker.
+     * @since 2.1.0
+     */
+    protected SourceExpirationChecker expirationChecker;
+    /**
+     * The cache responsible for storing source files dates.
+     * @since 2.1.0
+     */
+    protected SourceModificationDateCache datesCache;
+    /**
+     * The cache responsible for storing source files imports lists.
+     * @since 2.1.0
+     */
+    protected SourceImportsCache importsCache;
+    /**
+     * The factory responsible for creating new instances of the {@link LessSource}.
+     * @since 2.1.0
+     */
+    protected SourceFactory sourceFactory;
 
     /**
      * Constructs a new instance.
@@ -59,8 +75,8 @@ public class CompiledSourceExpirationCheckerImpl implements CompiledSourceExpira
 
     /**
      * Tests whether a compiled code for a source file expired. This method is called recursively for the source and all
-     * of its imports (until find the first expired file). To avoid imports loop, it processes only sources which path
-     * is not contained by the set.
+     * of its imports (until find the first expired file). To avoid imports loop, it processes only sources whose paths
+     * are not contained by the set.
      * @param source the source file.
      * @param lastCompilationDate the date of last compilation.
      * @param checkedSourcesPaths set with checked sources paths.

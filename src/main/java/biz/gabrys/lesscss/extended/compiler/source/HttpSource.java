@@ -39,8 +39,8 @@ public class HttpSource implements LessSource {
     private Date lastModificationDate;
 
     /**
-     * Constructs a new instance and sets URL of the source file.
-     * @param url the source file URL.
+     * Constructs a new instance and sets {@link URL} of the source file.
+     * @param url the {@link URL} which pointer to source file
      * @since 1.0
      */
     public HttpSource(final URL url) {
@@ -82,7 +82,7 @@ public class HttpSource implements LessSource {
             content = IOUtils.toString(connection.getInputStream(), encoding);
         } catch (final IOException e) {
             connection.disconnect();
-            throw new SourceException(e);
+            throw new SourceException(String.format("Cannot read content of the \"%s\" file", url), e);
         }
         lastModificationDate = getModificationDate(connection.getLastModified());
         connection.disconnect();
@@ -135,7 +135,7 @@ public class HttpSource implements LessSource {
             try {
                 resourceUrl = new URL(location);
             } catch (final MalformedURLException e) {
-                throw new SourceException(String.format("Invalid Location header: %s", location), e);
+                throw new SourceException(String.format("Invalid \"Location\" header: %s", location), e);
             }
         }
         if (responseCode != HttpURLConnection.HTTP_OK) {

@@ -39,10 +39,26 @@ import biz.gabrys.lesscss.extended.compiler.source.SourceFactory;
  */
 public class SourceTreeWithCodeCachingPreparationProcessor extends AbstractSourceTreePreparationProcessor {
 
-    private final SourceModificationDateCache datesCache;
-    private final SourceCodeCache codeCache;
-    private final LessImportResolver importResolver;
-    private final LessImportReplacer importReplacer;
+    /**
+     * The cache responsible for storing source files modification dates.
+     * @since 2.1.0
+     */
+    protected SourceModificationDateCache datesCache;
+    /**
+     * The cache responsible for storing source files code.
+     * @since 2.1.0
+     */
+    protected SourceCodeCache codeCache;
+    /**
+     * The resolver responsible for returning a list of import operations.
+     * @since 2.1.0
+     */
+    protected LessImportResolver importResolver;
+    /**
+     * The replacer responsible for replacing import operations.
+     * @since 2.1.0
+     */
+    protected LessImportReplacer importReplacer;
 
     /**
      * Constructs a new instance.

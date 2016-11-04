@@ -118,4 +118,16 @@ public final class LessImportResolverImplTest {
                     resolvedOperations.get(i));
         }
     }
+
+    @Test(expected = ImportException.class)
+    public void resolve_pathContainsQuote_throwException() {
+        final LessImportResolver resolver = new LessImportResolverImpl();
+        resolver.resolve("@import 'name\"';");
+    }
+
+    @Test(expected = ImportException.class)
+    public void resolve_pathContainsApostrophe_throwException() {
+        final LessImportResolver resolver = new LessImportResolverImpl();
+        resolver.resolve("@import \"name'\";");
+    }
 }

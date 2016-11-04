@@ -23,7 +23,11 @@ import biz.gabrys.lesscss.extended.compiler.source.LessSource;
  */
 public class SourceModificationDateBasedExpirationChecker implements SourceExpirationChecker {
 
-    private final SourceModificationDateCache cache;
+    /**
+     * The cache responsible for storing source files modification dates.
+     * @since 2.1.0
+     */
+    protected SourceModificationDateCache cache;
 
     /**
      * Constructs a new instance.

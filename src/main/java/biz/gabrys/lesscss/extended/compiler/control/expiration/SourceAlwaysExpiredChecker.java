@@ -28,6 +28,12 @@ public class SourceAlwaysExpiredChecker implements SourceExpirationChecker {
         // do nothing
     }
 
+    /**
+     * Always returns {@code true}.
+     * @param source the source file.
+     * @return {@code true}.
+     * @since 1.0
+     */
     public boolean isExpired(final LessSource source) {
         return true;
     }

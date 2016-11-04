@@ -14,15 +14,12 @@ package biz.gabrys.lesscss.extended.compiler.source;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Responsible for creating new instances of the {@link FtpSource}.
  * @since 1.0
  */
-public class FtpSourceFactory implements ConcreteSourceFactory<FtpSource> {
+public class FtpSourceFactory extends AbstractUriSourceFactory<FtpSource> {
 
     /**
      * Constructs a new instance.
@@ -32,34 +29,13 @@ public class FtpSourceFactory implements ConcreteSourceFactory<FtpSource> {
         // do nothing
     }
 
-    public FtpSource createAbsoluteSource(final LessSource source, final String importAbsolutePath) {
-        try {
-            final URI importUri = new URI(importAbsolutePath).normalize();
-            return new FtpSource(importUri.toURL(), source.getEncoding());
-        } catch (final URISyntaxException e) {
-            throw new SourceFactoryException("Cannot normalize URL", e);
-        } catch (final MalformedURLException e) {
-            throw new SourceFactoryException("Cannot create relative URL", e);
-        }
+    @Override
+    protected FtpSource createSource(final URI uri, final String encoding) throws MalformedURLException {
+        return new FtpSource(uri.toURL(), encoding);
     }
 
-    public FtpSource createRelativeSource(final LessSource source, final String importRelativePath) {
-        try {
-            final String sourcePath = source.getPath();
-            final String parentPath = sourcePath.substring(0, sourcePath.lastIndexOf('/'));
-            final URI importUri = new URI(parentPath + '/' + importRelativePath).normalize();
-            return new FtpSource(importUri.toURL(), source.getEncoding());
-        } catch (final URISyntaxException e) {
-            throw new SourceFactoryException("Cannot normalize URL", e);
-        } catch (final MalformedURLException e) {
-            throw new SourceFactoryException("Cannot create relative URL", e);
-        }
-    }
-
-    public boolean isAbsolutePath(final String path) {
-        if (StringUtils.isEmpty(path)) {
-            return false;
-        }
+    @Override
+    protected boolean isSupportedPath(final String path) {
         return path.startsWith("ftp://");
     }
 }

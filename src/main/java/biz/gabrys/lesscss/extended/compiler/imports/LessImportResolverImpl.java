@@ -14,6 +14,7 @@ package biz.gabrys.lesscss.extended.compiler.imports;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -43,19 +44,11 @@ public class LessImportResolverImpl implements LessImportResolver {
         final List<LessImportOperation> imports = new ArrayList<LessImportOperation>();
         final Matcher matcher = IMPORT_PATTERN.matcher(sourceCode);
         while (matcher.find()) {
-            String path = matcher.group(PATH_IN_DOUBLE_QUOTES_GROUP_INDEX);
-            if (path == null) {
-                path = matcher.group(PATH_IN_SINGLE_QUOTES_GROUP_INDEX);
-            }
-            if (path.contains("'") || path.contains("\"")) {
-                final String characterInfo = path.contains("'") ? "' (apostrophe)" : "\" (quote)";
-                throw new ImportException(String.format("Path contains not allowed character: %s", characterInfo));
-            }
-
+            final String path = resolvePath(matcher);
             final String option = matcher.group(IMPORT_OPTION_GROUP_INDEX);
-            String computedOption = option;
 
             String computedPath = path;
+            String computedOption = option;
             if (option == null) {
                 computedPath = computedPath.matches(".*\\.[^.\\s]+$") ? computedPath : computedPath + ".less";
                 computedOption = computedPath.endsWith(".css") ? "css" : "less";
@@ -66,5 +59,17 @@ public class LessImportResolverImpl implements LessImportResolver {
             }
         }
         return imports;
+    }
+
+    private static String resolvePath(final MatchResult matchResult) {
+        String path = matchResult.group(PATH_IN_DOUBLE_QUOTES_GROUP_INDEX);
+        if (path == null) {
+            path = matchResult.group(PATH_IN_SINGLE_QUOTES_GROUP_INDEX);
+        }
+        if (path.contains("'") || path.contains("\"")) {
+            final String characterInfo = path.contains("'") ? "' (apostrophe)" : "\" (quote)";
+            throw new ImportException(String.format("Path contains not allowed character: %s", characterInfo));
+        }
+        return path;
     }
 }

@@ -62,4 +62,28 @@ public final class LocalSourceTest {
         Assert.assertFalse(OTHER_SYSTEMS + "\"/file/fi\0le\" should be treated as absolute path",
                 LocalSource.isAbsolutePath("/file/fi\0le", false));
     }
+
+    @Test
+    public void isAbsoluteNormalizedPath_windowsOsAndPathDoesNotStartsWithLetter_returnsFalse() {
+        Assert.assertFalse("Should return false for path which does not start with letter on Windows",
+                LocalSource.isAbsoluteNormalizedPath("/does-not-start-with-letter", true));
+    }
+
+    @Test
+    public void isAbsoluteNormalizedPath_windowsOsPathDoesNotContainColonAsSecondCharacter_returnsFalse() {
+        Assert.assertFalse("Should return false for path which does not contain colon on second position on Windows",
+                LocalSource.isAbsoluteNormalizedPath("Ccolon:", true));
+    }
+
+    @Test
+    public void isAbsoluteNormalizedPath_windowsOsPathContainOnlyTwoCharacters_returnsFalse() {
+        Assert.assertFalse("Should return false for path which does not contain colon on second position on Windows",
+                LocalSource.isAbsoluteNormalizedPath("C:", true));
+    }
+
+    @Test
+    public void isAbsoluteNormalizedPath_windowsOsPathContainSeparatorAsFourthCharacter_returnsFalse() {
+        Assert.assertFalse("Should return false for path which does not contain colon on second position on Windows",
+                LocalSource.isAbsoluteNormalizedPath("C:A/too-late", true));
+    }
 }

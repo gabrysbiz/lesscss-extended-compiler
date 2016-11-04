@@ -17,6 +17,7 @@ import java.io.IOException;
 
 import biz.gabrys.lesscss.extended.compiler.storage.DataStorage;
 import biz.gabrys.lesscss.extended.compiler.storage.DataStorageImpl;
+import biz.gabrys.lesscss.extended.compiler.util.ParameterUtils;
 
 /**
  * Responsible for creating new instances of the {@link FullCacheImpl}.
@@ -42,9 +43,7 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheBuilder withDirectory(final File workingDirectory) {
-        if (workingDirectory == null) {
-            throw new IllegalArgumentException("Directory cannot be null");
-        }
+        ParameterUtils.verifyNotNull("directory", workingDirectory);
         dataStorage = new DataStorageImpl(workingDirectory);
         return this;
     }
@@ -57,9 +56,7 @@ public class FullCacheBuilder {
      * @since 1.0
      */
     public FullCacheBuilder withDataStorage(final DataStorage dataStorage) {
-        if (dataStorage == null) {
-            throw new IllegalArgumentException("Data storage cannot be null");
-        }
+        ParameterUtils.verifyNotNull("data storage", dataStorage);
         this.dataStorage = dataStorage;
         return this;
     }
@@ -73,12 +70,22 @@ public class FullCacheBuilder {
      */
     public FullCacheImpl create() {
         if (dataStorage == null) {
-            try {
-                dataStorage = new DataStorageImpl(TemporaryDirectoryUtils.create());
-            } catch (final IOException e) {
-                throw new UnsupportedOperationException("Cannot create temporary directory", e);
-            }
+            dataStorage = createFallbackDataStorage();
         }
         return new FullCacheImpl(dataStorage);
+    }
+
+    /**
+     * Creates a new instance of the {@link DataStorage} which will be use as fallback for {@link #create()} method.
+     * @return the new instance of the {@link DataStorage}.
+     * @throws UnsupportedOperationException if cannot create temporary directory.
+     * @since 2.1.0
+     */
+    protected DataStorage createFallbackDataStorage() {
+        try {
+            return new DataStorageImpl(TemporaryDirectoryUtils.create());
+        } catch (final IOException e) {
+            throw new UnsupportedOperationException("Cannot create temporary directory", e);
+        }
     }
 }

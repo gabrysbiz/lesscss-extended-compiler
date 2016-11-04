@@ -29,10 +29,26 @@ import biz.gabrys.lesscss.extended.compiler.source.LessSource;
  */
 public class SimpleExtendedCompiler implements ExtendedCompiler {
 
-    private final LessCompiler compiler;
-    private final PreCompilationProcessor preProcessor;
-    private final SourceFileProvider fileProvider;
-    private final PostCompilationProcessor postProcessor;
+    /**
+     * The native compiler.
+     * @since 2.1.0
+     */
+    protected LessCompiler compiler;
+    /**
+     * The pre compilation processor.
+     * @since 2.1.0
+     */
+    protected PreCompilationProcessor preProcessor;
+    /**
+     * The provider responsible for returning file representation of the {@link LessSource}.
+     * @since 2.1.0
+     */
+    protected SourceFileProvider fileProvider;
+    /**
+     * The post compilation processor.
+     * @since 2.1.0
+     */
+    protected PostCompilationProcessor postProcessor;
 
     /**
      * Constructs a new instance.
